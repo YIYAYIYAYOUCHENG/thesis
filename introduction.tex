@@ -1,0 +1,81 @@
+\chapter{Introduction\label{chap:introduction}}
+
+Linux is the most widely deployed open source general purpose
+operating system. Traditionally, the aim of Linux scheduling is to
+distribute cpu cycles fairly among tasks and task groups according to
+their relative importances. Because of the popularity and
+compatibility, Linux based systems are used to serve various kinds of
+purposes. In some cases, fairness is not enough or necessary.
+
+There is the class of real time applications 
+that have soft or hard requirements on the cpu cycles they receive,
+normally in some time length, in order to work well. Such timing
+guarantee (or real time guarantee) cannot be provided just by fairness. 
+Multi-media applications belong to this class. Simply from cpu bandwidth 
+management's point of view, a real time gurantee is also useful. In many 
+situations, people prefer to distributing cpu power in a previleged and 
+predictable way. For instance, to give 10\% of the total cpu cycles to a 
+set of tasks; furthermore, take half from the 10\% and assign it to some 
+subset of the tasks.
+
+Nowadays, multi-core architecture is successfully utilized to boost 
+computing capability for computing devices. It's no surprise to see an 
+embedded device with more than one cpu inside. Computing systems with 
+multiple processors are becoming mainstream. 
+Yet high speed processors and more cores do not solve the
+timing guarantee problem. Also, no matter how powerful the platform is,
+there is always time when people need more. So, there are good reasons to
+manage computing power in a guaranteed way from the aspect of multi-core 
+platform.
+
+In mainline Linux kernel, there are two so called real time scheduling 
+policies SCHED\_FIFO and SCHED\_RR. Tasks scheduled by them are called 
+''real time(rt) tasks''. They are required in POSIX standard for 
+POSIX-compliant operating systems like Linux. Unfortunately, despite of 
+the name, the two can only provide real time gurantee in very limited 
+conditions. In order to avoid confusion, in the following context
+we call such tasks \emph{rt tasks} and use \emph{real time tasks} referring
+to tasks with real time requirements. 
+There are also non real-time way to control cpu bandwidth in Linux: real time 
+throttling and complete fairness scheduler(CFS) bandwidth control. 
+They work for rt tasks and normal tasks in respectively.
+
+There are works to extend Linux with real time capabilities to fullfill 
+the timing guarantee requirement: RTAI, RTLinux, AQuoSA, sched-deadline
+IRMOS real time framework, RESCH, and so on. 
+Each work has its emphasis. Initially, our work is motivated by IRMOS.
+Our framework has two features:
+\begin{itemize}
+\item 	It can predictivly distribute cpu 
+      	cycles above multi-processor platform to a set of tasks 
+	and its subsets, without requirements for details how they 
+	are scheduled. 
+\item 	by the framework, scheduling policies can be applied in a
+	fine-grained way.
+\end{itemize}
+
+In Linux, there is a scheduling system on each CPU. Different such per-cpu 
+scheduling systems construct the system level scheduling by task
+migration mechanisms among different CPUs. 
+For the first time in Linux, our framework provides with the opportunity to 
+build extra scheduling systems besides these destinated with each CPU.
+We call the framework Open-Extension Container(OXC) scheduling framework. 
+Open-extension (ox) container is a new data dtructure in Linux that is 
+raised by our work. It is the core element in the framework.
+Based on ox-container structure, the concept ''per-container scheduling
+system'', whose behaviour is the same as ''per-cpu scheduling system''
+in Linux, is given. Several per-container scheduling systems coorperate
+and work as the ''pseudo (Linux) system level scheduling''.  
+
+In oxc scheduling framework, each ox-container can reserve some bandwidth 
+from a cpu through CBS rules \cite{Abe98a}. The per-container scheduling system based on
+it utilize this computing power to shcedule tasks as if working on a less
+power cpu. This is how oxc framework distribute reserved CPU cycles to
+tasks under it. 
+Because the per-container scheduling system has the same behaviour
+as per-cpu scheduling system in Linux, general types of tasks can run 
+using the reserved bandwidth. On multi-processor platforms, different
+ox-containers can reserve bandwidths from a subset of total CPUs and 
+scheduling systems above them work together to imitate the behaviour of 
+the Linux system level scheduling. The basic unit to 
+apply a scheduling policy under oxc framework is the ox container.
