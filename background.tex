@@ -297,9 +297,46 @@ not enabled, still \emph{task\_rq} marco will be used.
         \label{fig:rt_scheme_tg}
 \end{figure}
 
-\section{Related work}
-\subsection{rt-throttling}
-\subsection{cfs bandwidth control}
+\section{Related work\label{sec:RelatedWork}}
+\subsection{RT throttling\label{sec:RelatedWork_RT}}
+Enabling \texttt{CONFIG\_RT\_GROUP\_SCHED} lets users explicitly allocate
+CPU bandiwidth to rt tasks in task groups. It uses the \emph{control group}
+(cgroup) virtual file system. Each cgroup associates a set of tasks with
+a set of resources, called \emph{subsystems}. For example \emph{cpuset} 
+subsystem is responsible for assigning a set of CPUs and Memory Nodes to
+tasks in a cgroup. Such tasks and resources can be further distributed in 
+sub cgroups. Each cgroup is represented by a directory in the cgroup file 
+system and a hierarchy of cgroups maps to a hierarchy of directories. In 
+the directory, each mounted subsystem provides a list of files that are used 
+as interfaces to control the allocation of a resource.
+Through mounting the \emph{cpu} subsystem, two interfaces $cpu.rt\_period\_us$ 
+and $cpu.rt\_runtime\_us$ are used to control the CPU bandwidth for rt 
+tasks in each cgroup. That is, the total execution time of rt tasks in a cgroup 
+on each CPU in time length $rt\_period\_us$ cannot exceed $rt\_runtime\_us$. 
+If this constraint is met, rt tasks would not be choosen to run on that CPU 
+until a new period; we call such tasks be throttled.
+
+No matter \texttt{CONFIG\_RT\_GROUP\_SCHED} is set or not, in order to avoid rt 
+tasks forever occupy thc CPU, there is a system wide setting that constraints
+rt tasks' execution through the /proc virtual file system :
+
+	$/proc/sys/kernel/sched\_rt\_period\_us$ 
+
+	$/proc/sys/kernel/sched\_rt\_runtime\_us$ 
+\\This applies to all rt tasks in a system.
+
+\subsection{CFS bandwidth control\label{RelatedWork_CFS}}
+Basically, CFS bandwidth control is the same technique as RT throttling
+applying on normal tasks. It is a \texttt{CONFIG\_FAIR\_GROUP\_SCHED} 
+extension which allows the specification of the maximum CPU bandwidth
+available to normal tasks  in a cgroup or cgroup hierarchy.
+The bandwidth allowed to a cgroup is specified using a 
+quota(\texttt{cpu.cfs\_quota\_us}) and a period(\texttt{cpu.cfs\_period\_us}).
+By specifying this, normal tasks in a cgroup will be limited to 
+\texttt{cfs\_quota\_us} units of CPU time within the period of 
+\texttt{cfs\_period\_us}. Recall that in RT throttling \ref{sec:RelatedWork_RT},
+the reserved bandwidth through cgroup interfaces are applied in each CPU
+individually.
 \subsection{AQuoSA}
 \subsection{schedule-deadline}
 \subsection{RESCH}

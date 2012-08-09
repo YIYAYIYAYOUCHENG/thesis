@@ -7,50 +7,52 @@ their relative importances. Because of the popularity and
 compatibility, Linux based systems are used to serve various kinds of
 purposes. In some cases, fairness is not enough or necessary.
 
-There is the class of real time applications 
+There is the class of \emph{real time} applications 
 that have soft or hard requirements on the cpu cycles they receive,
 normally in some time length, in order to work well. Such timing
 guarantee (or real time guarantee) cannot be provided just by fairness. 
-Multi-media applications belong to this class. Simply from cpu bandwidth 
-management's point of view, a real time gurantee is also useful. In many 
-situations, people prefer to distributing cpu power in a previleged and 
-predictable way. For instance, to give 10\% of the total cpu cycles to a 
+Multi-media applications belong to this class. Indeed, simply from cpu 
+bandwidth management's point of view, a real time gurantee is also useful. 
+In many situations, people prefer to distributing cpu power in a privileged 
+and predictable way. For instance, to give 10\% of the total cpu cycles to a 
 set of tasks; furthermore, take half from the 10\% and assign it to some 
 subset of the tasks.
 
 Nowadays, multi-core architecture is successfully utilized to boost 
 computing capability for computing devices. It's no surprise to see an 
-embedded device with more than one cpu inside. Computing systems with 
+embedded device with more than one CPU inside. Computing systems with 
 multiple processors are becoming mainstream. 
-Yet high speed processors and more cores do not solve the
-timing guarantee problem. Also, no matter how powerful the platform is,
-there is always time when people need more. So, there are good reasons to
-manage computing power in a guaranteed way from the aspect of multi-core 
-platform.
+Yet high speed processors and more cores do bring more challenges instead of
+solving the CPU timing guarantee problem. Also, no matter how powerful the 
+platform is, there is always time when people need more. So, to fully utilize
+multi-core platform is also a good reason to manage computing power in a 
+real time way. 
 
 In mainline Linux kernel, there are two so called real time scheduling 
 policies SCHED\_FIFO and SCHED\_RR. Tasks scheduled by them are called 
 ''real time(rt) tasks''. They are required in POSIX standard for 
 POSIX-compliant operating systems like Linux. Unfortunately, despite of 
-the name, the two can only provide real time gurantee in very limited 
-conditions. In order to avoid confusion, in the following context
-we call such tasks \emph{rt tasks} and use \emph{real time tasks} referring
-to tasks with real time requirements. 
-There are also non real-time way to control cpu bandwidth in Linux: real time 
-throttling and complete fairness scheduler(CFS) bandwidth control. 
-They work for rt tasks and normal tasks in respectively.
+the name, these two policies can only provide real time gurantee in very 
+limited conditions. 
+In mainline Linux, there exist two non real time mechanisms to control CPU 
+bandwidth distribution: real time(rt) throttling and 
+complete fairness scheduler(CFS) bandwidth control. 
+In principle, they are the same technique working for different types of tasks.
 
 There are works to extend Linux with real time capabilities to fullfill 
-the timing guarantee requirement: RTAI, RTLinux, AQuoSA, sched-deadline
-IRMOS real time framework, RESCH, and so on. 
+the timing guarantee requirement: RTAI, RTLinux, AQuoSA\cite{Luigi09}, 
+sched-deadline\cite{Dario09},
+IRMOS real time framework, and RESCH and so on.
+Instead of modifying the system directly, RT-Xen tries to apply real time
+mechanisms in the hypervisor level(Xen).
 Each work has its emphasis. Initially, our work is motivated by IRMOS.
 Our framework has two features:
 \begin{itemize}
-\item 	It can predictivly distribute cpu 
+\item 	It can predictively distribute cpu 
       	cycles above multi-processor platform to a set of tasks 
 	and its subsets, without requirements for details how they 
 	are scheduled. 
-\item 	by the framework, scheduling policies can be applied in a
+\item 	Under the framework, scheduling policies can be applied in a
 	fine-grained way.
 \end{itemize}
 
@@ -68,7 +70,7 @@ in Linux, is given. Several per-container scheduling systems coorperate
 and work as the ''pseudo (Linux) system level scheduling''.  
 
 In oxc scheduling framework, each ox-container can reserve some bandwidth 
-from a cpu through CBS rules \cite{Abe98a}. The per-container scheduling system based on
+from a cpu through CBS rules \cite{AbeniB98}. The per-container scheduling system based on
 it utilize this computing power to shcedule tasks as if working on a less
 power cpu. This is how oxc framework distribute reserved CPU cycles to
 tasks under it. 
