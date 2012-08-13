@@ -239,7 +239,7 @@ for rt tasks when rt task group scheduling is not enabled.
         \label{fig:sched_scheme_no_tg}
 \end{figure}
 
-\subsection{Real time scheduler\label{LinuxSched_rt}}
+\subsection{Real time scheduler\label{sec:LinuxSched_rt}}
 Tasks with POSIX real time policies \texttt{SCHED\_FIFO} and \texttt{SCHED\_RR}
 are scheduled by the real time scheduling class \texttt{rt\_sched\_class} and
 are called rt tasks. Given figure\ref{fig:sched_classes}, rt tasks are always
@@ -337,7 +337,41 @@ By specifying this, normal tasks in a cgroup will be limited to
 \texttt{cfs\_period\_us}. Recall that in RT throttling \ref{sec:RelatedWork_RT},
 the reserved bandwidth through cgroup interfaces are applied in each CPU
 individually.
-\subsection{AQuoSA}
-\subsection{schedule-deadline}
-\subsection{RESCH}
+\subsection{AQuoSA\label{sec:AQuoSA}}
+The Adaptive Quality of Service Architecture composes two parts: 
+a resource reservation scheduler an a feedback-based
+control mechanism. The scheduler uses CBS rules to rserve CPU bandwidth for
+a task, which is a rt task with SCHED\_RR policy in its Linux implementation.
+Given the error between the reserved computation and the amount of CPU cycles
+really consumed, the feedback controller adapts CBS reservation paramters to
+provide quality of service CPU allocation in the system.
+The control mechanism depends on CBS performance, not the scheduling details.
+That is, such a control mechanism can be applied to general CBS based 
+scheduling. AQuoSA lacks considerations on multi-processor platform.
+  
+\subsection{Schedule-deadline patch}
+The schedule-deadline patch for Linux kernel is being developed to extend
+current mainline Linux with a deadline-based scheduling method. 
+In schedule-deadline, a new scheduling class (scheduler) is implemented and 
+has highest priority among all scheduling classes. Tasks scheduled by this
+scheduling class are called sched tasks. A sched task is assigned deadlines
+according to CBS rules and scheduled in ''earliest deadline first (EDF)'' way.
 \subsection{IRMOS real-time framework}
+The rague name IRMOS comes from the European project ''Interactive Real-time
+Multimedia Applications on Service Oriented Infrastructures''. 
+The IRMOS 
+framework replace rt throttling mechanism in mainline Linux with real time
+CPU reservation(still CBS), and reuses the existing interfaces. So, users 
+configure the cgroup interface as what we saw in rt 
+throttling(\ref{sec:RelatedWork_RT}), the difference is that this time the CPU 
+bandwidth is allocated in a guaranteed way. Also, new cgroup interfaces are 
+added to assist reserved CPU power distribution in the cgroup hierarchy.
+
+\subsection{Motivation from previous work\label{sec:motivation}}
+Based on Linux, CPU bandwidth control can be applied in the level of 
+single tasks or task groups which are shceudled by some policies.
+Such control can be real-time or non real-time. 
+One obervation here is that there does not exist a mechanism that can 
+control CPU bandwidth for all kinds of tasks as a whole. 
+Such a general control mechanism is the initial consideration of 
+OXC framework. 
