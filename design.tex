@@ -1,17 +1,21 @@
-\chapter{Design of oxc scheduling framework\label{chap:design}}
+\chapter{Design and development\label{chap:design}}
 
 \section{Open-Extension Container Structure\label{sec:design_oxc}}
 
 
-Linux scheduling is runqueue centered and each scheduling class 
+Linux scheduling is runqueue, \texttt{struct rq}, centered and each 
+scheduling class 
 implements a set of interfaces to deal with the runqueue structure.
-In mainline Linux, \texttt{struct rq} runqueue is a per CPU structure.
-On each CPU, based on its runqueue, a scheduling system is built up.
+In mainline Linux, \texttt{struct rq} is a per CPU structure.
+Each scheduling class defines its scheduling operations (enqueue, 
+dequeue, etc.) with this per CPU runqueue. On Multiple processor
+platform, tasks can migrate between different runqueues, also depending
+on behaviours defined in specific scheduler.
+In other words, on each CPU, a scheduling system is built up bsed on the
+associated runqueue.
 Different per CPU scheduling systems cooperate
-with each other by task migrations depending on specific scheduling class 
+with each other by task migrations defiend by specific scheduling class 
 and construct the system level scheduling. 
-Every scheduling operation works around the runqueue structure: enqueue,
-dequeue, etc. 
 The idea is that if there is one extra runqueue, each scheduler can still 
 use it as scheduling parameter and a scheduling system can be built around 
 it. If there are more than one extra runqueues, they can produce a pseudo 
@@ -51,16 +55,22 @@ lead a task to its per container runqueue. The same codes can still be used to
 find both kinds of runqueues.
 
 \begin{figure}[htbp]
+	\begin{subfigure}
         \centering
         \includegraphics[height=2.5cm, width=\textwidth]{images/cfs_scheduling_scheme_tg_oxc}
-        \caption{Scheduling path for normal tasks with fairness grouping}
+        \caption{cfs}
         \label{fig:oxc_fair_tg}
-\end{figure}
-\begin{figure}[htbp]
+	\end{subfigure}
+	
+	\begin{subfigure}
         \centering
         \includegraphics[height=2.5cm, width=\textwidth]{images/rt_scheduling_scheme_tg_oxc}
-        \caption{Scheduling path for rt tasks with rt grouping}
+        %\caption{RT task group shceduling is enabled}
         \label{fig:oxc_rt_tg}
+	\end{subfigure}
+	\caption{Scheduling route with task group scheduling 
+						in OXC enabled Linux}
+	\label{fig:scheduling_route_oxc}
 \end{figure}
 
 In section \ref{sec:LinuxSched_cfs}, we introduce that when task group
@@ -98,3 +108,682 @@ Based on per CPU scheduling, each scheduling operation defined in
 oxc scheduling provides another opportunity to apply a scheduling class in a 
 fine grained scale. Now, the scale to apply a scheduler can be controlled 
 in the unit of an ox container. 
+
+\section{Movtivation for oxc scheduling framework}
+In section \ref{sec:RelatedWork}, we see that based on Linux CPU bandwidth 
+control can be applied in the level of single tasks or task groups which 
+are shceudled by some policies. Such control can be real-time or non real-time.
+One obervation here is that there does not exist a mechanism that can
+control CPU bandwidth for all kinds of tasks as a whole.
+Such a general control mechanism is the initial consideration of
+OXC framework.
+
+Suppose there is an ox container, different schedulers can use it to enqueue,
+operate, and dequeue its tasks. If a fraction of CPU bandwidth can be assigned
+to this oxc, all kinds of tasks will use it as running on a less powerful
+machine. This is the oxc solution to realize CPU bandwidth control as a whole.
+
+
+\section{Development of OXC scheduling framework}
+The oxc framework is still ongoing. Stable codes can be found 
+in github\footnote{https://github.com/YIYAYIYAYOUCHENG/linux}.
+The oxc framework is not a scheduler, it only interests in CPU bandwidth
+control to an oxc, which depends on modular schedulers to use it for 
+scheduling tasks.
+
+\subsection{Implementation of ox container structure}
+An ox container \texttt{struct oxc\_rq} is implemented in Linux kernel.
+An \texttt{struct oxc\_rq} can reserve bandwidth from a CPU using CBS
+rules. The CPU reservation for oxc runqueue follows the implementation
+of CBS reservation for a rt runqueue in IRMOS framework. 
+In the following context, an \texttt{struct oxc\_rq} is also called ox 
+container, container, and oxc runqueue for the same meaning. An oxc runqueue
+also correspond to a constant bandwidth server in CBS theory. 
+\begin{lstlisting}[language=C, caption={\texttt{struct oxc\_rq}},
+                        label={oxc_rq}]
+struct oxc_rq {
+	unsigned long oxc_nr_running;
+	inx oxc_throttled;
+	u64 oxc_deadline;
+	u64 oxc_time;
+	u64 oxc_runtime;
+	ktime_t oxc_period;
+	struct hrtimer oxc_period_timer;
+	raw_spin_lock oxc_runtime_lock;
+	struct rq rq_;
+	struct rq *rq;
+	struct rb_node rb_node;
+};
+\end{lstlisting}
+
+\begin{itemize}
+\item \texttt{oxc\_nr\_running} is the number of tasks enqueued in the 
+		container's local runqueue. We say these tasks work in 
+		the ox container.
+\item \texttt{oxc\_throttled} is set when an ox container runs out of
+		its budget in a period.
+\item \texttt{oxc\_deadline} is current deadline of this ox container,
+		which is a server in CBS theory.
+\item \texttt{oxc\_time} is currently consumed budget in a period.
+\item \texttt{oxc\_runtime} and \texttt{oxc\_period} are CBS parameters:
+		\texttt{oxc\_runtime} is maximum budget and 
+		\texttt{oxc\_period} is the period.
+\item \texttt{oxc\_period\_timer} is timer which will activate at recharging
+		points. If at some point, the value of \texttt{oxc\_time} is 
+		larger than the value of \texttt{oxc\_runtime}, then
+		\texttt{oxc\_throttled} should be set until 
+		\texttt{oxc\_period\_timer} fires to recharge the container.
+\item \texttt{oxc\_runtime\_lock} guarantee that the timing information of the 
+		oxc is updated in a consistant way.
+\item \texttt{rq\_} is the local runqueue of the ox container.
+\item \texttt{rq} points to a per CPU runqueue and this CPU is where the 
+		ox container reserves bandwidth from.
+\item \texttt{rb\_node} is used to put an ox quneueu in a red black tree.
+		All oxc runqueues reserve bandwidth from the same CPU
+		is put in a red black tree associated with this CPU.
+		In this tree, an ox container's \texttt{oxc\_deadline} 
+		value is used to order nodes.
+		runqueue 
+\end{itemize}
+
+All oxc runqueues that reserve bandwidth from the same CPU are put in the 
+same red black tree, which orders its nodes according to the ox container's
+\texttt{oxc\_deadline} value. The one with latest deadline is stored in the
+leftmost node. 
+\begin{lstlisting}[language=C]
+struct oxc_edf_tree {
+	struct rb_root rb_root;
+	struct rb_node *rb_leftmost;
+};
+\end{lstlisting}
+The pointer \texttt{rb\_leftmost} helps fast access to the latest deadline
+ox container in a CPU.
+
+An ox container is responsible for reserving bandwidth from a CPU.
+Th \texttt{struct hyper\_oxc\_rq} is defined to reserve bandwidth from
+multiple CPUs. 
+\begin{lstlisting}[language=C]
+struct hyper_oxc_rq {
+	cpumask_var_t cpus_allowed;
+	struct oxc_rq ** oxc_rq;
+};
+\end{lstlisting}
+\begin{itemize}
+\item \texttt{cpus\_allowed} specifies the CPUs that are used to reserve 
+				bandwidth.
+\item \texttt{oxc\_rq} is an array of ox containers to reserve bandwidth 			
+		from CPUs specified in \texttt{cpus\_allowed}.
+\end{itemize}
+
+\subsection{Extensions on original data structures}
+Extensions are added in some original data structures in order to merge
+newly defined data structures in the system. Such extensions are not complex.
+\begin{lstlisting}[language=C, caption={Extensions in \texttt{struct rq}}]
+struct rq {
+	...
+	int in_oxc;
+	struct oxc_edf_tree oxc_edf_tree;
+};
+\end{lstlisting}
+As the name says, for an ox container's local runqueue, its 
+\texttt{in\_oxc} field is set. And \texttt{oxc\_edf\_tree} in a 
+per CPU runqueue help locate the ox container's edf tree in a CPU.
+
+In current implementation of oxc framework, reservation is made for 
+tasks in a control group. Tasks in a cgroup is represented in the
+\texttt{struct task\_group} structure. So extensions also happen inside it.
+\begin{lstlisting}[language=C, caption={Extensions in 
+						\texttt{struct task\_group}}]
+struct task_group {
+	...
+	struct hyper_oxc_rq *hyper_oxc_rq;
+	int oxc_label;
+};
+\end{lstlisting}
+Because tasks in a group can span multiple CPUs, the hyper container is
+used to reserve bandwidth for it.
+If a task group runs above a hyper oxc, its \texttt{hyper\_oxc\_rq} points 
+to the hyper container; otherwise, this field is NULL.
+When you associate a hyper container to a task group, its non oxc decendant 
+task groups will also be associated with this hyper container, the 
+\texttt{oxc\_label} field is used to specify this kind of sub task groups.
+
+If a task runs in a ox container, it is called an oxc task. 
+In section \ref{sec:design_oxc_scheduling}, we show how to direct a task
+to the runqueue it runs above, which may be a per CPU or container one.
+A further check of the runqueue's \texttt{in\_oxc} field can tell us
+whether a task is an oxc task or not. Consider that such ''is that an oxc
+task?'' is often used in the framework, a \texttt{is\_oxc\_task} field is
+added in \texttt{struct task\_struct} for efficient reason.
+\begin{lstlisting}[language=C, caption={\texttt{is\_oxc\_task} field in 
+						\texttt{struct task\_struct}}]
+struct task_struct {
+	int is_oxc_task;
+	...
+};
+\end{lstlisting}
+When a task runs in an ox container, this field is set.
+
+\subsection{The point to direct a task to a per ox container runqueue}
+To schedule a task in a per oxc runqueue, the first thing is to associate
+this task with the local runqueue of an oxc. To understand this, let's
+first see how the system associate a task to a runqueue in mainline Linux,
+where there is only per CPU runqueue concepts. 
+\begin{lstlisting}[language=C, 
+	caption={To associate a task with a runqueue in original Linux}]
+void set_task_rq(struct task_struct *p, unsigned int cpu)
+{
+#ifdef CONFIG_FAIR_GROUP_SCHED
+        p->se.cfs_rq = task_group(p)->cfs_rq[cpu];
+        p->se.parent = task_group(p)->se[cpu];
+#endif
+
+#ifdef CONFIG_RT_GROUP_SCHED
+        p->rt.rt_rq  = task_group(p)->rt_rq[cpu];
+#endif
+}
+\end{lstlisting}
+When task group scheduling is enabled, each task is directed to its task group.
+This correspond to the first part of scheduling route. The second part of 
+the scheduling route from task group to per CPU runqueue is done when the 
+task group is created. Figure \ref{tg_creation} shows the hint how a 
+task group joins the scheduling route during its creation.
+\begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{images/tg_creation}
+        \caption{The creation of a task group in original Linux}
+        \label{fig:tg_creation}
+\end{figure}
+In case that task group scheduling is not enabled, recall the scheduling path
+where the \texttt{task\_rq} leads a task to its per CPU runqueue directly.
+
+Now, we have seen the point a task joins the scheduling path in original Linux.
+It's time to see the scenario after per oxc runqueue is imported in Linux.
+Still, \texttt{set\_task\_rq} is the point to associate a task with a 
+runqueue, per CPU or per oxc now.
+\begin{lstlisting}[language=C, 
+        caption={To associate a task with a runqueue under oxc framework}]
+void set_task_rq(struct task_struct *p, unsigned int cpu)
+{
+        struct task_group *tg = task_group(p);
+
+#ifdef CONFIG_FAIR_GROUP_SCHED
+        p->se.cfs_rq = tg->cfs_rq[cpu];
+        p->se.parent = tg->se[cpu];
+#else
+        if(!tg->hyper_oxc_rq)
+                p->se.cfs_rq = &cpu_rq(cpu)->cfs;
+        else
+                p->se.cfs_rq = &tg->hyper_oxc_rq->oxc_rq[cpu]->rq_.cfs;
+#endif
+
+#ifdef CONFIG_RT_GROUP_SCHED
+        p->rt.rt_rq  = tg->rt_rq[cpu];
+        p->rt.parent = tg->rt_se[cpu];
+#else
+        if(!tg->hyper_oxc_rq)
+                p->rt.rt_rq = &cpu_rq(cpu)->rt;
+        else
+                p->rt.rt_rq = &tg->hyper_oxc_rq->oxc_rq[cpu]->rq_.rt;
+#endif
+        if (task_rq_oxc(p)->in_oxc == 1)
+                p->is_oxc_task = 100;
+        else
+                p->is_oxc_task = 0;
+}
+\end{lstlisting}
+                                                  
+When task group scheduling is enabled, there is no difference in cases of 
+original Linux and oxc enabled Linux. The interesting part happens when 
+task group scheduling is not set. This time, given the task group is associated
+with a hyper oxc or not, the task is drected to a per CPU or oxc runqueue. This 
+corresponds the scheduling route in figure \ref{fig:oxc_task_no_tg}. In 
+the end of the method, \texttt{is\_oxc\_task} is configured. 
+\texttt{task\_rq\_oxc} tracks the shceduling route to find the runqueue.
+
+In oxc enabled Linux, a task group can be associated with a hyper oxc and
+the runqueues it contains in three cases:1. when it is created, its parent is 
+associated with a hyper oxc 2. the task group is explicitly attached to
+a hyper oxc 3. one its acendant task group is attached to a hyper oxc.
+\begin{figure}[htbp]
+        \centering
+        \includegraphics[height=0.25\textheight,width=0.5\textwidth]{images/tg_creation_oxc}
+        \caption{The creation of a task group in oxc enabled Linux}
+        \label{fig:tg_creation_oxc}
+\end{figure}
+
+\begin{lstlisting}[language=C,
+        caption={OXC scheduling related initilization 
+					during task group creation}]
+int alloc_oxc_sched_group(struct task_group *tg, struct task_group *parent)
+{
+        int i;
+
+        tg->hyper_oxc_rq = parent->hyper_oxc_rq;
+        if( parent->hyper_oxc_rq) {
+                for_each_possible_cpu(i) {
+#ifdef CONFIG_FAIR_GROUP_SCHED
+                        tg->cfs_rq[i]->rq =
+                                &tg->hyper_oxc_rq->oxc_rq[i]->rq_;
+                        if( !parent->se[i] && tg->se[i])
+                                tg->se[i]->cfs_rq =
+                                      &tg->hyper_oxc_rq->oxc_rq[i]->rq_.cfs;
+#endif
+#ifdef CONFIG_RT_GROUP_SCHED
+                        tg->rt_rq[i]->rq =
+                                &tg->hyper_oxc_rq->oxc_rq[i]->rq_;
+                        if( !parent->rt_se[i] && tg->rt_se[i])
+                                tg->rt_se[i]->rt_rq =
+                                       &tg->hyper_oxc_rq->oxc_rq[i]->rq_.rt;
+#endif
+                }
+                tg->oxc_label = 100;
+        }
+        else
+                tg->oxc_label = 0;
+
+        return 1;
+}
+\end{lstlisting}
+\texttt{alloc\_oxc\_sched\_group} deals with oxc related initialization when a 
+new task group is created. At first, the a newly created task group will inherit
+its parent task group's hyper container. If the parent is an oxc task group, it
+directs its scheduling path to the per oxc runqueue. And the \texttt{oxc\_label}
+for such child oxc task group is 100.
+
+A task group can direct to a OXC local runqueue explicitly through 
+\texttt{init\_tg\_cfs\_entry\_oxc} and \texttt{init\_tg\_rt\_entry\_oxc}.
+Let's have a look at \texttt{init\_tg\_cfs\_entry\_oxc} as an example.
+\begin{lstlisting}[language=C, caption={To explicitlt direct a task group 
+						to an OXC local runqueue}]
+static void init_tg_cfs_entry_oxc(struct task_group *tg,
+					struct cfs_rq *cfs_rq,
+					struct sched_entity *se, int cpu,
+					struct sched_entity *parent,
+					struct oxc_rq *oxc_rq)
+{
+	struct rq *rq = rq_of_oxc_rq(oxc_rq);
+	init_tg_cfs_entry(tg, cfs_rq, se, cpu, parent);
+	tg->cfs_rq[cpu]->rq = rq;
+	if( !parent && se)
+		se->cfs_rq = &rq->cfs;
+} 
+\end{lstlisting}
+Brief explaination on the parameters:
+\begin{itemize}
+\item \texttt{tg} is the task group to be dealt with.
+\item \texttt{cfs\_rq} is the cfs runqueue the cfs entity of this task
+		group is enqueued. 
+\item \texttt{se} is the cfs entity that represents \texttt{tg}.
+\item \texttt{cpu} specifies the cfs\_rq pointer inside \texttt{tg} that
+		will be redirected.
+\item \texttt{parent} points to the parent cfs scheduling entity.
+\item \texttt{oxc\_rq} contains the destinated runqueue. 
+\end{itemize}
+As for codes, \texttt{rq\_of\_oxc\_rq} first returns the OXC local runqueue.
+\texttt{init\_tg\_cfs\_entry} initialize CFS related work for \texttt{tg}.
+Then, \texttt{tg} directs its local \texttt{cfs\_rq} for containing 
+tasks on \texttt{cpu} to the per OXC runqueue just got. From now on, cfs 
+tasks and task groups under \texttt{tg} work in the scheduling route which
+will lead them to an OXC local runqueue. By directing a hierarchy of task
+group to an OXC, there is a top group, which will be enqueud in the per
+OXC runqueue's embedded cfs runqueue directly.
+
+Now we see how to direct a task group to a per OXC runqueue when task group
+scheduling is enabeld. In the whole procedure, tasks under this group is 
+untouched.
+
+\subsection{Run tasks under OXC scheduling framework}
+As long as per OXC runqueue joins the scheduling route, the scheduling 
+of tasks is compatible with modular schedulers in Linux. For an OXC task,
+just pass the task itself and its OXC local runqueue, instead of per CPU
+runqueue, to its corresponding scheduling class. And the scheduler will
+behave as usual.
+
+Because we consider reserving CPU bandwidth for an OXC runqueue, necessary
+operations are performed before relaying a task to its modular scheduler.
+Still scheduling details are not the framework's interest. 
+
+In order to fullfill real time guarantee, oxc tasks are always privileged
+to non oxc tasks. Amg oxc tasks inside a container, the priority relation
+is the same as in Linux. The ox container itself can be considered as a 
+virtual Linux system.
+
+\subsubsection{To obtain the runqueue of a task}
+A method \texttt{tas\_rq\_oxc} is used to obtain the runqueue of a task.
+The runqueue retuned can be oxc local runqueue or per CPU one depending
+that whether the task is inside a container.
+\begin{lstlisting}[language=C]
+struct rq* rq_of_task(struct task_struct *p)
+{
+	struct rq *rq;
+
+#ifdef CONFIG_FAIR_GROUP_SCHED
+	rq = p->se.cfs_rq->rq;
+#else
+	rq = task_rq_fair_oxc(p);
+#endif
+	return rq;
+}
+\end{lstlisting}
+For any task, it has both cfs scheduling entity and rt entity. So the
+rt and cfs scheduling routes both exists for a task. Here, we utilize
+the cfs scheduling route. Given \texttt{CONFIG\_FAIR\_GROUP\_SCHED}
+is set or not, the corresponding scheduling routes are explored to
+track the runqueue.
+
+\subsubsection{To enqueue an oxc task}
+When an oxc task arrives, besides enqueue it in the oxc local runqueue,
+the ox container information may be updated if necesary.
+\begin{lstlisting}[language=C]
+void enqueue_task_oxc(struct rq *rq, struct task_struct *p, int flags)
+{
+	struct oxc_rq *oxc_rq = oxc_rq_of_task(p);
+	struct rq *rq_ = rq_of_oxc_rq(oxc_rq);
+
+	/* Update the local runqueue' clock. */
+	update_rq_clock(rq_);
+
+	/*
+	* Enqueue the task into the local runqueue
+	* by its scheduling class.
+	*/
+	p->sched_class->enqueue_task(rq_, p, flags);
+
+	inc_oxc_tasks(p, oxc_rq);
+	enqueue_oxc_rq(oxc_rq);
+}
+\end{lstlisting}
+\texttt{oxc\_rq\_of\_task} tracks the scheduling route and returns the ox
+container of an oxc task. Then local runqueue's time information is updated.
+Although the ox container does not care about scheduling details of tasks 
+inside it, tasks are enqueued in its local runqueue and may rely the
+runqueue's time information. Then we see all scheduling details are dealt 
+by a task's scheduling class as the \texttt{enqueue\_task} of the
+scheduling class is called with the task and local runqueue.
+The \texttt{inc\_oxc\_tasks} method is simple.
+\begin{lstlisting}[language=C]
+static inline void inc_oxc_tasks(struct task_struct *p, struct oxc_rq *oxc_rq)
+{
+        oxc_rq->oxc_nr_running ++;
+}
+\end{lstlisting}
+
+Until now, the oxc task has been put in the local runqueue. The coming of an
+oxc task in a container may change the relation among ox containers in the
+same edf tree. This is the work of \texttt{enqueue\_oxc\_rq} method. 
+\begin{lstlisting}[language=C]
+static void enqueue_oxc_rq(struct oxc_rq *oxc_rq)
+{
+        int on_rq;
+
+        on_rq = oxc_rq_on_rq(oxc_rq);
+
+        BUG_ON(!oxc_rq->oxc_nr_running);
+        BUG_ON(on_rq && oxc_rq_throttled(oxc_rq));
+
+        if( on_rq) {
+                /* Already queued properly. */
+                return;
+        }
+        /* We do not put a throttled oxc_rq in the edf tree. */
+        if( oxc_rq_throttled(oxc_rq))
+                return;
+
+        oxc_rq_update_deadline(oxc_rq);
+        __enqueue_oxc_rq(oxc_rq);
+}
+\end{lstlisting}
+\texttt{on\_rq} tells if the container \texttt{oxc\_rq} is in a edf tree.
+\texttt{BUG\_ON} is a Linux kernel macro. If the condition it checks is 
+\texttt{true}, then the kernel will crash! Because we just put a task
+in the local runqueue, so the first \texttt{BUG\_ON} should be passed.
+When an ox container runs out of its budget, it should be moved from the
+edf tree, this is what the second \texttt{BUG\_ON} checks. Now we pass
+the two \texttt{BUG\_ONs}. If the \texttt{oxc\_rq} is already on edf 
+tree or moved from the tree because of exhausting budget, nothing to
+be done. There are two conditions for an ox container outside an edf
+tree: it is throttled or it is empty. This means a task just joins
+an empty container. Recall the CBS rules ''when a task arrives and 
+the server is idle, update the deadline if necessary''. This is what
+\texttt{oxc\_rq\_update\_deadline} does. When it comes to CPU reservation,
+an ox container corresponds to a constant bandwidth server in CBS theory.
+texttt{\_enqueue\_oxc\_rq} is quite a mechanical procesure to put an
+oxc runqueue in an edf tree.
+
+\subsubsection{To dequeue an oxc task}
+\texttt{dequeue\_task\_oxc} is the opposite method of 
+\texttt{enqueue\_oxc\_rq}.
+\begin{lstlisting}[language=C]
+static void dequeue_task_oxc(struct rq *rq, struct task_struct *p, int flags)
+{
+        struct rq *rq_ = task_rq_oxc(p);
+        struct oxc_rq *oxc_rq = container_of(rq_, struct oxc_rq, rq_);
+
+        /* Update the local runqueue. */
+        update_rq_clock(rq_);
+        /*
+         * Dequeue the task from the local runqueue 
+         * by its scheduling class.
+         */
+        p->sched_class->dequeue_task(rq_, p, flags);
+
+        dec_oxc_tasks(p, oxc_rq);
+        dequeue_oxc_rq(oxc_rq);
+}
+\end{lstlisting}
+The structure of \texttt{dequeue\_task\_oxc} are the same as 
+\texttt{enqueue\_task\_oxc}: local runqueue's time information is updated,
+local runqueue and task is relayed to the corresponding scheduler, 
+and the task number is decreased. When an oxc task leaves the container,
+it is the time to check if the oxc is empty or not, which is done in
+\texttt{dequeue\_oxc\_rq}.
+\begin{lstlisting}[language=C]
+static void dequeue_oxc_rq(struct oxc_rq *oxc_rq)
+{
+        int on_rq;
+
+        on_rq = oxc_rq_on_rq(oxc_rq);
+        /*
+         * Here we do not expect throttled oxc_rq to be in the edf tree.
+         * Note that when an oxc_rq exceeds its maximum budget,
+         * it is dequeued via sched_oxc_rq_dequeue().
+         */
+        BUG_ON(on_rq && oxc_rq_throttled(oxc_rq));
+        /* 
+         * If an oxc_rq is not in the edf tree, it should be throttled or 
+         * have no tasks enqueued.
+         */
+        BUG_ON(!on_rq && !oxc_rq_throttled(oxc_rq) && !oxc_rq->oxc_nr_running);
+
+        if( on_rq && !oxc_rq->oxc_nr_running) {
+                /* Dequeue the oxc_rq if it has no more tasks. */
+                __dequeue_oxc_rq(oxc_rq);
+                return;
+        }
+}
+\end{lstlisting}
+The comments are explainable enough. \texttt{\_\_dequeue\_oxc\_rq} removes 
+a oxc runqueue from the edf tree.
+
+\subsubsection{To check the preemption}
+When a task wakes up from sleeping or is created, the scheduler will check 
+if it can preempt current running task in the same CPU. If the current task
+is an oxc task and the waking task is not an oxc task, the later cannot
+preempt the current one. If both are non oxc tasks, Linux already has methods
+to check. So here we only interest in the case when the waking task is an
+oxc task.\\
+
+\begin{lstlisting}[language=C]
+static inline int
+check_preempt_oxc_rq(struct task_struct *curr, struct task_struct *p, int flags)
+{
+        struct oxc_rq *oxc_rq = oxc_rq_of_task(p);
+        struct oxc_rq *oxc_rq_curr = oxc_rq_of_task(curr);
+        const struct sched_class *class;
+
+	if(oxc_rq_throttled(oxc_rq)
+		return 0;
+        /* 
+         * Tasks from a unthrottled oxc_rq always has a higher priority 
+         * than non oxc tasks.
+         */
+        if( !oxc_rq_curr)
+                return 1;
+
+        /* Both p and current task are in the same oxc_rq. */
+        if( oxc_rq_curr == oxc_rq) {
+                if( p->sched_class == curr->sched_class) 
+                        curr->sched_class->check_preempt_curr(
+                                      &oxc_rq->rq_, p, flags);
+                else {
+                        for_each_class(class) {
+                                if( class == curr->sched_class)
+                                        break;
+                                if( class == p->sched_class) {
+                                        resched_task(curr);
+                                        break;
+                                }
+                        }
+                }
+
+                return 0;
+        }
+
+        /* p and current tasks are oxc tasks from different ox containers. */
+        return oxc_rq_before(oxc_rq, oxc_rq_curr);
+}
+\end{lstlisting}
+\texttt{curr} and \texttt{p} are the current task and wakeing task respectively.
+If task \texttt{p}'s container is throttled, it cannot preempt currently running task.
+Otherwise, if \texttt{curr} is not an oxc task, \texttt{p} has higher priprity and
+preempt \texttt{curr}. When two tasks are contained in the same oxc runqueue: if 
+they are even in the same scheduling class, it's the modular scheduler's responsibility
+to decide given; otherwise, the task whose scheduling class has higher priority in the
+scheduler chain is chosen to run. In the last case, they two are from different 
+containers. Now, \texttt{oxc\_rq\_before} checks if a contaienr's deadline is before
+another's deadline. The one with smaller deadline will run. 
+
+\subsubsection{To pick up an oxc task}
+When to pick a most eligible task to run, oxc tasks should be checked first.
+If there is no eligible oxc tasks, then non oxc tasks are considered.
+\texttt{pick\_next\_task\_oxc} is responsible for choosing the most 
+eligible oxc task in a CPU.
+\begin{lstlisting}[language=C]
+static struct task_struct* pick_next_task_oxc(struct rq *rq)
+{
+        struct oxc_rq *oxc_rq;
+        struct rq *rq_;
+        struct task_struct *p, *curr;
+        const struct sched_class *class;
+        /* This clock update is necessary! */
+        update_rq_clock(rq);
+        update_curr_oxc_rq(rq);
+        oxc_rq = pick_next_oxc_rq(rq);
+        if( !oxc_rq)
+                return NULL;
+
+        rq_ = rq_of_oxc_rq(oxc_rq);
+
+        update_rq_clock(rq_);
+
+        for_each_class(class) {
+                if( class != &idle_sched_class) {
+                        p = class->pick_next_task(rq_);
+                        if( p) {
+                                rq_->curr = p;
+                                return p;
+                        }
+                }
+        }
+
+        return NULL;
+}
+\end{lstlisting}
+There are one thing to note here: not only local runqueue's clock
+is updated, but also the per CPU runqueue's clock is updated here.
+This is because the reservation time of an ox container is counted
+using the per CPU runqueue's clock and to keep the clock on time
+for the container's use, here it is updated. 
+\texttt{pick\_next\_oxc\_rq} picks the ox runqueue with latest 
+deadline in a CPU. And along the scheduling class chain, each
+scheduler uses its own way trying to find the most eligible
+task in the local runqueue.
+Another import method here is \texttt{update\_curr\_oxc\_rq}.
+The budget comsumption really happens here.
+\begin{lstlisting}[language=C]
+static void update_curr_oxc_rq(struct rq *rq)
+{
+        struct task_struct *curr = rq->curr;
+        struct oxc_rq *oxc_rq = oxc_rq_of_task(curr);
+        u64 delta_exec;
+        /*
+         * If current task is not oxc task, simply return.
+         */
+        if( !oxc_rq)
+                return;
+
+        delta_exec = rq->clock - oxc_rq->oxc_start_time;
+        oxc_rq->oxc_start_time = rq->clock;
+        if( unlikely((s64)delta_exec < 0))
+                delta_exec = 0;
+
+        raw_spin_lock(&oxc_rq->oxc_runtime_lock);
+
+        oxc_rq->oxc_time += delta_exec;
+        if( sched_oxc_rq_runtime_exceeded(oxc_rq)) {
+                resched_task(curr);
+        }
+
+        raw_spin_unlock(&oxc_rq->oxc_runtime_lock);
+}
+\end{lstlisting}
+\texttt{update\_curr\_oxc\_rq} updates the runtime information of 
+an oxc runqueue. If the budget in current period is exhausted, the
+current task needs to be resched. the local spinlock 
+\texttt{oxc\_runtime\_lock} protects the update of runtime from
+interleave.
+\begin{lstlisting}[language=C]
+static int sched_oxc_rq_runtime_exceeded(struct oxc_rq *oxc_rq)
+{
+        u64 runtime = sched_oxc_rq_runtime(oxc_rq);
+        u64 period = sched_oxc_rq_period(oxc_rq);
+
+        /* 
+         * If the runtime is set as 'RUNTIME_INF',
+         * the ox container can run without throttling.
+         */
+        if( runtime == RUNTIME_INF)
+                return 0;
+
+        /* 
+         * If the runtime to be larger the the period,
+         * the ox container can run without throttling.
+         */
+        if( runtime >=period)
+                return 0;
+
+        /* There is still budget left. */
+        if( oxc_rq->oxc_time < runtime)
+                return 0;
+        /* 
+         * The reservation in a period has been exhausted,
+         * to set the throttling label, remove the oxc_rq
+         * from the edf tree and start the recharging timer.
+         */
+        else {
+                oxc_rq->oxc_throttled = 1;
+                sched_oxc_rq_dequeue(oxc_rq);
+                start_oxc_period_timer(oxc_rq);
+
+                return 1;
+        }
+}
+\end{lstlisting}
+Inside \texttt{sched\_oxc\_rq\_runtime\_exceeded}, at first
+a series of non exceeded conditions are checked, which is 
+easy to understand. The last \emph{else} statement deals with
+the case tha tthe container is throttled: the \texttt{oxc\_throttled}
+label is set, the oxc runqueue is removed from the edf tree and 
+the timer is set and will fire at the next deadline to recharge the 
+budget.

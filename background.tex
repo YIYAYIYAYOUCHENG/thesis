@@ -1,11 +1,11 @@
 \chapter{Background\label{chap:background}}
-\section{The Constant Bandwidth Server\label{sec:CBS}}
+\section{The Constant Bandwidth Server theory\label{sec:CBS}}
 A Constant Bandwidth Server(CBS) is characterized by a budget $c_s$ and
-an ordered pair $(Q_s, T_s)$, where $Q_s$ is the maximum budget and $T_s$
+an pair $(Q_s, T_s)$, where $Q_s$ is the maximum budget and $T_s$
 is the period of the server. $U_s = Q_s/T_s$ is called the server bandwidth.
-Such a server can be utilized to serve a set of
-tasks, which can be non real time or (hard and soft) real time tasks. 
-CBS defines rules to reserve bandwidth on a single processor.
+Such a server can be utilized to serve a set of tasks, which can be 
+tasks with soft, hard or non real time guarantee requirements. 
+CBS theory defines rules to reserve bandwidth on a single processor.
 In our work, we use a hard version of CBS.
 
 For a specific server $S$, at any instant, a fixed deadline $d_{s,k}$ is 
@@ -366,12 +366,3 @@ configure the cgroup interface as what we saw in rt
 throttling(\ref{sec:RelatedWork_RT}), the difference is that this time the CPU 
 bandwidth is allocated in a guaranteed way. Also, new cgroup interfaces are 
 added to assist reserved CPU power distribution in the cgroup hierarchy.
-
-\subsection{Motivation from previous work\label{sec:motivation}}
-Based on Linux, CPU bandwidth control can be applied in the level of 
-single tasks or task groups which are shceudled by some policies.
-Such control can be real-time or non real-time. 
-One obervation here is that there does not exist a mechanism that can 
-control CPU bandwidth for all kinds of tasks as a whole. 
-Such a general control mechanism is the initial consideration of 
-OXC framework. 
