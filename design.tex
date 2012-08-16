@@ -55,19 +55,17 @@ lead a task to its per container runqueue. The same codes can still be used to
 find both kinds of runqueues.
 
 \begin{figure}[htbp]
-	\begin{subfigure}
-        \centering
+\begin{center}
+	\subfigure[cfs] {
         \includegraphics[height=2.5cm, width=\textwidth]{images/cfs_scheduling_scheme_tg_oxc}
-        \caption{cfs}
         \label{fig:oxc_fair_tg}
-	\end{subfigure}
-	
-	\begin{subfigure}
-        \centering
+	}
+	\subfigure[rt] {
         \includegraphics[height=2.5cm, width=\textwidth]{images/rt_scheduling_scheme_tg_oxc}
-        %\caption{RT task group shceduling is enabled}
         \label{fig:oxc_rt_tg}
-	\end{subfigure}
+	}
+\end{center}
+	%\end{subfigure}
 	\caption{Scheduling route with task group scheduling 
 						in OXC enabled Linux}
 	\label{fig:scheduling_route_oxc}
@@ -787,3 +785,268 @@ the case tha tthe container is throttled: the \texttt{oxc\_throttled}
 label is set, the oxc runqueue is removed from the edf tree and 
 the timer is set and will fire at the next deadline to recharge the 
 budget.
+
+\subsubsection{put\_prev\_task operation}
+The scheduling operation is called when the currently running task is
+possible to be replaced. It performs some conclusion work for the task.
+Although the currently running task may keep running without being
+preempted. If currently running task is an oxc task, when 
+\texttt{put\_prev\_task} is called, this is also a point to update 
+the ox container information. 
+\begin{lstlisting}[language=C]
+static void put_prev_task_oxc(struct rq* rq, struct task_struct *p)
+{
+        struct rq *rq_ = task_rq_oxc(p);
+
+	update_rq_clock(rq_);
+        update_curr_oxc_rq(rq);
+
+        p->sched_class->put_prev_task(rq_, p);
+}
+\end{lstlisting}
+Now, when a \texttt{put\_prev\_task} operation is needed and the
+currently running task is an oxc task, instead of calling the 
+\texttt{put\_prev\_task} defined in a scheduling class directly, our
+\texttt{put\_prev\_task\_oxc} encapsulation will be called first then
+ox container local runqueue and current task will be relayed to
+the corresponding scheduler.
+
+\subsubsection{set\_curr\_task operation}
+The above \texttt{put\_prev\_task} is the last scheduling operation before 
+a task gives up a CPU (of course, if it is chosen again immediately, it
+can still occupy the CPU). The \texttt{set\_curr\_task} is the first 
+scheduling operation a task performs when it is chosen to use the CPU.
+If the newly chosen task is an oxc task, it is also the point to prepare
+the ox container for time updating.
+\begin{lstlisting}[language=C]
+static void set_curr_task_oxc(struct rq *rq)
+{
+        struct task_struct *curr = rq->curr;
+        struct rq *rq_ = task_rq_oxc(curr);
+        struct oxc_rq *oxc_rq;
+
+        oxc_rq = container_of(rq_, struct oxc_rq, rq_);
+
+        oxc_rq->oxc_start_time = oxc_rq->rq->clock;
+
+        update_rq_clock(rq_);
+        curr->sched_class->set_curr_task(rq);
+}
+\end{lstlisting}
+One thing to note is that inside this encapsulation, the per CPU runqueue
+parameter is passed to the task's corresponding scheduling class. This is
+because \texttt{set\_curr\_task} operation updates the infomation in the 
+scheduling route except for the runqueue itself. So, there is no difference
+to pass which runqueue. The real reason is that, there is a possible
+insconsistent state. Initially, the current task in ox container local
+runqueue is NULL\footnote{This will be fixed in future work}, which is not 
+a special idle task from scheduling class \texttt{sched\_idle}. Because
+\texttt{set\_curr\_task} is called even before the task is enqueued in the
+runqueue( maybe oxc local one). And this will cause problems.
+
+\subsubsection{task\_tick operation}
+The \texttt{task\_tick} operation is the most frequently called scheduling 
+operation and is used to update the task's timing information. So, if
+the task parameter in this method is oxc type, this is the point to
+update the confainer's information and local runqueue's clock.
+\begin{lstlisting}[language=C]
+static void task_tick_oxc(struct rq *rq, struct task_struct *p, int queued)
+{
+        struct rq *rq_ = task_rq_oxc(p);
+
+        update_curr_oxc_rq(rq);
+        update_rq_clock(rq_);
+
+        p->sched_class->task_tick(rq_, p, queued);
+}
+\end{lstlisting}
+
+\subsection{SMP support in oxc framework}
+An ox container based scheduling system on a CPU has no difference with the 
+per CPU based scheduling system. Each ox container works independently and
+they are arranged in one hyper container. For a hyper container, tasks are
+partitioned to each ox container and task migration or load balancing between 
+different ox contaienrs in a hyper container are not realized now.
+
+\subsection{User interfaces provided with OXC framework}
+Currently, oxc framework provides users with cgroup interfaces.
+The CPU reservation functionality is realized through \emph{cpu} cgroup 
+subsystem. This \emph{cpu} cgroup subsystem is for CPU bandwidth control
+in Linux. RT throttling, fairness group scheduling and CFS bandwidth control
+are all realized through it. The following describes how to use the OXC 
+framework and the CPU number is assumed to be 2.
+
+To mount the \emph{cpu} cgroup subsystem(in directory /cgroup):
+\begin{lstlisting}
+	#mount -t cgroup -ocpu none /cgroup
+\end{lstlisting} 
+To create a cgroup for CPU reservation :
+\begin{lstlisting}
+	#mkdir -p /cgroup/cg
+\end{lstlisting}
+Observe the files inside \texttt{/cgroup/cg} directory, there are one
+new file \texttt{cpu.oxc\_control} which is the interface to control
+CPU bandwidth in oxcframework. However, if one tries to see the content
+of this file:
+\begin{lstlisting}
+	#cat /cgroup/cg/cpu.oxc_control
+\end{lstlisting}
+It will display nothing. This is because by default the oxc reservation
+is disabled initially until the reservation is triggered for the first 
+time. The reservation is triggerred by setting reservation parameters.
+To reserve bandwidth in a CPU, three parameters should be specified:
+CPU number, maximum budget and period. For example:
+\begin{lstlisting}
+	#echo 0 100000/1000000 1 20000/500000 > cg/cpu.oxc_control
+\end{lstlisting}
+This command reserve 100ms every 1s on CPU 0 and 20ms every 500ms on CPU 1
+to cgroup \texttt{cg}. 0 and 1 are CPU numbers. 100000 and 20000 are maximum
+budgets and 1000000 and 500000 are periods. The unit for budget and period
+value is millisecond. This follows the convention in \emph{cpu} cgroup
+subsystem. So tasks inside this cgroup and its further sub cgroups will
+run using the above reserved CPU bandwidth. Now we can say \texttt{cg} is
+contained in a hyper ox container.
+
+To ''cat'' the content of the \texttt{cpu.oxc\_control} interface under
+directory \texttt{/cgroup/cg}:
+\begin{lstlisting}
+	#cat /cgroup/cg/cpu.oxc_control
+\end{lstlisting}
+The above parameters set will be displayed:
+\begin{lstlisting}
+	0 100000/1000000 1 20000/500000
+\end{lstlisting}
+
+Reservation parameters can be configured in the same way. Furthermore,
+there is no need to configure reservation parameters for two CPUs at 
+the same time. Suppose in some point, users decide to decrease the 
+reservation from CPU 1, they can simply use the following command.
+\begin{lstlisting}
+	#echo 1 20000/1000000 > cg/cpu.oxc_control
+\end{lstlisting}
+The reservation on CPU 1 is dereased to 20ms every 1s and the reservation
+on another CPU is not interfered. 
+
+To create a sub cgroup for cgroup \texttt{cg}:
+\begin{lstlisting}
+	#mkdir -p /cgroup/cg/cg_0
+\end{lstlisting}
+The cgroup \texttt{cg\_0} is contained in the same hyper container as
+its parent. Try to ''cat'' the \texttt{/cgroup/cg/cg\_0/cpu.oxc\_control}: 
+\begin{lstlisting}
+	#cat /cgroup/cg/cg\_0/cpu.oxc\_control}
+\end{lstlisting}
+An error message will be returned. This is because for a cgroup family
+contained in a hyper container, only the top cgroup has the right to 
+browse and modify reservation parameters.
+
+People can move tasks to cgroup \texttt{cg} and texttt{cg\_0}. For example
+\begin{lstlisting}
+	#echo 1982 > cg/tasks
+	#echo 1983 > cg\_0/tasks
+	...
+\end{lstlisting}
+This moves task with \texttt{pid} 1982 and 1983 to cgroup \texttt{cg} and
+\texttt{cg\_0} respectively. Tasks can be rt tasks or normal tasks. All 
+tasks inside an ox container behave as working on a virtual Linux system
+and utilize the reserved bandwidth. Note here we use ''ox container'', not
+''hyper ox container'', because in temporary iplementation, tasks inside
+a hyper ox container are partitioned into each CPU. 
+
+The oxc tasks can move between different cgroups contained in the same 
+hyper container. They can move between ox containers and hyper containers.
+They can also leave an ox container and return to a non oxc task.
+
+
+Until now, how to reserve CPU bandwidth under oxc framework is introduced.
+Now let's see how to distribute the reserved CPU power.
+ALthough users cannot browse reservation parameters in cgroup
+\texttt{cg\_0}, they can indeed set reservation parameters for 
+\texttt{cg\_0}, which will trigger reserved power redistribution.
+\begin{lstlisting}
+	#echo 0 100000/2000000 1 20000/1000000 > cg/cpu.oxc_control
+\end{lstlisting}
+After this, a new hyper container with reservation parameters
+1000000/1500000 on CPU 0 and 20000/1000000 on CPU 1 will be created
+and \texttt{cg\_0} and its decendant cgroups will be associated with
+it. Now, although \texttt{cg} and \texttt{cg\_0} are still in the same
+hierarchy in the cgroup directory observation, they are indeeded contained
+in two different hyper containers.
+The ideal effct of the above command should also include that the reserved
+bandwidth by \texttt{cg} need to decrease the same vaue as distributed to
+\texttt{tg\_0}. This behaviour is still missed in current prorotype 
+implementation of oxc framework. Yet this is indeed implementable.
+Also, the total reserved bandwidth in the system should not be more one in
+each CPU; this condition test is not realised either.
+
+\subsection{Cooperation with scheduling mechanisms inside Linux}
+When \texttt{CONFIG\_FAIR\_GROUP\_SCHED} and \texttt{CONFIG\_RT\_GROUP\_SCHED}
+are not set; that is, task grouping is not enabled. Tasks work in an ox container
+just as the oxc scheduling theory explains. In fact, in this case, oxc framework
+can work as RT throttling and CFS bandwidth control in a real time behaviour.
+The result of IRMOS real time scheduler can also be achieved by our framework.
+Consider future scheduling classes that are possible to be merged in Linux kernel.
+For example deadline tasks in \texttt{schedule\_deadline} patch, they do not
+have task group scheme. The oxc framework provide them a real time way to group
+their tasks and because of the ''open to extension'' feature for ox container, to
+merge them with oxc framework is natural.
+
+When fairness task group shceduling is enabled, task groups under the same 
+hyper ox container follow the rules of fairness task grouping and share the 
+reserved CPU power. Fairness task group scheduling is applied in different 
+areas independently: each hyper ox container is an area, outside ox containers
+there is the other area. Inside one hyper ox container, bandwidths are reserved
+and task groups inside this hyper ox container share the reserved computation
+power arrording to the fairness task group scheduling rules. 
+
+When \texttt{CONFIG\_RT\_GROUP\_SCHED} is set, RT throttling is enabled.
+Let's first analyze the possible result when RT throttling is applied in
+a hyper ox container. Suppose inside an container, $Q/T$ is the 
+bandwidth reserved from the CPU and RT throttling sets parameters as 
+$Q^{'}/T^{'}$ and $Q^{'}/T^{'} \le Q/T$. The ideal behaviour for such an
+ox container would be : the container distributes reserved CPU power 
+to tasks inside it; and rt tasks inside a group will be throttled when
+$Q^{'}$ units of CPU cycles are exhausted in period $T^{'}$, then non
+rt tasks can run. However, there are also other possibilities.
+For example, $Q^{'}/T^{'} = 1/10$ and $Q/T = 10/50$. Suppose there
+are other higher priority containers in the same CPU and in one period 
+the example container get the right to use the CPU on the last 10 units
+of CPU cycles in its period. RT tasks inside thsi container immediately,
+yet after one unit, they are throttled and has to give up. So, during the
+whole period, rt tasks only run 1 unit over 50 unit of CPU cycles. The RT
+throttling result inside a hyper ox container is not stable. 
+Even we set the period parameter in RT throttling the same as its 
+container's, because of RT throttling using different \emph{hrtimer} 
+from oxc reservation, the unsyhcronization between can also cause even more 
+complex situation.
+
+In a word, to merge RT throttling directly inside container is not efficient.
+One possible solution is to count the time consumption in rt throttling using 
+the same timer, this basically means to implement a copy of RT throttling 
+in oxc framework itself. In such case, if some constraints are put, like
+the RT throttling period should equal to its container's period, we can
+expect predictable behaviour.
+Another solution is simply disable RT throttling inside container, because
+oxc scheduling framework itself can perform the same result in a real time
+way as RT throttling. 
+In current implementation, solution one is used when 
+\texttt{CONFIG\_RT\_GROUP\_SCHED} is set, and result is not satisfiable.
+
+The behaviour when CFS bandwidth control is enabled. We predict the behaviour
+should be similiar to what we see in RT throttling case.
+
+Among cgroup subsystems, there is one \texttt{cpuset} also effecting scheduling
+behaviour in a cgroup.
+After \texttt{cpuset} cgroup subsystem is mounted in a cgroup, there is an 
+interface \texttt{cpuset.cpus} appearring in the dorectory. Which can control
+which CPU the tasks inside this cgroup can use.
+For example, 
+\begin{lstlisting}
+	#echo 1 > cpuset.cpus
+\end{lstlisting}
+This will result tasks inside this cgroup can only run on CPU 1.
+In oxc scheduling framework, we have the concept of hyper ox container, which 
+control which CPUs tasks inside hyper container can run. So, this idea is
+compatible with \texttt{cpuset} cgroup subsystem. However, until now the two
+work independently; future work to bridge the two will make the system more
+efficient.
