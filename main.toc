@@ -4,34 +4,34 @@
 \contentsline {section}{\numberline {1.1}The Constant Bandwidth Server theory}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}The Linux Scheduler}{2}{section.1.2}
 \contentsline {subsection}{\numberline {1.2.1}Scheduling classes}{2}{subsection.1.2.1}
-\contentsline {subsection}{\numberline {1.2.2}Runqueue centered scheduling}{4}{subsection.1.2.2}
-\contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{5}{subsection.1.2.3}
-\contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{7}{subsection.1.2.4}
-\contentsline {section}{\numberline {1.3}Related work}{9}{section.1.3}
-\contentsline {subsection}{\numberline {1.3.1}RT throttling}{9}{subsection.1.3.1}
-\contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{10}{subsection.1.3.2}
-\contentsline {subsection}{\numberline {1.3.3}AQuoSA}{10}{subsection.1.3.3}
-\contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{10}{subsection.1.3.4}
-\contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{11}{subsection.1.3.5}
-\contentsline {chapter}{\numberline {2}Design and development}{12}{chapter.2}
-\contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{12}{section.2.1}
-\contentsline {section}{\numberline {2.2}The oxc scheduling}{13}{section.2.2}
-\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{15}{section.2.3}
-\contentsline {section}{\numberline {2.4}Development of OXC scheduling framework}{15}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Implementation of ox container structure}{16}{subsection.2.4.1}
-\contentsline {subsection}{\numberline {2.4.2}Extensions on original data structures}{18}{subsection.2.4.2}
-\contentsline {subsection}{\numberline {2.4.3}The point to direct a task to a per ox container runqueue}{19}{subsection.2.4.3}
-\contentsline {subsection}{\numberline {2.4.4}Run tasks under OXC scheduling framework}{24}{subsection.2.4.4}
-\contentsline {subsubsection}{To obtain the runqueue of a task}{24}{section*.12}
-\contentsline {subsubsection}{To enqueue an oxc task}{25}{section*.13}
-\contentsline {subsubsection}{To dequeue an oxc task}{27}{section*.14}
-\contentsline {subsubsection}{To check the preemption}{28}{section*.15}
-\contentsline {subsubsection}{To pick up an oxc task}{30}{section*.16}
-\contentsline {subsubsection}{put\_prev\_task operation}{33}{section*.17}
-\contentsline {subsubsection}{set\_curr\_task operation}{34}{section*.18}
-\contentsline {subsubsection}{task\_tick operation}{35}{section*.19}
-\contentsline {subsection}{\numberline {2.4.5}SMP support in oxc framework}{35}{subsection.2.4.5}
-\contentsline {subsection}{\numberline {2.4.6}User interfaces provided with OXC framework}{35}{subsection.2.4.6}
-\contentsline {subsection}{\numberline {2.4.7}Cooperation with scheduling mechanisms inside Linux}{38}{subsection.2.4.7}
-\contentsline {chapter}{\numberline {3}Experimental Results}{41}{chapter.3}
-\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{42}{chapter.4}
+\contentsline {subsection}{\numberline {1.2.2}Runqueue centered scheduling}{5}{subsection.1.2.2}
+\contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{6}{subsection.1.2.3}
+\contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{8}{subsection.1.2.4}
+\contentsline {section}{\numberline {1.3}Related work}{10}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}RT throttling}{10}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{11}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}AQuoSA}{11}{subsection.1.3.3}
+\contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{11}{subsection.1.3.4}
+\contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{12}{subsection.1.3.5}
+\contentsline {chapter}{\numberline {2}Design and development}{13}{chapter.2}
+\contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{13}{section.2.1}
+\contentsline {section}{\numberline {2.2}The oxc scheduling}{14}{section.2.2}
+\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{16}{section.2.3}
+\contentsline {section}{\numberline {2.4}Development of OXC scheduling framework}{16}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Implementation of ox container structure}{17}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Extensions on original data structures}{19}{subsection.2.4.2}
+\contentsline {subsection}{\numberline {2.4.3}The point to direct a task to a per ox container runqueue}{20}{subsection.2.4.3}
+\contentsline {subsection}{\numberline {2.4.4}Run tasks under OXC scheduling framework}{25}{subsection.2.4.4}
+\contentsline {subsubsection}{To obtain the runqueue of a task}{25}{section*.12}
+\contentsline {subsubsection}{To enqueue an oxc task}{26}{section*.13}
+\contentsline {subsubsection}{To dequeue an oxc task}{28}{section*.14}
+\contentsline {subsubsection}{To check the preemption}{29}{section*.15}
+\contentsline {subsubsection}{To pick up an oxc task}{31}{section*.16}
+\contentsline {subsubsection}{put\_prev\_task operation}{34}{section*.17}
+\contentsline {subsubsection}{set\_curr\_task operation}{35}{section*.18}
+\contentsline {subsubsection}{task\_tick operation}{36}{section*.19}
+\contentsline {subsection}{\numberline {2.4.5}SMP support in oxc framework}{36}{subsection.2.4.5}
+\contentsline {subsection}{\numberline {2.4.6}User interfaces provided with OXC framework}{36}{subsection.2.4.6}
+\contentsline {subsection}{\numberline {2.4.7}Cooperation with scheduling mechanisms inside Linux}{39}{subsection.2.4.7}
+\contentsline {chapter}{\numberline {3}Experimental Results}{42}{chapter.3}
+\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{43}{chapter.4}

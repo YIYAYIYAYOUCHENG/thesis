@@ -37,56 +37,80 @@ reserves from a cpu.
 A scheduler is responsible for distributing CPU cycles to tasks in the system
 according to some scheduling algorithm. In Linux, tasks refer to a process or 
 a thread and correspond to the data structure \texttt{struct task\_struct}.
+The emphasis in this section is to clarify the relationships and connections
+among different scheduling components. As for how each scheduling algorithm 
+in Linux is implemented, it's neither the interest of this section or oxc 
+framework. To understand the Linux scheduling architecture is the first step 
+to explore the oxc framework. For details about how linux schedulers work, 
+people can read corresponding chapters in ''wolfgang''''R.Love''.
 
 \subsection{Scheduling classes\label{sec:LinuxSched_classes}}
 Linux scheduling system adapts a modular design, and the basic modularity is
 a scheduling class, which is an instance of \texttt{struct sched\_class}. 
+Scheduling algorithms are implemented as scheduling classes and a 
+scheduling class is a modular scheduler( or simply called a scheduler).
+All modular schedulers composes the generic scheduler in Linux.
 The \texttt{struct sched\_class} defines a set of interfaces which need to be 
-realized in order to implement a scheduler in Linux. 
+realized in order to implement a scheduler in Linux. These methods are all 
+scheduling operations a scheduler in Linux can perform. Each scheduler 
+fullfills details behind the interface and carries out its specific
+scheduling behaviour. 
 There are three scheduling classes in mainline Linux: rt\_sched\_class,
 cfs\_sched\_class and idle\_sched\_class. Each scheduling class is 
 responsible for scheduling a type of tasks. Tasks scheduled
 \texttt{cfs\_sched\_class} are called normal tasks. Tasks scheduled
 by \texttt{rt\_sched\_class} are called rt tasks. 
 \texttt{idle\_sched\_class} deals with special idles tasks which
-does nothing and occupy the CPU when no rt or normal tasks need
-a CPU.
-Each scheduler fullfill
-details behind the interface. Let's have a look at the 
-\texttt{struct sched\_class} structure:
-\begin{lstlisting}
+does nothing and occupy the CPU when no rt or normal tasks need a CPU.
+Now, it's time to see the semantics of scheduling operations for a scheduler.
+\begin{lstlisting}[language=C, 
+		caption={\texttt{Shceduling operations for a scheduler}},
+		label={sched_class}]
 struct sched_class {
 	const struct sched_class *next;
 	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
 	void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
 	void (*check_preempt_curr) (struct rq *rq, struct task_struct *p, int flags);
 	struct task_struct * (*pick_next_task) (struct rq *rq);
+	void (*put_prev_task) (struct rq *rq, struct task_struct *p);
+        void (*set_curr_task) (struct rq *rq);
 	void (*task_tick) (struct rq *rq, struct task_struct *p, int queued);
 	...
 };
 \end{lstlisting}
 \begin{itemize} 
 \item \texttt{next:}
-	Scheduling classes are linked in a chain. Whenever a task is needed 
-	to pick up, the scheduler from the beginning to the end of the chain 
-	is checked until a task is found, as shown in \ref{fig:sched_classes}. 
-	So, schedulers in front have higher priority. 
+	Scheduling classes are linked in a chain, as shown 
+	in \ref{fig:sched_classes}.  Whenever a task is needed,
+	the scheduler from the beginning to the end of the chain 
+	is checked and corresponding scheduling methods are called
+	until a task is found. So, schedulers in front have higher 
+	priority to execute their tasks. 
 \item \texttt{enqueue\_task:}
-	Called when a task enters a runnable state. It puts the scheduling 
-	entity (task or task group) into the runqueue structure, 
-	i.e. \texttt{struct rq}.
+	Called when a task enters a runnable state. The task is then 
+	enqueued into a runqueue, which is an instance of \texttt{struct rq}.
 \item \texttt{dequeue\_task:}
 	When a task is no longer runnable, this function is called to move
-	corresponding scheduling entity out of the runqueue.
+	corresponding task from a runqueue.
 \item \texttt{check\_preempt\_curr:}
 	This function checks if a task that entered the runnable state 
 	should preempt the currently running task.
 \item \texttt{pick\_next\_task:}
-	This function chooses the task to run next.
+	This function chooses the task to run next. The newly picked up
+	one can be the one currently occupting the CPU; in this case,
+	no context switches are needed.
+\item \texttt{put\_prev\_task:}
+	This is the last scheduling activity for a task before it gives
+	up the executing opportunity on a CPU. In fact, it can happen
+	that after this operation, the same task still occupies the 
+	CPU, as it is picked up again through \texttt{pick\_next\_task}.
+\item \texttt{set\_curr\_task:}
+	This is the first scheduling operation for a task after a task 
+	is chosen to occupy the CPU.
 \item \texttt{task\_tick:}
-	This function is the most frequently called function. 
-	It is called every time tick in the system, it might lead to task
-	switch.
+	This function is the most frequently called scheduling function. 
+	It is a good point to update the scheduling information, and 
+	it might lead to task switch.
 \end{itemize} 
 \begin{figure}[htbp]
         \centering
@@ -95,19 +119,29 @@ struct sched_class {
         \label{fig:sched_classes}
 \end{figure}
 The basic scheduling unit in Linux is scheduling entity, which can represent
-tasks or task groups. There are two kinds of scheduling entities:
+both tasks and task groups. There are two kinds of scheduling entities:
 \texttt{struct sched\_entity} for cfs scheduling class and 
 \texttt{struct sched\_rt\_entity} for rt scheduling class.
-When \texttt{CONFIG\_FAIR\_GROUP\_SCHED} is set, cfs task grouping 
-is enabled. And \texttt{CONFIG\_RT\_GROUP\_SCHEED} is the kernel configuration
-for rt task group scheduling.
-\begin{lstlisting}
+To differentiate, here we call them cfs (scheduling) entity and
+rt (scheduling) entity respectively.
+\begin{lstlisting}[language=C, 
+			caption={\texttt{A task embeds scheduling entities}},
+			label={task_struct}]
 struct task_struct {
 	...
 	struct sched_entity se;
 	struct sched_rt_entity rt;
 	...
 };
+\end{lstlisting}
+Both cfs and rt entities are embedded in \texttt{struct task\_struct}. 
+For any task, its status can switch between a cfs task and a rt task
+through methods like \texttt{sched\_setscheduler}.
+
+When \texttt{CONFIG\_FAIR\_GROUP\_SCHED} is set, cfs task grouping 
+is enabled. And \texttt{CONFIG\_RT\_GROUP\_SCHEED} is the kernel configuration
+for rt task group scheduling.
+\begin{lstlisting}
 
 struct task_group {
 #ifdef CONFIG_FAIR_GROUP_SCHED
