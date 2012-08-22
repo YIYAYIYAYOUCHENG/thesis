@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  20 AUG 2012 18:59
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  22 AUG 2012 11:59
 entering extended mode
  %&-line parsing enabled.
 **main
@@ -466,7 +466,7 @@ Overfull \hbox (6.0pt too wide) in paragraph at lines 68--68
 [][][][][][][] 
  []
 
-[3] <images/sched_classes.png, id=220, 589.20125pt x 84.315pt>
+[3] <images/sched_classes.png, id=230, 589.20125pt x 84.315pt>
 File: images/sched_classes.png Graphic file (type png)
 
 <use images/sched_classes.png>
@@ -492,16 +492,16 @@ Overfull \hbox (1.82736pt too wide) in paragraph at lines 162--168
 12 deals with the data struc-ture \OT1/pcr/m/n/12 struct
  []
 
-[5] [6] <images/cfs_scheduling_scheme_tg.png, id=274, 948.54375pt x 120.45pt>
+[5] [6] <images/cfs_scheduling_scheme_tg.png, id=284, 948.54375pt x 120.45pt>
 File: images/cfs_scheduling_scheme_tg.png Graphic file (type png)
 
 <use images/cfs_scheduling_scheme_tg.png> [7]
-<images/scheduling_scheme_no_tg.png, id=300, 447.6725pt x 140.525pt>
+<images/scheduling_scheme_no_tg.png, id=310, 447.6725pt x 140.525pt>
 File: images/scheduling_scheme_no_tg.png Graphic file (type png)
 
 <use images/scheduling_scheme_no_tg.png> [8 <./images/cfs_scheduling_scheme_tg.
 png (PNG copy)> <./images/scheduling_scheme_no_tg.png (PNG copy)>]
-<images/rt_scheduling_scheme_tg.png, id=309, 950.55125pt x 148.555pt>
+<images/rt_scheduling_scheme_tg.png, id=319, 950.55125pt x 148.555pt>
 File: images/rt_scheduling_scheme_tg.png Graphic file (type png)
 
 <use images/rt_scheduling_scheme_tg.png>
@@ -524,16 +524,16 @@ od. In schedule-
 
 ) (./design.tex [11] [12]
 Chapter 2.
-<images/oxc.png, id=355, 196.735pt x 95.35625pt>
+<images/oxc.png, id=365, 196.735pt x 95.35625pt>
 File: images/oxc.png Graphic file (type png)
  <use images/oxc.png> [13
 
 ]
-<images/cfs_scheduling_scheme_tg_oxc.png, id=365, 1041.8925pt x 152.57pt>
+<images/cfs_scheduling_scheme_tg_oxc.png, id=375, 1041.8925pt x 152.57pt>
 File: images/cfs_scheduling_scheme_tg_oxc.png Graphic file (type png)
 
 <use images/cfs_scheduling_scheme_tg_oxc.png>
-<images/rt_scheduling_scheme_tg_oxc.png, id=366, 1044.90375pt x 150.5625pt>
+<images/rt_scheduling_scheme_tg_oxc.png, id=376, 1044.90375pt x 150.5625pt>
 File: images/rt_scheduling_scheme_tg_oxc.png Graphic file (type png)
 
 <use images/rt_scheduling_scheme_tg_oxc.png>
@@ -546,7 +546,7 @@ Overfull \hbox (7.83765pt too wide) in paragraph at lines 62--67
  [][] 
  []
 
-<images/oxc_task_no_tg.png, id=369, 917.4275pt x 396.48125pt>
+<images/oxc_task_no_tg.png, id=379, 917.4275pt x 396.48125pt>
 File: images/oxc_task_no_tg.png Graphic file (type png)
 
 <use images/oxc_task_no_tg.png> [14 <./images/oxc.png (PNG copy)>]
@@ -597,7 +597,7 @@ Overfull \hbox (6.0pt too wide) in paragraph at lines 271--271
 
 LaTeX Warning: Reference `tg_creation' on page 21 undefined on input line 287.
 
-<images/tg_creation.png, id=460, 810.02625pt x 314.17375pt>
+<images/tg_creation.png, id=470, 810.02625pt x 314.17375pt>
 File: images/tg_creation.png Graphic file (type png)
 
 <use images/tg_creation.png>
@@ -606,7 +606,7 @@ Overfull \hbox (6.0pt too wide) in paragraph at lines 303--303
  []
 
 [21 <./images/tg_creation.png (PNG copy)>]
-<images/tg_creation_oxc.png, id=478, 292.09125pt x 269.005pt>
+<images/tg_creation_oxc.png, id=488, 292.09125pt x 269.005pt>
 File: images/tg_creation_oxc.png Graphic file (type png)
 
 <use images/tg_creation_oxc.png>
@@ -653,13 +653,19 @@ Overfull \hbox (8.96947pt too wide) in paragraph at lines 969--981
 
 [38] [39]) (./exp.tex [40] [41]
 Chapter 3.
-) (./conclusion.tex [42
+[42
 
 ]
-Chapter 4.
-) (./main.bbl [43
+Overfull \hbox (19.56938pt too wide) in paragraph at lines 57--68
+\OT1/cmr/m/n/12 spe-cific func-tions. They are \OT1/pcr/m/n/12 set[]ftrace[]fil
+ter \OT1/cmr/m/n/12 and \OT1/pcr/m/n/12 set[]ftrace[]notrace\OT1/cmr/m/n/12 .
+ []
 
-]) [44
+[43]) (./conclusion.tex [44]
+Chapter 4.
+) (./main.bbl [45
+
+]) [46
 
 ] (./main.aux)
 
@@ -667,10 +673,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 9285 strings out of 495061
- 134836 string characters out of 1182621
- 328246 words of memory out of 3000000
- 11681 multiletter control sequences out of 15000+50000
+ 9338 strings out of 495061
+ 135523 string characters out of 1182621
+ 328269 words of memory out of 3000000
+ 11720 multiletter control sequences out of 15000+50000
  13935 words of font info for 50 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,8n,43p,266b,1790s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -689,9 +695,9 @@ onts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl1
 -texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf-texlive/fo
 nts/type1/urw/courier/ucrb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/cour
 ier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb>
-Output written on main.pdf (51 pages, 647532 bytes).
+Output written on main.pdf (53 pages, 656179 bytes).
 PDF statistics:
- 1124 PDF objects out of 1200 (max. 8388607)
- 613 named destinations out of 1000 (max. 500000)
- 275 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1154 PDF objects out of 1200 (max. 8388607)
+ 627 named destinations out of 1000 (max. 500000)
+ 291 words of extra memory for PDF output out of 10000 (max. 10000000)
 

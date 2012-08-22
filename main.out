@@ -25,4 +25,6 @@
 \BOOKMARK [2][-]{subsection.2.4.6}{User interfaces provided with OXC framework}{section.2.4}
 \BOOKMARK [2][-]{subsection.2.4.7}{Cooperation with scheduling mechanisms inside Linux}{section.2.4}
 \BOOKMARK [0][-]{chapter.3}{Experimental Results}{}
+\BOOKMARK [1][-]{section.3.1}{Ftrace in Linux kernel}{chapter.3}
+\BOOKMARK [1][-]{section.3.2}{Experiment set up}{chapter.3}
 \BOOKMARK [0][-]{chapter.4}{Conclusions and Future Work}{}
