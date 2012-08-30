@@ -4,7 +4,7 @@ A Constant Bandwidth Server(CBS) is characterized by a budget $c_s$ and
 an pair $(Q_s, T_s)$, where $Q_s$ is the maximum budget and $T_s$
 is the period of the server. $U_s = Q_s/T_s$ is called the server bandwidth.
 Such a server can be utilized to serve a set of tasks, which can be 
-tasks with soft, hard or non real time guarantee requirements. 
+tasks with soft, hard or non real-time guarantee requirements. 
 CBS theory defines rules to reserve bandwidth on a single processor.
 In our work, we use a hard version of CBS.
 
@@ -42,11 +42,12 @@ among different scheduling components. As for how each scheduling algorithm
 in Linux is implemented, it's neither the interest of this section or oxc 
 framework. To understand the Linux scheduling architecture is the first step 
 to explore the oxc framework. For details about how linux schedulers work, 
-people can read corresponding chapters in ''wolfgang''''R.Love''.
+people can read corresponding chapters in \cite{Wolf} \cite{R.Love}.
 
 \subsection{Scheduling classes\label{sec:LinuxSched_classes}}
 Linux scheduling system adapts a modular design, and the basic modularity is
-a scheduling class, which is an instance of \texttt{struct sched\_class}. 
+a scheduling class, which is an instance of 
+\texttt{struct sched\_class}\footnote{Defined in include/linux/sched.h}. 
 Scheduling algorithms are implemented as scheduling classes and a 
 scheduling class is a modular scheduler( or simply called a scheduler).
 All modular schedulers composes the generic scheduler in Linux.
@@ -56,12 +57,13 @@ scheduling operations a scheduler in Linux can perform. Each scheduler
 fullfills details behind the interface and carries out its specific
 scheduling behaviour. 
 There are three scheduling classes in mainline Linux: rt\_sched\_class,
-cfs\_sched\_class and idle\_sched\_class. Each scheduling class is 
+cfs\_sched\_class and idle\_sched\_class\footnote{Defined in rt.c, fair.c, 
+and idle.c under kernel/sched directory respectively}. Each scheduling class is 
 responsible for scheduling a type of tasks. Tasks scheduled
 \texttt{cfs\_sched\_class} are called normal tasks. Tasks scheduled
 by \texttt{rt\_sched\_class} are called rt tasks. 
 \texttt{idle\_sched\_class} deals with special idles tasks which
-does nothing and occupy the CPU when no rt or normal tasks need a CPU.
+does nothing and occupies the CPU when no rt or normal tasks need a CPU.
 Now, it's time to see the semantics of scheduling operations for a scheduler.
 \begin{lstlisting}[language=C, 
 		caption={\texttt{Shceduling operations for a scheduler}},
@@ -119,11 +121,13 @@ struct sched_class {
         \label{fig:sched_classes}
 \end{figure}
 The basic scheduling unit in Linux is scheduling entity, which can represent
-both tasks and task groups. There are two kinds of scheduling entities:
-\texttt{struct sched\_entity} for cfs scheduling class and 
-\texttt{struct sched\_rt\_entity} for rt scheduling class.
-To differentiate, here we call them cfs (scheduling) entity and
-rt (scheduling) entity respectively.
+both tasks and task groups. There are two kinds of scheduling entities
+\footnote{Both are defined in include/linux/sched.h}:
+cfs (scheduling) entities and rt (scheduling) entities.
+They are separately defined by \texttt{struct sched\_entity} 
+and \texttt{struct sched\_rt\_entity}.
+When we say a task is enqueued in a runqueue, more precisely, it is the task's
+(cfs or rt) scheduling entity is enqueued.
 \begin{lstlisting}[language=C, 
 			caption={\texttt{A task embeds scheduling entities}},
 			label={task_struct}]
@@ -136,12 +140,18 @@ struct task_struct {
 \end{lstlisting}
 Both cfs and rt entities are embedded in \texttt{struct task\_struct}. 
 For any task, its status can switch between a cfs task and a rt task
-through methods like \texttt{sched\_setscheduler}.
+through the system call \texttt{sched\_setscheduler}.
 
 When \texttt{CONFIG\_FAIR\_GROUP\_SCHED} is set, cfs task grouping 
 is enabled. And \texttt{CONFIG\_RT\_GROUP\_SCHEED} is the kernel configuration
-for rt task group scheduling.
-\begin{lstlisting}
+for rt task group scheduling. A task group can contains both rt tasks and
+normal tasks, as shown in listing \ref{task_group}. For each CPU, a task group
+uses a rt entity and a cfs entity to represent its rt tasks and normal tasks.
+Each type of tasks inside a task group is scheduled independently by 
+its own scheduling class.
+\begin{lstlisting}[language=C,
+			caption={\texttt{A task group}},
+			label={task_group}]		
 
 struct task_group {
 #ifdef CONFIG_FAIR_GROUP_SCHED
@@ -160,12 +170,16 @@ struct task_group {
 
 \subsection{Runqueue centered scheduling\label{LinuxSched_rq}}
 Every hook in \texttt{struct sched\_class} deals with the data structure 
-\texttt{struct rq}, which is called run queue in Linux.  We can say that 
+\texttt{struct rq}\footnote{Defined in kernel/sched/core.c}, which is called 
+runqueue in Linux.  We say that 
 Linux scheduling is runqueue centered. In Linux, the \texttt{struct rq} is 
 a per CPU data structure; each cpu is associated with a runqueue. Although 
-the name indicates, \texttt{struct rq} is not a queue. Let's have a look at 
-the inside of a runqueue structure:
-\begin{lstlisting}
+the name indicates, \texttt{struct rq} is not a queue. The \texttt{struct rq}
+contains a large amount of information. Its partial contents that are
+necessary for understanding this article is listed.
+\begin{lstlisting}[language=C,
+			caption={\texttt{The runqueue structure}},
+			label={runqueue}]
 struct rq {
 	...
 	unsigned long nr_running;
@@ -173,6 +187,7 @@ struct rq {
 	struct rt_rq rt;
 	struct task_struct *curr, *idle;
 	u64 clock;
+	u64 clock_task;
 #ifdef CONFIG_SMP
 	int cpu;
 #endif
@@ -180,42 +195,74 @@ struct rq {
 };
 \end{lstlisting}
 \begin{itemize}
-\item \texttt{nr\_running} specifies the number of runnable tasks in the
-	runqueue.
+\item \texttt{nr\_running} specifies the number of runnable tasks 
+	having been enqueued in the runqueue.
 \item \texttt{cfs and rt} are two specific runqueues for 
 	\texttt{cfs\_sched\_class} and \texttt{rt\_sched\_class} respectively. 
 	In order to handle specific type of tasks, different schedulers define 
-	new type of runqueue data structures. For example, \texttt{struct cfs 
-	rq} and \texttt{struct rt\_rq}. 
-\item \texttt{curr} points to the task currently running.
-\item \texttt{idle} points to a special idle task when no other tasks are
-	runnable.
-\item \texttt{clock} is updated by \texttt{update\_rq\_clock} method.
+	new type of runqueue data structures. 
+	When we say a task is enqueued into a runqueue, it is finally into
+	its corresponding specific runqueue.Each task group has one cfs 
+	runqueue and rt runqueue per CPU to enqueue the tasks and sub task
+	groups it contains in that CPU. 
+	Figure \ref{task_group1} adds this new information to the
+	knowledge just introduced for a task group, as in 
+	figure \ref{task_group}. The default task group in the system points
+	their cfs runqueue and rt runqueue to fields contained in the
+	per CPU runqueue directly. 
+\item \texttt{curr} points to the task currently running in this runqueue.
+\item \texttt{idle} points to a special idle task. This is the task occupying
+		the CPU  when no other tasks are runnable.
+\item \texttt{clock and clock\_task} are time information kept by the runqueue.
+	They updated by \texttt{update\_rq\_clock} method and some scheduling
+	operation can rely them as time source.
 \item \texttt{cpu} tells the CPU of this runqueue.
 \end{itemize}
+\begin{lstlisting}[language=C,
+caption={\texttt{Specific runqueue information within a task group}},
+			label={task_group1}]		
+
+struct task_group {
+#ifdef CONFIG_FAIR_GROUP_SCHED
+	/* sched_entity of this group on each cpu */
+	struct sched_entity **se;
+	/* runqueue "owned" by this group on each cpu */
+	struct cfs_rq **cfs_rq;
+	...
+#endif
+#ifdef CONFIG_RT_GROUP_SCHED
+	/* sched_rt_entity of this group on each cpu */
+	struct sched_entity **rt_se;
+	struct rt_rq **rt_rq;
+	...
+#endif
+	...
+};
+\end{lstlisting}
 
 \subsection{Completely Fair scheduler\label{sec:LinuxSched_cfs}}
 Completely fair scheduler is implemented in \texttt{fair\_sched\_class}. 
 Most tasks inside Linux are scheduled by completely fair scheduling class
- and are normal tasks, which can be further divided into three sub 
+and are normal tasks, which can be further divided into three sub 
 types given scheduling policies (\texttt{SCHED\_NORMAL}, \texttt{SCHED\_BATCH}
 and \texttt{SCHED\_IDLE\footnote{This SCHED\_IDLE policy is not related to
 idle\_sched\_class which aims to handle a special idle task.}}).
 
 CFS tries to distribute CPU cycles fairly to tasks and task groups according
 to their \emph{weight}. A specific runqueue structure \texttt{struct cfs\_rq}
-is provided to deal with normal tasks. Recall an instance of such cfs runqueue
-is embedded in the per CPU runqueue and each task group holds a pointer
-to cfs runqueue on each CPU to store tasks belonging to it.
-The scheduling entity handled by cfs scheduling class is 
-\texttt{struct sched\_entity}. Here instead of studying the details of
-CFS, we are going to see how different scheduling components
-(\texttt{sched\_entity}, \texttt{task\_struct}, \texttt{task\_group}
-and \texttt{struct cfs\_rq}) are related.
-\begin{lstlisting}
+is provided to deal with normal tasks. 
+Recall that an instance of such cfs runqueue is embedded in the per 
+CPU runqueue and each task group holds a pointer
+to cfs runqueue on each CPU to store cfs tasks belonging to it.
+A little more details on cfs runqueue and cfs scheduling entity are followed.
+%The scheduling entity handled by cfs scheduling class is 
+%\texttt{struct sched\_entity}. Here instead of studying the details of
+%CFS, we are going to see how different scheduling components
+\begin{lstlisting}[language=C,
+		caption={\texttt{The cfs runqueue}},
+		label={cfsrunqueue}]
 struct cfs_rq {
         unsigned long nr_running;
-        u64 min_vruntime;
         struct rb_root tasks_timeline;
 #ifdef CONFIG_FAIR_GROUP_SCHED
         struct rq *rq;  
@@ -225,16 +272,21 @@ struct cfs_rq {
 };
 \end{lstlisting}
 \begin{itemize}
-\item \texttt{nr\_running} is the number of tasks in this cfs runqueue.
-\item \texttt{min\_vruntime} tracks the minimum virtual runtime of all
-	tasks associated with this cfs runqueue.
-\item \texttt{tasks\_timeline} is the root of the red-black tree where 
-	all tasks associated with this cfs runqueue is stored. Tasks are 
-	ordered by their virtual run time value.
-\item \texttt{rq} is the per CPU runqueue this cfs runqueue is embedded in.
+\item \texttt{nr\_running} is the number of cfs tasks(entities) in this cfs 
+	runqueue.
+\item \texttt{tasks\_timeline} is the root of the red-black tree 
+	\cite{rbtree} where 
+	all cfs entities enququed into this cfs runqueue is stored. 
+	This article will not go into details of the red-black tree
+	mechanism, people only need to know it is an efficient way 
+	to sort and access data elements.
+\item \texttt{rq} is the per CPU runqueue that the task group \texttt{tg} 
+	is finally enqueued.
 \item \texttt{tg} is the task group that owns this cfs runqueue.
 \end{itemize}
-\begin{lstlisting}
+\begin{lstlisting}[language=C,
+			caption={\texttt{The cfs scheduling entity}},
+			label={sched_entity}]
 struct sched_entity {
 	...
 	struct cfs_rq *cfs_rq;
@@ -246,15 +298,19 @@ struct sched_entity {
 \end{lstlisting}
 \begin{itemize}
 \item \texttt{cfs\_rq} is where this entity is to be queued.
+		
 \item \texttt{my\_rq} is the cfs runqueue owned by this entity(group).
-	Remember that a schedulign entity can also represent a task group.
+	Remember that a scheduling entity can also represent a task group.
 \end{itemize}
-When cfs task group scheduling is enabled. In this case, the cfs scheduling 
-scheme is shown in figure\ref{fig:cfs_scheme_tg}. This is not a complete
-scheme: 1) Under a task group there could be sub groups, which behave as 
-the task in the figure 2) In the system, there is a top group, which includes
-all tasks in the system defaultly; tasks in this group are enqueued in the
-cfs runqueue embedded in the per CPU runqueue directly.
+Now there is enough information to show how different scheduling components
+(\texttt{sched\_entity}, \texttt{task\_struct}, \texttt{task\_group}
+and \texttt{struct cfs\_rq}) are related in completely fair scheduler.
+
+In this case that cfs task group scheduling is enabled. the cfs scheduling 
+scheme is shown in figure\ref{fig:cfs_scheme_tg}. 
+This is not a complete scheme: 1) Under a task group there could be sub groups, which behave as the task in the figure 2) In the system, there is a top group, 
+which includes all tasks in the system by default; tasks in this group are 
+enqueued in the cfs runqueue embedded in the per CPU runqueue directly.
 \begin{figure}[htbp]
         \centering
         \includegraphics[width=\textwidth]{images/cfs_scheduling_scheme_tg}
@@ -265,13 +321,24 @@ cfs runqueue embedded in the per CPU runqueue directly.
 If cfs task group scheduling is not enabled, a task is directed to its 
 per CPU runqueue by a \emph{task\_rq} marco. \emph{task\_rq} also works 
 for rt tasks when rt task group scheduling is not enabled.
-\ref{fig:sched_scheme_no_tg}.
+\ref{fig:cfs_scheme_no_tg}.
 \begin{figure}[htbp]
         \centering
         \includegraphics[height=0.1\textheight,width=0.5\textwidth]{images/scheduling_scheme_no_tg}
         \caption{Scheduling scheme without group scheduling}
-        \label{fig:sched_scheme_no_tg}
+        \label{fig:cfs_scheme_no_tg}
 \end{figure}
+
+We call the scheme in figure \ref{fig:cfs_scheme_tg} and 
+\ref{fig:cfs_scheme_no_tg} \emph{scheduling routes} in cfs scheduling. 
+The route source is a task and the destination is a runqueue. 
+The feature of a scheduling route is that if one component in the route 
+is known, then other scheduling components in the direction towards the 
+destination can be tracked.
+The concept of scheduling route is first invented in our work. 
+Later you will see the theory behind oxc framework explores scheduling routes
+in Linux extensivly. We believe a new concept is deserved in formalizing 
+the work for oxc framework.
 
 \subsection{Real time scheduler\label{sec:LinuxSched_rt}}
 Tasks with POSIX real time policies \texttt{SCHED\_FIFO} and \texttt{SCHED\_RR}
@@ -289,7 +356,9 @@ cannot be preempted by a lower priority task.
 
 The rt scheduling class provides with a sub runqueue structure 
 \texttt{struct rt\_rq} to deal with rt tasks.
-\begin{lstlisting}
+\begin{lstlisting}[language=C,
+		caption={\texttt{The rt runqueue}},
+		label={rtrunqueue}]
 struct rt_rq {
 	struct rt_prio_array active;
         unsigned long rt_nr_running;
@@ -305,13 +374,14 @@ struct rt_prio_array {
 	struct list_head queue[MAX_RT_PRIO];
 };
 \end{lstlisting}
-All rt tasks with the same priority are kept in a linked list headed by
-$active.queue[prio]$. If there is a task in the liset, the corresponding 
-bit in $active.bitmap$ is set.
-
-The connections among \texttt{struct sched\_rt\_entity} and other scheduling
-components are similar to the \text{struct sched\_entity} case.
-\begin{lstlisting}
+All rt tasks with the same priority, let's say $prio$, are kept in a linked 
+list headed by $active.queue[prio]$. If there is a task in the list, the 
+corresponding bit in $active.bitmap$ is set. All other fields have the same
+meaning as in cfs runqueue. Compare with the cfs scheduling entity, the 
+following \texttt{struct sched\_rt\_entity} is self explanatory enough. 
+\begin{lstlisting}[language=C,
+		caption={\texttt{The rt scheduling entity}},
+		label={rt_entity}]
 struct sched_rt_entity {
 	...
 	struct rt_rq *rt_rq;
@@ -321,8 +391,11 @@ struct sched_rt_entity {
 	...
 }; 
 \end{lstlisting}
+
+%The connections among \texttt{struct sched\_rt\_entity} and other scheduling
+%components are similar to the \text{struct sched\_entity} case.
 When \texttt{CONFIG\_RT\_GROUP\_SCHED} is set, figure\ref{fig:rt_scheme_tg} 
-shows the scheduling scheme of rt tasks. If rt task group scheduling is 
+shows the scheduling route for rt scheduling. If rt task group scheduling is 
 not enabled, still \emph{task\_rq} marco will be used.
 \begin{figure}[htbp]
         \centering

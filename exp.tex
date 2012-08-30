@@ -68,16 +68,60 @@ to these files is listed in \texttt{available\_filter\_functions}.
 
 \section{Experiment set up}
 
+The hardware and software used in the experiment is shown in 
+table \ref{tab:exp_setup}.
 \begin{table}[hbp]
   \centering
   \begin{tabular}{ll}\hline
-	Hardware platform\hspace{4cm}		& 	\\
-	Processor			&	 AMD 	\\
-	Frequency			& 1666MHz\\
-	RAM size			& 512 Mb \\\hline
-    %First row &  centred   &  .7  \\\hline\hline
+	\emph{Hardware platform}\hspace{4cm}		& 	\\
+	Processor			& Intel(R) Core(TM) Duo E8500	 \\
+	Frequency			& 3.16GHz\\
+					&	\\	
+	\emph{Software platform}\hspace{4cm}		& 	\\
+	Linux distribution		& Ubuntu 11.10\\
+	Compiler version		& gcc 4.6.1\\
+	Kernel version			& 3.4.0-rc+ \\\hline
   \end{tabular}
   \caption{Hardware-Software platform}
-  \label{tab:mytable}
+  \label{tab:exp_setup}
 \end{table}
+
+In a Linux system, even if the oxc patch is applied in the kernel, when there is
+no reservation enabled, the system performs as a plain Linux system. The possible
+overheads in this case include the code execution time in function 
+\texttt{is\_oxc\_task} and the oxc related initialization when a scheduling group
+is created; both are negligible.
+
+In the following experiments, we compare the oxc way to control cpu bandwidth 
+with two non real-time CPU power management methods inside the kernel: 
+rt throtttling and cfs bandwidth control.
+%In the experiment, different number of hyper oxc numbers in a system is
+%considered: 1, 2, and 4 ox containers. Each oxc contains 2 dummy tasks, which are 
+%assigned to different CPUs and run 100 micro seconds every 1 milli second.
+%A dummy task is simply a forever while loop. 
+%
+%As for kernel options concern with scheduling, 
+%\texttt{CONFIG\_FAIR\_GROUP\_SCHED} is set and \texttt{CONFIG\_RT\_GROUP\_SCHED} 
+%and \texttt{CONFIG\_CFS\_BANDWIDTH} are not set. During tests for cfs tasks,
+%only tasks in the top cgroup in the system and an ox container are tested.
+%
+\section{tbench}
+Tbench is a filesystem benchmark that generates load patterns similar to those
+of the commercial Netbench benchmark, but without requiring a lab of Windows
+load generators to run.
+
+
+
+
+\section{The oxc control \emph{vs.} cfs bandwidth control}
+\section{The oxc control \emph{vs.} rt throttling}
+The oxc framework and rt throttling mechanism can manage CPU bandwidth for 
+rt tasks in real-time and non real-time respectively. In this section, the 
+overhead brought by our oxc control is compared with the result when rt 
+throttling is used.
+e
+The load used is Fixed Time Quanta \cite{ftq} benchmark, executed at rt 
+priority. FTQ measures the amount of work done in a fixed time quantum
+periodically. 
+\subsection{To enqueue a task and dequeue a task}
 
