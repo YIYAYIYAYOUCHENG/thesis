@@ -1,7 +1,10 @@
 \chapter{Experimental Results\label{chap:exp}}
-The overhead introduced by oxc framework composes two parts:
+The overhead introduced by oxc framework composes three parts:
 \begin{itemize}
-\item The time required to execute the code of framework functions.
+\item The degression in modular schedulers' performance when they 
+	work under the oxc framework. This is largly because current
+	framework implementation is not matured enough.
+\item The time required to execute codes brought framework functions.
 \item The context switches introduced by the oxc framework.
 \end{itemize}
 
@@ -15,6 +18,29 @@ kernel, there is previous work .... This may help readers understand what
 happens under the oxc framework. In the rest of this chapter, our experiment
 will concentrate on measuring execution time of oxc functions.
 
+In a Linux system, even if the oxc patch is applied in the kernel, when there 
+is no reservation enabled, the system performs as a plain Linux system. 
+The possible overheads in this case include the code execution time in 
+function \texttt{is\_oxc\_task} and the oxc related initialization when a 
+scheduling group is created; both are negligible.
+
+The hardware and software used in the experiment is shown in 
+table \ref{tab:exp_setup}.
+\begin{table}[thbp]
+  \centering
+  \begin{tabular}{ll}\hline
+	\emph{Hardware platform}\hspace{4cm}		& 	\\
+	Processor			& Intel(R) Core(TM) Duo E8500	 \\
+	Frequency			& 3.16GHz\\
+					&	\\	
+	\emph{Software platform}\hspace{4cm}		& 	\\
+	Linux distribution		& Ubuntu 11.10\\
+	Compiler version		& gcc 4.6.1\\
+	Kernel version			& 3.4.0-rc+ \\\hline
+  \end{tabular}
+  \caption{Hardware-Software platform}
+  \label{tab:exp_setup}
+\end{table}
 \section{Ftrace in Linux kernel}
 Ftrace is an internal tracer designed to help out developers of systems to
 find out what is going on inside the kernel. The name ftrace comes from
@@ -66,62 +92,51 @@ tracing of specific functions. They are \texttt{set\_ftrace\_filter} and
 \texttt{set\_ftrace\_notrace}. A list of available functions that you can add
 to these files is listed in \texttt{available\_filter\_functions}.
 
-\section{Experiment set up}
+\section{Dbench}
+The dbench benchmark is a tool that measures disk throughput for simulated
+netbench run Dbench reads a load description file called client.txt that was
+derived from a network sniffer dump of a real netbench run and produces the
+filesystem load according to the description file. It does no networking calls.
+One exmple to run dbench test:
+\begin{lstlisting}
+	dbench 2 -t 100
+\end{lstlisting}
+\begin{itemize}
+\item 2 indicates the number of clients in the simulated netbench run.
+\item \texttt{-t} sets the runtime of the benchmark in seconds (default 600).
+\end{itemize}
+So, this command means that two dbench threads will run simultaneously for 
+100 seconds.
 
-The hardware and software used in the experiment is shown in 
-table \ref{tab:exp_setup}.
-\begin{table}[hbp]
-  \centering
-  \begin{tabular}{ll}\hline
-	\emph{Hardware platform}\hspace{4cm}		& 	\\
-	Processor			& Intel(R) Core(TM) Duo E8500	 \\
-	Frequency			& 3.16GHz\\
-					&	\\	
-	\emph{Software platform}\hspace{4cm}		& 	\\
-	Linux distribution		& Ubuntu 11.10\\
-	Compiler version		& gcc 4.6.1\\
-	Kernel version			& 3.4.0-rc+ \\\hline
-  \end{tabular}
-  \caption{Hardware-Software platform}
-  \label{tab:exp_setup}
-\end{table}
+\section{Overhead evaluation}
+\subsection{The experiment design}
+There will be six individual tests differing in the number of
+hyper ox containers in the system, from 1 to 6.
+The hyper ox containers in the experiment are identical.
+Each hyper ox-container has two ox containers with CPU reservation parameter
+$0.1ms/1ms$. Each ox container has one dummy task within it. The dummy task
+is simply running a forever while loop and it is a normal task. This while loop
+task will exhuaust the reservation in a ox container. During each 
+test, the execution time of following oxc functions are measured by Ftrace:
+\begin{itemize} 
+\item \texttt{check\_preempt\_curr\_oxc}
+\item \texttt{pick\_next\_task\_oxc}
+\item \texttt{put\_prev\_task\_oxc}
+\item \texttt{set\_curr\_task\_oxc}
+\item \texttt{task\_tick\_oxc}
+\end{itemize} 
+There are other oxc functions, like \texttt{enqueue\_task\_rq\_oxc}, not
+included in the list because they are not called so often.
 
-In a Linux system, even if the oxc patch is applied in the kernel, when there is
-no reservation enabled, the system performs as a plain Linux system. The possible
-overheads in this case include the code execution time in function 
-\texttt{is\_oxc\_task} and the oxc related initialization when a scheduling group
-is created; both are negligible.
+The measured execution time of above oxc functions comprises the time 
+consumed by codes involving with the oxc control and operations defined 
+in modular scheduler which are encapsulated inside the above functions.
+Here the situation for cfs scheduling inside an ox container is very simple.
+And the experiment analysis can focus on oxc control overhead.
 
-In the following experiments, we compare the oxc way to control cpu bandwidth 
-with two non real-time CPU power management methods inside the kernel: 
-rt throtttling and cfs bandwidth control.
-%In the experiment, different number of hyper oxc numbers in a system is
-%considered: 1, 2, and 4 ox containers. Each oxc contains 2 dummy tasks, which are 
-%assigned to different CPUs and run 100 micro seconds every 1 milli second.
-%A dummy task is simply a forever while loop. 
-%
-%As for kernel options concern with scheduling, 
-%\texttt{CONFIG\_FAIR\_GROUP\_SCHED} is set and \texttt{CONFIG\_RT\_GROUP\_SCHED} 
-%and \texttt{CONFIG\_CFS\_BANDWIDTH} are not set. During tests for cfs tasks,
-%only tasks in the top cgroup in the system and an ox container are tested.
-%
-\section{tbench}
-Tbench is a filesystem benchmark that generates load patterns similar to those
-of the commercial Netbench benchmark, but without requiring a lab of Windows
-load generators to run.
-
-
+\subsection{Experiment results}
 
 
-\section{The oxc control \emph{vs.} cfs bandwidth control}
-\section{The oxc control \emph{vs.} rt throttling}
-The oxc framework and rt throttling mechanism can manage CPU bandwidth for 
-rt tasks in real-time and non real-time respectively. In this section, the 
-overhead brought by our oxc control is compared with the result when rt 
-throttling is used.
-e
-The load used is Fixed Time Quanta \cite{ftq} benchmark, executed at rt 
-priority. FTQ measures the amount of work done in a fixed time quantum
-periodically. 
-\subsection{To enqueue a task and dequeue a task}
+
+
 

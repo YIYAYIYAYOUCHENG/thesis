@@ -34,10 +34,9 @@
 \contentsline {subsection}{\numberline {2.4.6}User interfaces provided with OXC framework}{37}{subsection.2.4.6}
 \contentsline {subsection}{\numberline {2.4.7}Cooperation with scheduling mechanisms inside Linux}{40}{subsection.2.4.7}
 \contentsline {chapter}{\numberline {3}Experimental Results}{43}{chapter.3}
-\contentsline {section}{\numberline {3.1}Ftrace in Linux kernel}{43}{section.3.1}
-\contentsline {section}{\numberline {3.2}Experiment set up}{45}{section.3.2}
-\contentsline {section}{\numberline {3.3}tbench}{45}{section.3.3}
-\contentsline {section}{\numberline {3.4}The oxc control \emph {vs.} cfs bandwidth control}{46}{section.3.4}
-\contentsline {section}{\numberline {3.5}The oxc control \emph {vs.} rt throttling}{46}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}To enqueue a task and dequeue a task}{46}{subsection.3.5.1}
+\contentsline {section}{\numberline {3.1}Ftrace in Linux kernel}{44}{section.3.1}
+\contentsline {section}{\numberline {3.2}Dbench}{45}{section.3.2}
+\contentsline {section}{\numberline {3.3}Overhead evaluation}{46}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}The experiment design}{46}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Experiment results}{46}{subsection.3.3.2}
 \contentsline {chapter}{\numberline {4}Conclusions and Future Work}{47}{chapter.4}
