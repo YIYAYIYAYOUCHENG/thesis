@@ -1,9 +1,9 @@
 \chapter{Experimental Results\label{chap:exp}}
 The overhead introduced by oxc framework composes three parts:
 \begin{itemize}
-\item The degression in modular schedulers' performance when they 
-	work under the oxc framework. This is largly because current
-	framework implementation is not matured enough.
+%\item The degression in modular schedulers' performance when they 
+%	work under the oxc framework. This is largly because current
+%	framework implementation is not matured enough.
 \item The time required to execute codes brought framework functions.
 \item The context switches introduced by the oxc framework.
 \end{itemize}
@@ -115,14 +115,15 @@ hyper ox containers in the system, from 1 to 6.
 The hyper ox containers in the experiment are identical.
 Each hyper ox-container has two ox containers with CPU reservation parameter
 $0.1ms/1ms$. Each ox container has one dummy task within it. The dummy task
-is simply running a forever while loop and it is a normal task. This while loop
-task will exhuaust the reservation in a ox container. During each 
-test, the execution time of following oxc functions are measured by Ftrace:
+is simply running a forever while loop and it is a rt task with policy
+\texttt{SCHED\_FIFO}. This while loop task will exhuaust the reservation in a 
+ox container. During each test, the execution time of following oxc functions 
+are measured by Ftrace:
 \begin{itemize} 
 \item \texttt{check\_preempt\_curr\_oxc}
 \item \texttt{pick\_next\_task\_oxc}
 \item \texttt{put\_prev\_task\_oxc}
-\item \texttt{set\_curr\_task\_oxc}
+%\item \texttt{set\_curr\_task\_oxc}
 \item \texttt{task\_tick\_oxc}
 \end{itemize} 
 There are other oxc functions, like \texttt{enqueue\_task\_rq\_oxc}, not
@@ -133,10 +134,68 @@ consumed by codes involving with the oxc control and operations defined
 in modular scheduler which are encapsulated inside the above functions.
 Here the situation for cfs scheduling inside an ox container is very simple.
 And the experiment analysis can focus on oxc control overhead.
+This is also the reason why the dummy task is configured as a rt task since 
+rt scheduler tself is simpler then cfs scheduling.
 
 \subsection{Experiment results}
+The statistics results of 6 tests are listed in table \ref{tab:exp_res}.
+The two fields in the pair are average time and standard deviation and are
+measured in nano seconds.
+\begin{table}[thbp]
+	\centering
+	\begin{tabular}{|l||c|c|c|c|c|c|}\hline
+		& \tiny{test1} & \tiny{test2} & \tiny{test3} & \tiny{test4} & \tiny{test5} & \tiny{test6}\\\hline
+	\tiny{pick\_next\_task\_oxc} &\tiny{(0.168, 0.083)} &\tiny{(0.155, 0.070)} &\tiny{(0.206, 0.178)} 
+							&\tiny{(0.230, 0.215)} &\tiny{(0.211, 0.216)} & \tiny{(0.246, 0.251)} \\\hline
+	\tiny{put\_prev\_task\_oxc} &\tiny{(0.827, 0.049)} & \tiny{(0.834, 0.096)}&\tiny{(0.820, 0.103)} &\tiny{(0.801, 0.111)} &
+					\tiny{(0.829, 0.146)} & \tiny{(0.852, 0.251)}\\\hline
+	\tiny{task\_tick\_oxc} &\tiny{(0.272, 0.192)} & \tiny{(0.275, 0.182)}&\tiny{(0.263, 0.155)} & \tiny{(0.261,0.15)}& \tiny{(0.245,0.158)}& 
+					\tiny{(0.249,0.146)}\\\hline
+	\tiny{check\_preempt\_curr\_oxc} & - & - & - & - & - & - \\\hline
+	\end{tabular}
+	\caption{Experimental results in the format of 
+					(mean, standard deviation)}
+	\label{tab:exp_res}
+\end{table}
+The first observation must be the strange row for 
+\texttt{check\_preempt\_curr\_oxc}. This function is not a big soure for 
+oxc control overhead. The comparation between two tasks in dfferent ox 
+containers or one in oxc and the other outside containers is just several
+instructions. And when two tasks are inside the same ox container, the 
+workload is not on the body of oxc control codes. Maybe because this reason, 
+the ftrace does not catch any information for it during tests. This also says
+in order to evaulate our framework, to develop a new tracing tool could benefit.
 
+The variable parameter in each test is the number of ox containers.
+And experimental results show that at least in current oxc framework, the
+codes execution time are influenced by the number of containers in the
+system.
+\begin{figure}[h!]%tbp]
+        \centering
+        \includegraphics[width=\textwidth]{images/pick_next_task_oxc}
+        \caption{Experiment results for \texttt{pick\_next\_task\_oxc}}
+        \label{fig:pick_next}
+\end{figure}
 
+Figure \ref{fig:pick_next} shows the statistical result of 
+\texttt{pick\_next\_task\_oxc} in each test. One observation from the figure
+is that with more ox containers joining the system, the time spent on executing
+the function codes becomes more unstable. This trend also reflects in the
+results for \texttt{put\_prev\_task\_oxc}, shown in figure \ref{fig:put_prev}.
 
+\begin{figure}[h!]%tbp]
+        \centering
+        \includegraphics[width=\textwidth]{images/put_prev_task_oxc}
+        \caption{Experiment results for \texttt{put\_prev\_task\_oxc}}
+        \label{fig:put_prev}
+\end{figure}
+However, from figure \ref{fig:task_tick} for \texttt{task\_tick\_oxc} shows
+both stable mean value and standard deviation in all tests.
+\begin{figure}[h!]%tbp]
+        \centering
+        \includegraphics[width=\textwidth]{images/task_tick_oxc}
+        \caption{Experiment results for \texttt{task\_tick\_oxc}}
+        \label{fig:task_tick}
+\end{figure}
 
 
