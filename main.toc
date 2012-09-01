@@ -35,8 +35,12 @@
 \contentsline {subsection}{\numberline {2.4.7}Cooperation with scheduling mechanisms inside Linux}{40}{subsection.2.4.7}
 \contentsline {chapter}{\numberline {3}Experimental Results}{43}{chapter.3}
 \contentsline {section}{\numberline {3.1}Ftrace in Linux kernel}{44}{section.3.1}
-\contentsline {section}{\numberline {3.2}Dbench}{45}{section.3.2}
-\contentsline {section}{\numberline {3.3}Overhead evaluation}{46}{section.3.3}
+\contentsline {section}{\numberline {3.2}Tbench}{46}{section.3.2}
+\contentsline {section}{\numberline {3.3}Experiment A}{46}{section.3.3}
 \contentsline {subsection}{\numberline {3.3.1}The experiment design}{46}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}Experiment results}{46}{subsection.3.3.2}
-\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{51}{chapter.4}
+\contentsline {subsection}{\numberline {3.3.2}Experiment results}{47}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Experiment B}{52}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Experiment design}{52}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Experiment results}{53}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}What learnt from the experiment}{55}{subsection.3.4.3}
+\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{58}{chapter.4}
