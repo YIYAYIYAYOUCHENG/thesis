@@ -39,8 +39,8 @@
 \contentsline {section}{\numberline {3.3}Experiment A}{46}{section.3.3}
 \contentsline {subsection}{\numberline {3.3.1}The experiment design}{46}{subsection.3.3.1}
 \contentsline {subsection}{\numberline {3.3.2}Experiment results}{48}{subsection.3.3.2}
-\contentsline {section}{\numberline {3.4}Experiment B}{53}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Experiment design}{53}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}Experiment results}{54}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}What learnt from the experiment}{55}{subsection.3.4.3}
-\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{59}{chapter.4}
+\contentsline {section}{\numberline {3.4}Experiment B}{51}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Experiment design}{51}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Experiment results}{52}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Experiment feedbacks}{56}{subsection.3.4.3}
+\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{57}{chapter.4}

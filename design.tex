@@ -612,7 +612,7 @@ preempt the current one. If both are non oxc tasks, Linux already has methods
 to check. So here we only interest in the case when the waking task is an
 oxc task.\\
 
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, label={check_preempt}]
 static inline int
 check_preempt_oxc_rq(struct task_struct *curr, struct task_struct *p, int flags)
 {
@@ -667,7 +667,7 @@ When to pick a most eligible task to run, oxc tasks should be checked first.
 If there is no eligible oxc tasks, then non oxc tasks are considered.
 \texttt{pick\_next\_task\_oxc} is responsible for choosing the most 
 eligible oxc task in a CPU.
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, label={list:pick_next}]
 static struct task_struct* pick_next_task_oxc(struct rq *rq)
 {
         struct oxc_rq *oxc_rq;
@@ -793,7 +793,7 @@ Although the currently running task may keep running without being
 preempted. If currently running task is an oxc task, when 
 \texttt{put\_prev\_task} is called, this is also a point to update 
 the ox container information. 
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, label={list:put_prev}]
 static void put_prev_task_oxc(struct rq* rq, struct task_struct *p)
 {
         struct rq *rq_ = task_rq_oxc(p);
@@ -849,7 +849,7 @@ The \texttt{task\_tick} operation is the most frequently called scheduling
 operation and is used to update the task's timing information. So, if
 the task parameter in this method is oxc type, this is the point to
 update the confainer's information and local runqueue's clock.
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, label={list:task_tick}]
 static void task_tick_oxc(struct rq *rq, struct task_struct *p, int queued)
 {
         struct rq *rq_ = task_rq_oxc(p);

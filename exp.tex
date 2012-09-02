@@ -204,18 +204,17 @@ of the measured function execution time in micro seconds.
 	\label{tab:exp_res}
 \end{table}
 
-The first observation is from the row for 
-\texttt{check\_preempt\_curr\_oxc}. That is, no tracing result for 
-\texttt{check\_preempt\_curr\_oxc} is recorded.
-An analysis of overhead in this function is necessary.
-There are three cases for the comparison between a task and currently 
-the running task. When only one of them is an oxc
-task or both two are oxc tasks and not in the same containers, the comparison 
-cost is just several \texttt{if-else} instructions. If they are two oxc tasks
-in the same container, the comparison follows the procedure in Linux scheduling
-and this is not overhead from oxc control; in addition, in our experiment 
-setup, there is only one task inside an ox container.
-In one statement, this function is not a big soure for oxc control overhead. 
+The first surprise is from the row for \texttt{check\_preempt\_curr\_oxc}. 
+That is, no tracing result for \texttt{check\_preempt\_curr\_oxc} is 
+recorded. An analysis of overhead in this function is necessary.
+The details of this function is in list \ref{check_preempt}.
+There are three cases when to check if a task can preempt the currently 
+running task. When only one of the two is an oxc task or both two are oxc 
+tasks and not in the same ox containers, the comparison cost is just several 
+\texttt{if-else} instructions. If they are two oxc tasks in the same container, 
+this function follows the procedure in Linux scheduling; in addition, in our 
+experiment setup, there is only one task inside an ox container. In short words, 
+this function is not a significant soure for oxc framework overhead in tests. 
 Although this could be a reason to explain that the ftrace fails to measure
 the execution time of \texttt{check\_preempt\_cur\_oxc} during tests, it reminds
 us that, given the feature of hierarchical scheduling, it may be attractive to
@@ -224,49 +223,58 @@ develop a new recording tool so as to evaluate the oxc framework more accurately
 The test results of other three oxc functions are illustrated in figure 
 \ref{fig:pick_next}, \ref{fig:put_prev} and \ref{fig:task_tick}.
 The variable parameter in each test is the number of ox containers.
-And experimental results show that at least in current oxc framework, the
-codes execution time are influenced by the number of containers in the
+And experiment results show that at least in current oxc framework, the
+codes execution time is influenced by the number of ox containers in the
 system.
-\begin{figure}[htbp]
+
+\begin{figure}[H]%htbp]
         \centering
-        \includegraphics[width=\textwidth]{images/pick_next_task_oxc}
-        \caption{Experiment results for \texttt{pick\_next\_task\_oxc}}
+        \includegraphics[width=\textwidth, totalheight=0.4\textheight]{images/pick_next_task_oxc}
+        \caption{Measured execution time for \texttt{pick\_next\_task\_oxc}}
         \label{fig:pick_next}
 \end{figure}
-\begin{figure}[htbp]
+\begin{figure}[H]%htbp]
         \centering
-        \includegraphics[width=\textwidth]{images/put_prev_task_oxc}
+        \includegraphics[width=\textwidth, totalheight=0.4\textheight]{images/put_prev_task_oxc}
         \caption{Measured execution time for \texttt{put\_prev\_task\_oxc}}
         \label{fig:put_prev}
 \end{figure}
-\begin{figure}[htbp]
+\begin{figure}[H]%htbp]
         \centering
-        \includegraphics[width=\textwidth]{images/task_tick_oxc}
-        \caption{Experiment results for \texttt{task\_tick\_oxc}}
+        \includegraphics[width=\textwidth, totalheight=0.4\textheight]{images/task_tick_oxc}
+        \caption{Measured execution time for \texttt{task\_tick\_oxc}}
         \label{fig:task_tick}
 \end{figure}
 Figure \ref{fig:pick_next} shows the statistical result of 
 \texttt{pick\_next\_task\_oxc} in each test. One observation from the figure
 is that with more ox containers joining the system, the time spent on executing
 the function codes fluctuates more. This trend also reflects in the
-results for \texttt{put\_prev\_task\_oxc}, shown in figure \ref{fig:put_prev}.
+results for \texttt{put\_prev\_task\_oxc}, as in figure \ref{fig:put_prev}.
 However, figure \ref{fig:task_tick} for \texttt{task\_tick\_oxc} does not 
 show this pattern.
 
-Actually, the oxc control codes in the three oxc functions are the same:
+Now we are going to probe why the execution time of \texttt{task\_tick\_oxc}
+is more stable than the result of the other two. A look at the body of the
+three functions in list \ref{list:pick_next}, \ref{list:put_prev} and
+\ref{list:task_tick}, we can find that except for the enclosed scheduling
+operations, other codes in the three functions are actually the same:
 to update the per CPU runqueue, to update the per container runqueue and
-update the current ox container. So the different variance behaviours in
-results for tested oxc functions are caused by the scheduler's performance
-under inside a container. More specifically, the difference in accessing 
-per CPU and per ox container runqueue could be the reason for variance 
-changing trend. 
+update the current ox container. So, the different variance behaviour in 
+measured execution time for oxc functions may be affected by the performance
+of sheduling operations inside oxc container. 
 
-The \texttt{task\_tick\_oxc} encloses in the \texttt{task\_tick} scheduling
-operation. In our experiment, it is \texttt{task\_tick\_rt}. A look at 
-the content inside this method in list \ref{task_tick_rt}. Compare it 
-with the other two tested oxc functions' content, it's operations with
-runqueue is very simple. This explains why the result in \ref{fig:task_tick}
-is stable in both mean value and standard variance.
+The three encapsulated scheduling operations \texttt{pick\_next\_task\_rt}, 
+\\\texttt{put\_prev\_task\_rt} and \texttt{task\_tick\_rt} are defined in
+rt scheduling class. Specifically, the codes of \texttt{task\_tick\_rt},
+which is called inside oxc function \texttt{task\_tick\_oxc}, is listed 
+below. This is a very simple function. If people read the other two
+scheduling operations' codes in \emph{linux/sched/rt.c}, this function is 
+still less complex in dealing with runqueues. When scheduling operations 
+are called inside an ox container, there will be extra cost because
+the raw handle of implementation details, and such an influence may 
+be smaller when the scheduling operation itself is simple. This explains 
+why the result in \ref{fig:task_tick} is stable in both mean value and 
+standard variance.
 \begin{lstlisting}[language=C,
 			caption={\texttt{task\_tick\_rt}},
 			label={task_tick_rt}]
@@ -282,10 +290,10 @@ static void task_tick_rt(struct rq *rq, struct task_struct *p, int queued)
          */
         if (p->policy != SCHED_RR)
                 return;
-	/*
+        /*
          * The left part has no effects in our tests.
-	 */
-	...
+         */
+        ...
 
 }
 \end{lstlisting}
@@ -295,39 +303,39 @@ static void task_tick_rt(struct rq *rq, struct task_struct *p, int queued)
 \section{Experiment B}
 \subsection{Experiment design}
 The aim of this experiment is to estimate the overall overhead in oxc 
-framework through non real-time CPU bandwidth control mechanisms that 
-are already in Linux kernel.
-During tests the synthetic load is generated by the tbench benchmark tool.
-The CPU bandwidth allocated to tbench connections are allocated by oxc 
-control, rt throttling and cfs bandwidth control individually. 
-The tbench throughput results of oxc framework are then compared with 
-rt throttling and cfs bandwidth control. Through such comparisons, the 
-overhead introduced by oxc control is then evaluated in a relative way.
+framework through comparison with non real-time CPU bandwidth control 
+mechanisms that are already in Linux kernel. During tests the synthetic 
+load is generated by the tbench benchmark tool. The CPU bandwidth 
+allocated to tbench connections are allocated by oxc control, rt 
+throttling and cfs bandwidth control individually. The tbench throughput 
+results of oxc framework are then compared with rt throttling and cfs 
+bandwidth control. By such comparisons, the overhead introduced by oxc 
+control is then evaluated in a relative way.
 
-Two \emph{tbench} connections will be set up in the system.
+Two tbench connections will be set up in the system.
 Each connection will be dedicated to one CPU.
 Without constraints, they will consume all CPU time.
 In the experiment, the CPU bandwidth allocated to tbench traffic is restricted.
-The tested per CPU bandwidth parameter includes
+The per CPU bandwidth parameter used in tests includes
 $0.05ms/1ms$, $0.1ms/1ms$, $0.2ms/1ms$, $0.4ms/1ms$, $0.6ms/1ms$ and 
 $0.8ms/1ms$. 
-Again, this is per CPU bandwidth that is planned to assign to \emph{tbench}
-tasks. Each cpu bandwidth control mechnism will restricts the \emph{tbench}
-execution not exceed the configured value. And the throughput results will
-reflect the overhead in three work through a relative way.
+Note that these are the per CPU bandwidth that is planned to assign to 
+tbench tasks. Each cpu bandwidth control mechnism will restricts the 
+tbench execution not exceed the configured value. And the throughput 
+results will be proportional to the overhead in each bandwidth 
+control mechanism.
 
-When rt throttling is tested, \emph{tbench} clients and servers will be 
+When rt throttling is tested, tbench clients and servers will be 
 scheduled as rt tasks with policy \texttt{SCHED\_RR}. Otherwise the client 
-and server in the same connection cannot run at all. Correspondingly, when 
-comparing with rt throttling, \emph{tbench} threads inside containers will 
-be set as rt tasks with \texttt{SCHED\_RR} policy. 
-When comparing the oxc control with cfs bandwidth control, the \emph{tbench}
-threads will be put inside two ox containers and they will run as normal
-tasks. 
+and server in the same connection cannot run at all. Correspondingly, to 
+compare with rt throttling, tbench threads inside the ox container will 
+be set as rt tasks with \texttt{SCHED\_RR} policy too. 
+When comparing the oxc control with cfs bandwidth control, the tbench
+threads inside ox containers will run as normal tasks. 
 
 \subsection{Experiment results}
-The test results are shown in table \ref{tab:expB1} and \ref{tab:expB2}.
-\begin{table}[thbp]
+The thrughput results are shown in table \ref{tab:expB1} and \ref{tab:expB2}.
+\begin{table}[H]%thbp]
 	\centering
 	\begin{tabular}{|l||c|c|}\hline
 		 per CPU bandwidth & rt throttling & oxc control + rt scheduling\\\hline
@@ -338,10 +346,10 @@ The test results are shown in table \ref{tab:expB1} and \ref{tab:expB2}.
 			0.6ms/1ms &	233	&	225.72	\\\hline
 			0.8ms/1ms &	319.297 &	297.0607	\\\hline
 	\end{tabular}
-	\caption{Measured throughput, in Mbps/sec, between rt throttling and oxc control}
+	\caption{Throughputs, in Mbps/sec, under rt throttling and oxc control}
 	\label{tab:expB1}
 \end{table}
-\begin{table}[thbp]
+\begin{table}[H]%thbp]
 	\centering
 	\begin{tabular}{|l||c|c|}\hline
 		 per CPU bandwidth & cfs bandwidth control & oxc control + cfs scheduling  \\\hline
@@ -352,63 +360,88 @@ The test results are shown in table \ref{tab:expB1} and \ref{tab:expB2}.
 		 0.6ms/1ms	& 323.628	& 234.369 \\\hline
 		 0.8ms/1ms	& 433.025	& 305.1 \\\hline
 	\end{tabular}
-	\caption{Measured throughput, in Mbps/sec, between cfs bandwidth and oxc control}
+	\caption{Throughputs, in Mbps/sec, under cfs bandwidth and oxc control}
 	\label{tab:expB2}
 \end{table}
-A glance on the two tables, it's apparantly to see that the throughput results
-under cfs bandwidth control outperforms the other two. There are two reasons for this.
-Firstly, the overhead brought by cfs bandwidth control is indeed lower 
-than the other two bandwidth control mechnanisms.
-And both oxc tasks and rt tasks are more greedy than cfs tasks when they occupy a CPU. 
-An oxc task or rt tasks will not give up a CPU to a cfs task until the 
-CPU reservation is all consumed and most tasks in Linux are scheduled by cfs.
-So the system is stressed more under oxc control or rt throttling.
-However, in cfs scheduling, cfs tasks, with or without
-CPU reservation, can share the CPU evenly.
+After a glance on the two tables, it's apparent to note that the 
+throughput results under cfs bandwidth control outperform the other two. 
+There are two reasons for this. Firstly, the overhead brought by cfs 
+bandwidth control is indeed lower than the other two mechnanisms.
+Secondly, both oxc tasks and rt tasks are more greedy than cfs tasks when 
+they occupy a CPU. For oxc tasks, both rt and normal tasks are lower
+priority tasks, between which normal tasks are lower priority tasks.
+the oxc task or rt tasks will not give up a CPU to a lower priority
+task until the CPU reservation is totally consumed. So lower priority 
+tasks in the system are stressed more under oxc control or rt throttling, 
+especially when high reservation parameter is configured. However, in cfs 
+scheduling, cfs tasks, with or without CPU reservation, can share the CPU 
+evenly.
 
-Having solved the above question, let's see the overhead in oxc framework.
-In figuer \ref{fig:expB1}, the throughput results in different reservation
-parameters under oxc control and rt throttling are shown.
-At first, the throughput result under rt throttling is growing faster 
-than the result in oxc control. However, as the more CPU bandwdith is
-reserved to tbench tasks, the throughtput of the two are converging.
-In fact, the throughtput growing trend in oxc control are consistent.
-When it comes to rt throttling, it's not like this.
+\begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth,totalheight=0.4\textheight]{images/expB1}
+        \caption{\emph{oxc control} vs. \emph{rt throttling}}
+        \label{fig:expB1}
+\end{figure}
+Having solved the above question, let's first study the peformance of tbench 
+tasks in oxc framework when they are scheduled with \texttt{SCHED\_RR} 
+policy. The comparison between oxc control and rt throttling in 
+table \ref{tab:expB1} is visulized in figure \ref{fig:expB1}.
+At first, the throughput result under rt throttling is higher and 
+growing faster than the result in oxc control. However, as the more CPU 
+bandwdith is reserved to tbench tasks, the throughtput results under the 
+two means are converging. In fact, the throughtput growing trend in oxc 
+control are consistent. When it comes to rt throttling, it's not like this.
 When a relatively small fraction of CPU is assigned to rt throttling
 and oxc control, rt throttling shows better performance. However, with
 increasing the reserved CPU bandwdith, the stress of rt throttling on
-the whole system is increasing too, which slows the throughput growing. 
-The performance in oxc control is interesting. The increasement of 
-throughput result is almost linear with the change of reserved bandwidth.
-The overhead in oxc control is almost a constant value.
+the whole system is rising too, which slows growth of the throughput. 
+Under oxc control, the throughput result is almost linear with the 
+given reserved bandwidth. The overhead in oxc control behaves as 
+a constant factor.
 
 The comparason between oxc control and CPU bandwidth control is ahown 
 in figure \ref{fig:expB2}. As we just analyzed, cfs bandwidth control has
 much better throughput result. One observation is that althouth with
 less rasing speed, the throughput increasing trend in oxc control has the
 similar shape as in cfs bandwidth control. 
-
-There is another meaningful comparasons shown in figure \ref{fig:expB3}, which
-is the throughtput results of rt scheduling and cfs scheduling under oxc 
-framework. The results are quite close, and the difference can be regarded as
-the scheduling cose between rt and cfs scheduling in an ox container.
+The result under oxc framework has another meaningful implication. 
+When oxc control is used, allocations of bandwidth in the system should be
+cautioned so as to achieve an optimal system performance. 
 
 \begin{figure}[htbp]
         \centering
-        \includegraphics[width=\textwidth]{images/expB1}
-        \caption{\emph{oxc control} vs. \emph{rt throttling}}
-        \label{fig:expB1}
-\end{figure}
-\begin{figure}[htbp]
-        \centering
-        \includegraphics[width=\textwidth]{images/expB2}
+        \includegraphics[width=\textwidth, totalheight=0.4\textheight]{images/expB2}
         \caption{\emph{oxc control} vs. \emph{cfs bandwidth control}}
         \label{fig:expB2}
 \end{figure}
 \begin{figure}[htbp]
         \centering
-        \includegraphics[width=\textwidth]{images/expB3}
+        \includegraphics[width=\textwidth, totalheight=0.4\textheight]{images/expB3}
         \caption{\emph{oxc control + rt throttling} vs. \emph{oxc control + cfs scheduling}}
         \label{fig:expB3}
 \end{figure}
-\subsection{What learnt from the experiment}
+At last, figure \ref{fig:expB3} mixes the statistics in table \ref{tab:expB1}
+and \ref{tab:expB2} and draws the throughput results under oxc control with
+rt throttling and cfs scheduling in the same graph.
+The results are quite close, and the difference can be regarded as
+the scheduling cost between rt and cfs scheduling in an ox container.
+Still, cfs scheduling shows better results than rt scheduling even under 
+oxc framework. This says that cfs scheduling introduces less overhead in the
+system than rt scheduler. Such a comparison causes us to think about one
+possible application of oxc framework. In some cases, when to compare two
+schedulers, we can set up the environment inside an ox container; or by preparing
+a certain number of ox containers, a lightweight networked testbed. 
+
+\subsection{Experiment feedbacks}
+The experiment does not show that the performance of oxc control is better than
+existing bandwidth control methods. This is also not the experiment objective( the
+comparison result with rt throttling is a small surprise). The experiment outcome
+has an unstated meaning for future development of oxc framework.
+Experiment A gives precise measurement of oxc function execution time and 
+confirms the necessary to improve implementation quality of the oxc framework.
+In experiment B, the overall performance of oxc framework is compared with
+rt throttling and cfs bandwidth control. Its experiment analysis show us that
+how to distribute CPU bandwidth will affect both the work inside an ox container
+and the whole system behaviour; it also raises one example for oxc control usage. 
+These feedbacks would be incorporated in the evolvement of the oxc framework.
