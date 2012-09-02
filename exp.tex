@@ -1,6 +1,6 @@
-\chapter{Experimental Results\label{chap:exp}}
+\chapter{Experiments\label{chap:exp}}
 
-The overhead introduced by oxc framework composes three parts:
+The overhead introduced by oxc framework includes three parts:
 \begin{itemize}
 \item The time required to execute codes brought oxc functions.
 \item The context switches introduced by the oxc framework.
@@ -8,31 +8,33 @@ The overhead introduced by oxc framework composes three parts:
 	framework.
 \end{itemize}
 
-The third item is caused by implementation skills and not the emphasis
-of our experiments. For example, the per CPU runqueue is a per CPU 
-structure, which can be more efficiently accessed than per ox container 
-runqueue. However, such a difference can be solved with efforts on 
-implementation details. 
+The third item is caused by implementation limitation can be minimized 
+or removed by improving implementation details. For example, to access 
+the per CPU runqueue in Linux is an optimized operation. However, the 
+access to a per ox container is not so efficient, this will give a 
+penalty when scheduler works inside an ox container.
 
-There are two experiments carried out to evaluate the overhead in the oxc
-framework. In experiment A, the codes execution
-time of frequently invoked oxc functions is measured. In experiment B, the
-overall overhead of oxc control is estimated through comparisons with rt 
-throttling and cfs bandwidth control.
+There are two experiments carried out to evaluate the overhead in the 
+oxc framework. In experiment A, the code execution time of frequently 
+invoked oxc functions is measured. In experiment B, the overall overhead 
+of oxc control is estimated through comparisons with rt throttling and 
+cfs bandwidth control.
 
-Inside each oxc function, there is a scheduling operation encapsulated and
-extra codes to control bandwidth reservation. The execution time of these
-control codes is the main interest in experiment A.
-Current oxc framework implementation is still a prototype one. Some kernel 
-features are not considered under the framework yet. For example, the 
-\texttt{priority inheritance}, which is important for the kernel's real time
-performance and will influence number of context switches. So the overhead
-result in experiment B in shown in a relative way instead of precisely 
-statistical analysis. As for the context switches caused by importng CBS 
-based scheduling in the kernel, there is previous work in \cite{Luigi09};
-yet these results do not straightly apply to oxc work. 
+Inside each oxc function, there is a scheduling operation inside and
+codes to regulate bandwidth reservation. The cost of these functions 
+is the main interest in experiment A. Current oxc framework 
+implementation is still a prototype. Some kernel features are not 
+considered under the framework yet. For instance, the 
+\texttt{priority inheritance}, which is important for the kernel's 
+real-time performance and will influence number of context switches. 
+So, instead of counting and analyzing context switches directly,
+in experiment B the overhead of scheduling inside an ox container is
+approximately evaluated by a relative way. As for the context switches 
+caused by importng CBS based scheduling in the kernel, people can refer  
+to \cite{Luigi09} for more iformation; yet these results do not straightly 
+apply to oxc work. 
 
-The hardware and software used in the experiment is shown in 
+The hardware and software used in the experiment are shown in 
 table \ref{tab:exp_setup}.
 \begin{table}[H]%thbp]
   \centering
@@ -50,10 +52,10 @@ table \ref{tab:exp_setup}.
   \caption{Hardware-Software platform}
   \label{tab:exp_setup}
 \end{table}
-This chapter is organized like this: the tracing tool and synthetic benchmark
-tool we use in the experiment are described; then it's the design of each 
-experiment and result analysis; finally, what we learn from the experiment
-is concluded.
+The chapter is organized like this: the tracing tool and synthetic 
+benchmark tool we use in the experiment are described; then it's the 
+design and result analysis of each experiment; finally, what we learn
+from the experiment is concluded.
 
 \section{Ftrace in Linux kernel}
 Ftrace\cite{ftrace} is an internal tracer designed to help out developers of systems to
@@ -69,7 +71,7 @@ Typically, ftrace is mounted at \texttt{/sys/kernel/debug}.
 \begin{lstlisting}
 	#mount -t debugfs nodev /sys/kernel/debug
 \end{lstlisting}
-After this command, a firectory \texttt{/sys/kernel/debug/tracing} will 
+After this command, a directory \texttt{/sys/kernel/debug/tracing} will 
 be created containing interfaces to configure ftrace and display results.
 \begin{lstlisting}
 	#cd /sys/kernel/debug/tracing
@@ -78,21 +80,29 @@ The following commands will be assumed to be called under \texttt{tracing}
 directory.
 There are several kinds of tracers available in ftrace, simply cat the
 \texttt{available\_tracers} file in the \texttt{tracing} dorectory.
+The output could vary with enabling or disabling kernel configuration 
+options concerned with ftrace functionality in compilation time.
 \begin{lstlisting}
 	#cat available_tracers
 	blk function_graph mmiotrace wakeup_rt wakeup function sched_switch nop
 \end{lstlisting}
-The \texttt{function} is function tracer. It uses the \texttt{-pg} option
+The \texttt{function} is the function tracer. It uses the \texttt{-pg} option
 of \texttt{gcc} to have every function in the kernel call a special function
-\texttt{mcount()} for tracing all kernel functions and measure execution time 
-of them.  This is what we need. To enable the function tracer, just \emph{echo} \texttt{function} into the \texttt{current\_tracer}
-file.
+\texttt{mcount()} for tracing all kernel functions. 
+The \texttt{function\_graph} is similar to the function tracer except that
+the function tracer probes functions on their entry whereas the function 
+graph tracer traces on both entry and exit of a function. It is called 
+function graph tracer because it provides the ability to draw a graph 
+of function calls similar to C code as tracing results. 
+This \texttt{function\_graph} is what we use in experiments. 
+To enable the function graph tracer, just echo \texttt{function\_graph} 
+into the \texttt{current\_tracer} file.
 \begin{lstlisting}
-	#echo function > current_tracer
+	#echo function_graph > current_tracer
 \end{lstlisting}
-The trace can be started and stopped through configuring \texttt{tracing\_on}
+A trace can be started and stopped through configuring \texttt{tracing\_on}
 file. Echo 0 into this file to disable the tracer or 1 to enable it. Cat the
-file will displat whether the tracer is enabled or not.
+file will display whether the tracer is enabled or not.
 
 The output of the trace in held in file \texttt{trace} in a human readable
 format. The ftrace will by default trace all functions in the kernel. In
@@ -101,35 +111,41 @@ configure which function to trace, the \texttt{CONFIG\_DYNAMIC\_FTRACE}
 kernel option should be set in compilation time  to enable dynamic ftrace. 
 Actually, \texttt{CONFIG\_DYNAMIC\_FTRACE} is highly recommanded and defaultly
 set because of its performance enhancement. To filter which function to trace
-or not, two files are used, one for enabling and one for disabling the 
-tracing of specific functions. They are \texttt{set\_ftrace\_filter} and 
-\texttt{set\_ftrace\_notrace}. A list of available functions that you can add
-to these files is listed in \texttt{available\_filter\_functions}.
+or not, two files are used: \texttt{set\_ftrace\_filter} for enabling the
+tracing of a specific function and \texttt{set\_ftrace\_notrace} to 
+disable the tracing of some function. A list of available functions that you 
+can add to these files is listed in \texttt{available\_filter\_functions}.
+In the later experiment, the oxc function \texttt{task\_tick\_oxc} is traced
+by setting up like this:
+\begin{lstlisting}
+	#echo task_tick_oxc > set_ftrace_filter
+\end{lstlisting}
+
 
 \section{Tbench}
-The tbench benchmark is a tool that measures disk throughput for simulated
-netbench run. Tbench reads a load description file called client.txt that was
-derived from a network sniffer dump of a real netbench run and produces the
-filesystem load according to the description file. It produces only the TCP
-and process load and no filesystem calls.
+The tbench \cite{tbench} benchmark is a tool that measures disk throughput 
+for simulated netbench runs. Tbench reads a load description file called 
+client.txt that was derived from a network sniffer dump of a real netbench 
+run and %produces the filesystem load according to the description file. 
+it produces only the TCP and process load and no filesystem calls.
 One exmple to run tbench test:
 \begin{lstlisting}
 	$tbench_srv
 	$tbench 2 -t 100
 \end{lstlisting}
 The \texttt{tbench\_srv} should be invoked before running \texttt{tbench}.
-The second starts two tbench connections with one client and one server in
-each connection. The two connections will run simultaneously and the runtime
-of the benchmark will be 100 seconds.
+The second command starts two tbench connections with one client thread 
+and one server thread in each connection. The two connections will run 
+simultaneously and the runtime of the benchmark will be 100 seconds.
 
 \section{Experiment A}
 \subsection{The experiment design}
 In this experiment, the execution time of oxc functions are measured.
-In a Linux system, even if the oxc patch is applied in the kernel, when 
-there is no reservation enabled, the system performs as a plain Linux system. 
-The possible oxc overheads in this case include the code execution time in 
-function \texttt{is\_oxc\_task} and the oxc related initialization when a 
-scheduling group is created; both are negligible.
+In a Linux system, even if the oxc patch is applied in the kernel, 
+when there is no oxc tasks, the system performs as a plain Linux system. 
+In such a case, the possible oxc overheads include the code execution time 
+in function \texttt{is\_oxc\_task} and the oxc related initialization when 
+a scheduling group is created; both are negligible.
 
 During the experiment, the execution time of following oxc functions are 
 measured using Ftrace:
@@ -144,32 +160,33 @@ invoked scheduling operations. The oxc functions like
 \texttt{enqueue\_task\_rq\_oxc} and \texttt{dequeue\_task\_rq\_oxc} only 
 happen when a task enters or leaves an ox container. Inside an
 ox container, enqueue and dequeue of a task still frequently happen.
-However, the performance of scheduling operations of each modular
-scheduler under oxc framework is not an interest in this experiment.
+However, the performance of scheduling operations of a modular
+scheduler under oxc framework is not an emphasis in this experiment.
 
-
-There will be six individual tests differing in the number of
-hyper ox containers in the system. The number of hyper ox containers in
-different will vary from 1 to 6.
-The hyper ox containers in the experiment are identical.
-Each hyper ox-container has two ox containers with the same CPU reservation 
-parameter $0.1ms/1ms$. Each ox container has one dummy task within it. 
-The dummy task is simply running a forever while loop and it is a rt task with 
-policy \texttt{SCHED\_FIFO}. This while loop task will exhuaust the 
-reservation in an ox container. The scheduling policy is arbitrarily chosen 
-without special thoughts.
+There will be six individual tests differing in the number of hyper ox 
+containers in the system. In the first test, there is only one hyper 
+ox container; then, in each test one more hyper ox container would be 
+added. All hyper ox containers in the experiment are identical.
+Each hyper ox-container has two ox containers with the same CPU 
+reservation parameter $0.1ms/1ms$. Each ox container has one dummy task 
+within it. The dummy task simply runs a forever while loop and it is a 
+rt task with policy \texttt{SCHED\_FIFO}. This while loop task will 
+exhuaust the reservation in its ox container. The scheduling policy is 
+arbitrarily chosen without special thoughts. On the contrary, the 
+situation for modular scheduling inside an ox container is intentionally
+arranged as simple as possible to clarify the effect of oxc framework.
 
 The measured execution time of above oxc functions comprises the time 
 consumed by codes involving with the oxc control and operations defined 
-in modular scheduler which are encapsulated inside the above functions.
-Here the situation for rt scheduling inside an ox container is very simple.
-And the experiment analysis can focus on oxc control overhead.
+in modular scheduler which are encapsulated inside the these functions.
+%Here the situation for rt scheduling inside an ox container is very simple.
+%And the experiment analysis can focus on oxc control overhead.
 
 \subsection{Experiment results}
-The statistics results of six tests are listed in table \ref{tab:exp_res}.
-The index of a text is the number of hyper ox containers in that test.
-The two fields in the pair are average time and standard deviation of the
-function execution and are measured in micro seconds.
+The results of six tests are listed in table \ref{tab:exp_res}.
+The index of a test indicates the number of hyper ox containers in that 
+test. The two fields in the pair are average vaule and standard deviation 
+of the measured function execution time in micro seconds.
 \begin{table}[thbp]
 	\centering
 	\begin{tabular}{|l||c|c|c|c|c|c|}\hline
