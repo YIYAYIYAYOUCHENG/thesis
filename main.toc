@@ -42,5 +42,5 @@
 \contentsline {section}{\numberline {3.4}Experiment B}{51}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Experiment design}{51}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Experiment results}{52}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Experiment feedbacks}{56}{subsection.3.4.3}
+\contentsline {section}{\numberline {3.5}Experiment feedbacks}{56}{section.3.5}
 \contentsline {chapter}{\numberline {4}Conclusions and Future Work}{57}{chapter.4}
