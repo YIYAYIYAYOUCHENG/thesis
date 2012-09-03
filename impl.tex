@@ -258,7 +258,7 @@ corresponds the first part of the scheduling route in figure
 configured. 
 \texttt{task\_rq\_oxc} tracks the shceduling route to find the runqueue that
 a task is just associated.
-After this functio call, the whole scheduling route without group scheduling
+After this function call, the whole scheduling route without group scheduling
 and the first part of the scheduling route under group scheduling are built up.
 
 In the mainline Linux, the end part of a scheduling route is built up when
@@ -343,7 +343,7 @@ static void init_tg_cfs_entry_oxc(struct task_group *tg,
 		se->cfs_rq = &rq->cfs;
 } 
 \end{lstlisting}
-Brief explaination on the parameters:
+Brief explanation on the parameters:
 \begin{itemize}
 \item \texttt{tg} is the task group to be dealt with.
 \item \texttt{cfs\_rq} is the cfs runqueue where the cfs entity of this 
@@ -375,20 +375,57 @@ One amazing feature of this procedure to direct a task group to a per oxc
 is that tasks under a group is untouched.
 
 \section{Run tasks under OXC scheduling framework}
-As long as per OXC runqueue joins the scheduling route, the scheduling 
-of tasks is compatible with modular schedulers in Linux. For an OXC task,
-just pass the task itself and its OXC local runqueue, instead of per CPU
+As long as per oxc runqueue joins the scheduling route, the scheduling 
+of tasks is compatible with modular schedulers in Linux. For an oxc task,
+just pass the task itself and its oxc local runqueue, instead of per CPU
 runqueue, to its corresponding scheduling class. And the scheduler will
-behave as usual.
+behave as usual. That is, this oxc scheduling framework is transparent
+to both schedulers and tasks.
 
-Because we consider reserving CPU bandwidth for an OXC runqueue, necessary
-operations are performed before relaying a task to its modular scheduler.
-Still scheduling details are not the framework's interest. 
+Because we consider reserving CPU bandwidth for an ox container, there
+are scheduling operations that before or after passing parameters to them,
+the reservation information should be updated. For these kinds of scheduling
+operations, we adapt a relaying mechanism. The parameter is first passed to
+another function and after necessary actions, the scheduling operation is
+called inside this function. We say that such scheduling operations are
+encapsulated in oxc (scheduling) functions.
+Still scheduling details for a task are not the framework's work. 
 
 In order to fullfill real time guarantee, oxc tasks are always privileged
-to non oxc tasks. Amg oxc tasks inside a container, the priority relation
+to non oxc tasks. Among oxc tasks inside a container, the priority relation
 is the same as in Linux. The ox container itself can be considered as a 
 virtual Linux system.
+
+For each scheduling operation defined in \texttt{struct sched\_class},
+there are three situations for them to work under oxc scheduling framework: 
+some are encapsulated inside oxc functions; some can work under the framework
+without directly; and others are not supported. The table \ref{tab:op_classes}
+displays the three classes of scheduling operations. The naming convention
+for oxc functions which encapsulate a scheduling operation inside is appending
+the original name with \texttt{\_oxc}. For example, the scheduling operation
+\texttt{task\_tick} is called inside in \texttt{task\_tick\_oxc}.
+The enqueue and dequeue are two exceptions, they are enclosed in 
+\texttt{enqueue\_task\_oxc} and \texttt{dequeue\_task\_oxc}.
+\begin{table}[thbp]
+  \centering
+  \begin{tabular}{l|l|l}\hline
+	\small{Work inside an oxc function} & \small{Work without encapsulation} & \small{Unsupported}\\\hline
+		check\_preempt\_curr	& yield\_task				& Others	\\
+		pick\_next\_task	& yield\_to\_task			&		\\
+		put\_prev\_task		& task\_waking				&		\\
+		set\_curr\_task		& task\_woken				&		\\
+		task\_tick		& set\_cpus\_allowed			&		\\
+		enqueue\_task\_rq	& task\_fork				&		\\
+		dequeue\_task\_rq	& switched\_from			&		\\
+					& switched\_to				&		\\
+					& prio\_changed				&		\\
+					& get\_rt\_interval			&		\\
+					& task\_move\_group			&		\\\hline
+  \end{tabular}	
+  \caption{The way to handle a scheduling operation under the oxc framework}
+  \label{tab:op_classes}
+\end{table}
+
 
 \subsection{To obtain the runqueue of a task}
 A method \texttt{tas\_rq\_oxc} is used to obtain the runqueue of a task.

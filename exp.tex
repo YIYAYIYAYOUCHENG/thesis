@@ -156,12 +156,15 @@ measured using Ftrace:
 \item \texttt{task\_tick\_oxc}
 \end{itemize} 
 They are most often called oxc functions as they enclose in most frequently
-invoked scheduling operations. The oxc functions like 
+invoked scheduling operations. 
+The oxc functions like 
 \texttt{enqueue\_task\_rq\_oxc} and \texttt{dequeue\_task\_rq\_oxc} only 
-happen when a task enters or leaves an ox container. Inside an
-ox container, enqueue and dequeue of a task still frequently happen.
-However, the performance of scheduling operations of a modular
-scheduler under oxc framework is not an emphasis in this experiment.
+happen when a task enters or leaves an ox container. And are not often
+happens in the following experiment set up.
+%Inside an
+%ox container, enqueue and dequeue of a task still frequently happen.
+%However, the performance of scheduling operations of a modular
+%scheduler under oxc framework is not an emphasis in this experiment.
 
 There will be six individual tests differing in the number of hyper ox 
 containers in the system. In the first test, there is only one hyper 
