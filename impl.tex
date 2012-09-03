@@ -4,7 +4,9 @@ in github\footnote{https://github.com/YIYAYIYAYOUCHENG/linux}.
 The oxc framework is not a scheduler. Although it cooperates with
 different scheduling classes, its pure responsibility is managing 
 the distribution of CPU power, which depends on modular schedulers 
-to use it for scheduling tasks.
+to use it for scheduling tasks. Under oxc framework, we also call
+oxc scheduling oxc control since it is utilized to control CPU 
+bandwidth reservation.
 
 \section{Implementation of ox container structure}
 An ox container \texttt{struct oxc\_rq}, list \ref{oxc_rq}, is 
@@ -138,12 +140,17 @@ ox container as its father. The \texttt{oxc\_label} field is used to
 differ them.
 
 %If a task runs in a ox container, it is called an oxc task. 
-In section \ref{sec:design_oxc_scheduling}, we show how to direct a task
-to the runqueue it runs above, which may be a per CPU or container one.
-A further check of the runqueue's \texttt{in\_oxc} field can tell us
-whether a task is an oxc task or not. Consider that such ''is that an oxc
-task?'' is often used in the framework, a \texttt{is\_oxc\_task} field is
-added in \texttt{struct task\_struct} for efficient reason.
+When oxc scheduling is added in the kernel, there are two kinds of tasks
+in the system: oxc tasks and non oxc tasks. To difference between them
+is that oxc tasks work enqueued in an ox container's local runqueue and 
+non oxc tasks work in a per CPU runqueue. So, from a task, its 
+associated runqueue can be tracked according to the scheduling route in
+figure \ref{fig:scheduling_route_oxc} or \ref{fig:oxc_task_no_tg}.
+As long as the runqueue is found, given its \texttt{in\_oxc} field, the 
+status of this runqueue and the task can both be fixed.
+Consider that such ''is that an oxc task?'' is often used in the framework, 
+a \texttt{is\_oxc\_task} field is added in \texttt{struct task\_struct} for 
+efficient reason.
 \begin{lstlisting}[language=C, caption={\texttt{is\_oxc\_task} field in 
 						\texttt{struct task\_struct}}]
 struct task_struct {
@@ -153,13 +160,18 @@ struct task_struct {
 \end{lstlisting}
 When a task runs in an ox container, this field is set.
 
-\section{The point to direct a task to a per ox container runqueue}
-To schedule a task in a per oxc runqueue, the first thing is to associate
-this task with the local runqueue of an oxc. To understand this, let's
-first see how the system associate a task to a runqueue in mainline Linux,
-where there is only per CPU runqueue concepts. 
-\begin{lstlisting}[language=C, 
-	caption={To associate a task with a runqueue in original Linux}]
+\section{To direct a task to a per ox container runqueue}
+In section \ref{sec:design_oxc_scheduling}, we show the scheduling routes
+when there exists oxc scheduling in a system. This section will introduce
+the details on how to build these scheduling routes.
+\subsection{To build the scheduling route in mainline Linux}
+In orde to schedule a task in a per oxc runqueue, the first thing is to 
+associate this task with the local runqueue of an oxc. To understand this,
+let's first see how the system associate a task to a runqueue in 
+mainline Linux, where there is only per CPU runqueues. This is done through
+the method \texttt{set\_task\_rq}.
+\begin{lstlisting}[language=C, label={set_task_rq},
+	caption={To associate tasks with a per CPU runqueue in mainline Linux}]
 void set_task_rq(struct task_struct *p, unsigned int cpu)
 {
 #ifdef CONFIG_FAIR_GROUP_SCHED
@@ -172,11 +184,17 @@ void set_task_rq(struct task_struct *p, unsigned int cpu)
 #endif
 }
 \end{lstlisting}
-When task group scheduling is enabled, each task is directed to its task group.
-This correspond to the first part of scheduling route. The second part of 
-the scheduling route from task group to per CPU runqueue is done when the 
-task group is created. Figure \ref{tg_creation} shows the hint how a 
-task group joins the scheduling route during its creation.
+As demonstrated in list \ref{set_task_rq},  codes inside \texttt{set\_task\_rq}
+build up the first part of the scheduling route 
+%in figure \ref{fig:scheduling_route_oxc} 
+when \texttt{CONFIG\_FAIR\_GROUP\_SCHED} and 
+\texttt{CONFIG\_RT\_GROUP\_SCHED} are set.
+When rt or cfs task group scheduling is enabled, each task is then directed 
+to its task group. In mainline Linux, the second part of a scheduling route
+only directs a task group to the per CPU runqueues. Such paths are connected 
+when the task group is created. Figure \ref{fig:tg_creation} shows the hint how 
+a task group joins the scheduling route during its creation. In addition, now 
+we know that a scheduling route is built backwards.
 \begin{figure}[htbp]
         \centering
         \includegraphics[width=\textwidth]{images/tg_creation}
@@ -186,10 +204,11 @@ task group joins the scheduling route during its creation.
 In case that task group scheduling is not enabled, recall the scheduling path
 where the \texttt{task\_rq} leads a task to its per CPU runqueue directly.
 
-Now, we have seen the point a task joins the scheduling path in original Linux.
-It's time to see the scenario after per oxc runqueue is imported in Linux.
-Still, \texttt{set\_task\_rq} is the point to associate a task with a 
-runqueue, per CPU or per oxc now.
+\subsection{To build the scheduling route in oxc enabled Linux}
+Now, we have seen the point when a task or task group joins the scheduling 
+route in mainline Linux. These points are still time to fill elements in 
+scheduling routes, figure \ref{fig:scheduling_route_oc} and 
+\ref{fig:oxc_task_no_tg}, after oxc runqueues are imported in Linux.
 \begin{lstlisting}[language=C, 
         caption={To associate a task with a runqueue under oxc framework}]
 void set_task_rq(struct task_struct *p, unsigned int cpu)

@@ -320,8 +320,12 @@ enqueued in the cfs runqueue embedded in the per CPU runqueue directly.
 
 If cfs task group scheduling is not enabled, a task is directed to its 
 per CPU runqueue by a \emph{task\_rq} marco. \emph{task\_rq} also works 
-for rt tasks when rt task group scheduling is not enabled.
-\ref{fig:cfs_scheme_no_tg}.
+for rt scheduling when rt task group scheduling is not enabled.
+In fact, this \texttt{task\_rq} can be used even in case rt and cfs task group
+scheduling are enabled. It just that when such task group schedling are set,
+normally the information in each element in the scheduling route is more
+important than simply returning a runqueue. 
+%\ref{fig:cfs_scheme_no_tg}.
 \begin{figure}[htbp]
         \centering
         \includegraphics[height=0.1\textheight,width=0.5\textwidth]{images/scheduling_scheme_no_tg}

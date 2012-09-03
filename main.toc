@@ -20,27 +20,29 @@
 \contentsline {chapter}{\numberline {3}Development of OXC Framework}{19}{chapter.3}
 \contentsline {section}{\numberline {3.1}Implementation of ox container structure}{19}{section.3.1}
 \contentsline {section}{\numberline {3.2}Extensions on original data structures}{22}{section.3.2}
-\contentsline {section}{\numberline {3.3}The point to direct a task to a per ox container runqueue}{23}{section.3.3}
-\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{28}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{28}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{29}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{31}{subsection.3.4.3}
+\contentsline {section}{\numberline {3.3}To direct a task to a per ox container runqueue}{23}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{23}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{25}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{29}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{29}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{30}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{32}{subsection.3.4.3}
 \contentsline {subsection}{\numberline {3.4.4}To check the preemption}{33}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{34}{subsection.3.4.5}
-\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task operation}{37}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{35}{subsection.3.4.5}
+\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task operation}{38}{subsection.3.4.6}
 \contentsline {subsection}{\numberline {3.4.7}set\_curr\_task operation}{38}{subsection.3.4.7}
 \contentsline {subsection}{\numberline {3.4.8}task\_tick operation}{39}{subsection.3.4.8}
-\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{39}{section.3.5}
+\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{40}{section.3.5}
 \contentsline {section}{\numberline {3.6}User interfaces provided with OXC framework}{40}{section.3.6}
-\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{42}{section.3.7}
-\contentsline {chapter}{\numberline {4}Experiments}{45}{chapter.4}
-\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{46}{section.4.1}
-\contentsline {section}{\numberline {4.2}Tbench}{48}{section.4.2}
-\contentsline {section}{\numberline {4.3}Experiment A}{48}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}The experiment design}{48}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Experiment results}{50}{subsection.4.3.2}
-\contentsline {section}{\numberline {4.4}Experiment B}{53}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}Experiment design}{53}{subsection.4.4.1}
-\contentsline {subsection}{\numberline {4.4.2}Experiment results}{54}{subsection.4.4.2}
-\contentsline {section}{\numberline {4.5}Experiment feedbacks}{58}{section.4.5}
-\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{59}{chapter.5}
+\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{43}{section.3.7}
+\contentsline {chapter}{\numberline {4}Experiments}{46}{chapter.4}
+\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{47}{section.4.1}
+\contentsline {section}{\numberline {4.2}Tbench}{49}{section.4.2}
+\contentsline {section}{\numberline {4.3}Experiment A}{49}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}The experiment design}{49}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Experiment results}{51}{subsection.4.3.2}
+\contentsline {section}{\numberline {4.4}Experiment B}{54}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Experiment design}{54}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Experiment results}{55}{subsection.4.4.2}
+\contentsline {section}{\numberline {4.5}Experiment feedbacks}{59}{section.4.5}
+\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{60}{chapter.5}
