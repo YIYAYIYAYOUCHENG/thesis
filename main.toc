@@ -24,16 +24,16 @@
 \contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{23}{subsection.3.3.1}
 \contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{25}{subsection.3.3.2}
 \contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{29}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{29}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{30}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{30}{subsection.3.4.2}
 \contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{32}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}To check the preemption}{33}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.4}To check the preemption}{34}{subsection.3.4.4}
 \contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{35}{subsection.3.4.5}
 \contentsline {subsection}{\numberline {3.4.6}put\_prev\_task operation}{38}{subsection.3.4.6}
-\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task operation}{38}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}task\_tick operation}{39}{subsection.3.4.8}
-\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{40}{section.3.5}
-\contentsline {section}{\numberline {3.6}User interfaces provided with OXC framework}{40}{section.3.6}
+\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task operation}{39}{subsection.3.4.7}
+\contentsline {subsection}{\numberline {3.4.8}task\_tick operation}{40}{subsection.3.4.8}
+\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{41}{section.3.5}
+\contentsline {section}{\numberline {3.6}User interfaces provided with OXC framework}{41}{section.3.6}
 \contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{43}{section.3.7}
 \contentsline {chapter}{\numberline {4}Experiments}{46}{chapter.4}
 \contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{47}{section.4.1}

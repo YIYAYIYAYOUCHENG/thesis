@@ -137,7 +137,7 @@ There are several types of oxc task group: an oxc group whose father
 is not an oxc task group; an oxc task group whose father is an oxc group
 with different hyper ox container; an oxc task group with the same hyper
 ox container as its father. The \texttt{oxc\_label} field is used to 
-differ them.
+differ them. For non oxc task group, this field is not set.
 
 %If a task runs in a ox container, it is called an oxc task. 
 When oxc scheduling is added in the kernel, there are two kinds of tasks
@@ -158,7 +158,7 @@ struct task_struct {
 	...
 };
 \end{lstlisting}
-When a task runs in an ox container, this field is set.
+When a task runs in an ox container, this new field is set.
 
 \section{To direct a task to a per ox container runqueue}
 In section \ref{sec:design_oxc_scheduling}, we show the scheduling routes
@@ -184,7 +184,7 @@ void set_task_rq(struct task_struct *p, unsigned int cpu)
 #endif
 }
 \end{lstlisting}
-As demonstrated in list \ref{set_task_rq},  codes inside \texttt{set\_task\_rq}
+As demonstrated in list \ref{set_task_rq}, codes inside \texttt{set\_task\_rq}
 build up the first part of the scheduling route 
 %in figure \ref{fig:scheduling_route_oxc} 
 when \texttt{CONFIG\_FAIR\_GROUP\_SCHED} and 
@@ -209,8 +209,15 @@ Now, we have seen the point when a task or task group joins the scheduling
 route in mainline Linux. These points are still time to fill elements in 
 scheduling routes, figure \ref{fig:scheduling_route_oc} and 
 \ref{fig:oxc_task_no_tg}, after oxc runqueues are imported in Linux.
+
+Previously, the \texttt{set\_task\_rq} does not deal with the task that is
+not in a rt or cfs task group. This is because for tasks without group
+scheduling, the scheduling route \texttt{task\_rq} is utilized.
+However, \texttt{task\_rq} does not work for an oxc task to locate the
+per container runqueue. The functionality of \texttt{set\_task\_rq} is
+then extended to care about tasks with group scheduling. 
 \begin{lstlisting}[language=C, 
-        caption={To associate a task with a runqueue under oxc framework}]
+        caption={The extended \texttt{set\_task\_rq}}]
 void set_task_rq(struct task_struct *p, unsigned int cpu)
 {
         struct task_group *tg = task_group(p);
@@ -241,25 +248,42 @@ void set_task_rq(struct task_struct *p, unsigned int cpu)
 }
 \end{lstlisting}
                                                   
-When task group scheduling is enabled, there is no difference in cases of 
-original Linux and oxc enabled Linux. The interesting part happens when 
+When task group scheduling is enabled, there is no difference for setting a 
+task's runqueue in both
+the mainline Linux and oxc enabled Linux. The interesting part happens when 
 task group scheduling is not set. This time, given the task group is associated
 with a hyper oxc or not, the task is drected to a per CPU or oxc runqueue. This 
-corresponds the scheduling route in figure \ref{fig:oxc_task_no_tg}. In 
-the end of the method, \texttt{is\_oxc\_task} is configured. 
-\texttt{task\_rq\_oxc} tracks the shceduling route to find the runqueue.
+corresponds the first part of the scheduling route in figure 
+\ref{fig:oxc_task_no_tg}. In the end of the method, \texttt{is\_oxc\_task} is 
+configured. 
+\texttt{task\_rq\_oxc} tracks the shceduling route to find the runqueue that
+a task is just associated.
+After this functio call, the whole scheduling route without group scheduling
+and the first part of the scheduling route under group scheduling are built up.
 
-In oxc enabled Linux, a task group can be associated with a hyper oxc and
-the runqueues it contains in three cases:1. when it is created, its parent is 
-associated with a hyper oxc 2. the task group is explicitly attached to
-a hyper oxc 3. one its acendant task group is attached to a hyper oxc.
+In the mainline Linux, the end part of a scheduling route is built up when
+a task group is created. Within the oxc enabled kernel, things wil be a 
+little more complex. In the oxc applied Linux, a task group can be associated 
+with a hyper oxc and the contained runqueues in three cases:1. if its parent 
+is associated with a hyper oxc, then when it is created it will inherit its 
+parent's hyper ox container 2. the task group is explicitly attached to
+a hyper oxc 3. when the group's one ascendant task group is attached to 
+a hyper oxc, its \texttt{hyper\_oxc\_rq} field will point to that hyper 
+oxc too. 
+
 \begin{figure}[htbp]
         \centering
         \includegraphics[height=0.25\textheight,width=0.5\textwidth]{images/tg_creation_oxc}
         \caption{The creation of a task group in oxc enabled Linux}
         \label{fig:tg_creation_oxc}
 \end{figure}
-
+Corresponding to case 1, now when a task group is created, there 
+will be a initilization routine for oxc scheduling. A sketch is shown in 
+figure \ref{fig:tg_creation_oxc}. The details of this routinue 
+\texttt{alloc\_oxc\_sched\_group} is shown below. Case 2 and 3 actually 
+happen at the same time. To explicitly direct a task group to hyper ox 
+containers, two methods \texttt{init\_tg\_cfs\_entry\_oxc} and
+\texttt{init\_tg\_rt\_entry\_oxc} will be used
 \begin{lstlisting}[language=C,
         caption={OXC scheduling related initilization 
 					during task group creation}]
@@ -293,15 +317,17 @@ int alloc_oxc_sched_group(struct task_group *tg, struct task_group *parent)
         return 1;
 }
 \end{lstlisting}
-\texttt{alloc\_oxc\_sched\_group} deals with oxc related initialization when a 
+The \texttt{alloc\_oxc\_sched\_group} handles oxc related initialization when a 
 new task group is created. At first, the a newly created task group will inherit
-its parent task group's hyper container. If the parent is an oxc task group, it
-directs its scheduling path to the per oxc runqueue. And the \texttt{oxc\_label}
-for such child oxc task group is 100.
+its parent task group's hyper container. If the parent is an oxc task group, the
+newly created task group will be directed to per oxc runqueues contained in the
+hyper oxc, which corresponds to the end part of the scheduling route.  And 
+the \texttt{oxc\_label} for such child oxc task group is 100.
 
-A task group can direct to a OXC local runqueue explicitly through 
+A task group can direct to a oxc local runqueue explicitly through 
 \texttt{init\_tg\_cfs\_entry\_oxc} and \texttt{init\_tg\_rt\_entry\_oxc}.
-Let's have a look at \texttt{init\_tg\_cfs\_entry\_oxc} as an example.
+The structure in the two methods is silimar. Here we will have a look at 
+\texttt{init\_tg\_cfs\_entry\_oxc} as an example.
 \begin{lstlisting}[language=C, caption={To explicitlt direct a task group 
 						to an OXC local runqueue}]
 static void init_tg_cfs_entry_oxc(struct task_group *tg,
@@ -320,26 +346,33 @@ static void init_tg_cfs_entry_oxc(struct task_group *tg,
 Brief explaination on the parameters:
 \begin{itemize}
 \item \texttt{tg} is the task group to be dealt with.
-\item \texttt{cfs\_rq} is the cfs runqueue the cfs entity of this task
-		group is enqueued. 
+\item \texttt{cfs\_rq} is the cfs runqueue where the cfs entity of this 
+		task group is enqueued. 
 \item \texttt{se} is the cfs entity that represents \texttt{tg}.
 \item \texttt{cpu} specifies the cfs\_rq pointer inside \texttt{tg} that
 		will be redirected.
+		This method redirects one cfs runqueue inside a \texttt{tg} 
+		to an oxc runqueue \texttt{oxc\_rq} in each call. A hyper ox 
+		container can have more than one oxc runqueues iside
+		and to associate a task group with such hyper ox container 
+		may require the \texttt{init\_g\_cfs\_entry\_oxc} be called 
+		multiple times.
 \item \texttt{parent} points to the parent cfs scheduling entity.
 \item \texttt{oxc\_rq} contains the destinated runqueue. 
 \end{itemize}
-As for codes, \texttt{rq\_of\_oxc\_rq} first returns the OXC local runqueue.
+As for codes, first \texttt{rq\_of\_oxc\_rq} returns the oxc local runqueue.
 \texttt{init\_tg\_cfs\_entry} initialize CFS related work for \texttt{tg}.
-Then, \texttt{tg} directs its local \texttt{cfs\_rq} for containing 
-tasks on \texttt{cpu} to the per OXC runqueue just got. From now on, cfs 
-tasks and task groups under \texttt{tg} work in the scheduling route which
-will lead them to an OXC local runqueue. By directing a hierarchy of task
-group to an OXC, there is a top group, which will be enqueud in the per
-OXC runqueue's embedded cfs runqueue directly.
-
-Now we see how to direct a task group to a per OXC runqueue when task group
-scheduling is enabeld. In the whole procedure, tasks under this group is 
-untouched.
+Then, \texttt{tg} directs its local \texttt{cfs\_rq} on \texttt{cpu} to 
+the per oxc runqueue just got. After this function is invoked for every
+ox container in the hyper oxc, cfs tasks and task groups 
+under \texttt{tg} work in the scheduling route which will lead them to an 
+oxc local runqueue. When a task group is explicitly directed to a hyper
+ox container, the whole hierarchy of task groups under it will also be
+associated with this hyper ox container. This task group will be the top of
+this hierarchy, and it will be enqueud in the per oxc runqueue's embedded cfs 
+runqueue directly. This is what the last \texttt{if} condition means.
+One amazing feature of this procedure to direct a task group to a per oxc 
+is that tasks under a group is untouched.
 
 \section{Run tasks under OXC scheduling framework}
 As long as per OXC runqueue joins the scheduling route, the scheduling 
