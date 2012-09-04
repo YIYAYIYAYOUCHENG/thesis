@@ -1,72 +1,110 @@
 \chapter{Introduction\label{chap:introduction}}
 
+%%
+%% PEPPE: I did some more re-writing, splitted the chapter into sections
+%%
+
 Linux is the most widely deployed open source general purpose
-operating system. Traditionally, the aim of Linux scheduling is to
-distribute cpu cycles fairly among tasks and task groups according to
-their relative importance. Because of their popularity and high-level
-of compatibility, Linux based systems are used to serve various kinds
-of purposes. In some cases, fairness is not enough or necessary.
+Operating System. Linux flavors are used in a very wide range of
+systems and application area, from servers for cloud computing, to
+desktop computing, to tablet and smart phones, to industrial embedded
+systems. 
+
+One critical part of every Operating System is the task scheduler. For
+Linux, the scheduling system is also very critical given the wide
+range of application scenario in which this system is used. In facts,
+every scenario has different requirements and there is no single
+scheduler that can optimally satisfy them all.
+
+Traditionally, one of the aim of Linux scheduling is to distribute CPU
+cycles fairly among tasks and task groups according to their relative
+importance. Another important requirement is to make \emph{interactive
+  applications} reactive to user input. There is no precise definition
+of an \emph{interactive task}: the kernel uses heuristics to identify
+interactive tasks from batch processing tasks, in order to give higher
+priority to interactive tasks, thus reducing their response time.
 
 One important class of applications consists of hard real-time or soft
 real-time systems. In order to work well, these applications have
 requirements in terms of the CPU cycles they receive, or on the time
-they need to react to external events. Such timing guarantee (or
-\emph{real-time guarantee}) cannot be provided just by fairness.
-Examples of soft real-time applications are multi-media applications.
+they need to react to external events. Hard and soft real-time
+applications needs to be guaranteed prior to their execution that they
+will be able to meet all their timing requirements (if hard real-time)
+or most of their timing requirements (if soft real-time).
+Unfortunately, such timing guarantee (or \emph{real-time guarantee})
+cannot be provided just by using an heuristic scheduler. 
 
-%%
-%% TODO: I do not understand the following sentence 
-%%
-%Indeed, simply from CPU bandwidth management's point of view, a
-%real-time guarantee is also useful. 
+Examples of soft real-time applications are multi-media applications. 
 %
+% TODO: Please spend some time describing what is a multi-media
+% application, and how it is different from a interactive application.
+%
+
+\section{CPU reservations}
+ 
+%
+% TODO: Here it is necessary to introduce resource reservations,
+% as a way to manage bandwidth. 
+% Key concepts are:
+% - Open Systems (tasks can be dynamically launched and removed from the system)
+% - There is the need to isolate tasks by reserving bandwidth
+% - There is the need to perform admission control, to not overload the system
+%
+% One you do this, you can discuss about what is the best way to
+% distribute bandwidth (i.e. the need to do it hierarchically)
+% 
+
 In many situations, people prefer to distributing cpu power in a
 privileged and predictable way. For instance, to give 10\% of the
 total CPU cycles to a set of tasks; furthermore, take half of this
 10\% and assign it to a subset of the tasks.
+
+\section{Multi-core systems}
 
 Nowadays, multi-core architectures are successfully used to boost
 computing capability for computing devices. Common computing systems
 with multiple processors are becoming mainstream: it is no surprise to
 see an embedded device with more than one CPU inside.  Yet high speed
 processors and more cores rather than solving the CPU timing guarantee
-problem do bring more challenges. Also, no matter how powerful the
-platform is, there is always time when people need more. So, to fully
-utilize multi-core platform is also a good reason to manage computing
-power in a real-time way.
-%%
-%% TODO: please use "real-time" instead of "real time" 
-%%
+problem do bring more challenges for the developer. Also, no matter
+how powerful the platform is, there is always time when people need
+more. So, to fully utilize multi-core platform is also a good reason
+to manage computing power in a real-time way.
+%
+% TODO: 
+% The last thought is interesting, needs to be further elaborated.
+%
 
-In mainline Linux kernel, there are two so called real time scheduling 
-policies: SCHED\_FIFO and SCHED\_RR. Tasks scheduled by them are called 
-``real time(rt) tasks''. They are required in POSIX standard for 
-POSIX-compliant operating systems like Linux. Unfortunately, despite of 
-the name, these two policies can only provide real time gurantee in very 
-limited conditions. In mainline Linux, there exist two non real time 
-mechanisms to control CPU bandwidth distribution: real time (rt) throttling 
-and complete fairness scheduler (CFS) bandwidth control. In principle, they 
-are the same technique working for different types of tasks.
 
-There is work that extends Linux with real time capabilities to fullfill 
-the timing guarantee requirement: RTAI\cite{rtai}, AQuoSA\cite{Luigi09}, 
-\texttt{sched-deadline} patch\cite{Dario09}, 
-IRMOS real-time framework, RESCH and so on.
-%%
-%% TODO: Do not forget to insert citations where necessary, 
-%% IRMOS, RESCH, RT-Xen.
-%%
-Instead of modifying the system directly, RT-Xen tries to apply real 
-time mechanisms in the hypervisor level(Xen). 
+\section{The Linux scheduler}
 
-Each work has its emphasis. Initially, our work is motivated by
-IRMOS. 
+%
+% TODO: This ought to be explained in greater detail. You can remand
+% to the appropriate chapter (1.2), and make some little anticipation
+% here.
+%
+In mainline Linux kernel, there are two so called real time scheduling
+policies: SCHED\_FIFO and SCHED\_RR. Tasks scheduled by them are
+called ``real time(rt) tasks''. They are required in POSIX standard
+for POSIX-compliant operating systems like Linux. Unfortunately,
+despite of the name, these two policies can only provide real time
+gurantee in very limited conditions. In mainline Linux, there exist
+two non real time mechanisms to control CPU bandwidth distribution:
+real time (rt) throttling and complete fairness scheduler (CFS)
+bandwidth control. In principle, they are the same technique working
+for different types of tasks.
+
+
+\section{Contributions of this thesis}
+
 The objective of our framework is to develope a multi-processor reservation
 mechanism in Linux that does not constraint with specific scheduling 
 algorithms implemented in the kernel.
-%%
-%% TODO You have not stated the objectives yet. This is the time to do it. 
-%%
+
+%
+% TODO: Here you must first list what you have done. 
+%
+
 Our framework has two features:
 \begin{itemize}
 \item It can predictably distribute the cpu cycles of a
@@ -77,9 +115,10 @@ Our framework has two features:
 \end{itemize}
 
 
-%%
-%% TODO: I need to review this last part. 
-%%
+%
+% TODO: I (still) need to review this last part. 
+% Some of the things should be moved elsewhere.
+%
 In Linux, there is a scheduling system on each CPU. Different such per
 CPU scheduling systems construct the system level scheduling by task
 migration mechanisms among different CPUs. For the first time in
@@ -91,7 +130,7 @@ Linux that is introduced by our work.  It is the fundamental element
 in the framework. Based on ox container structure, the concept ``per
 oxc scheduling system'', whose behaviour is the same as ``per CPU
 scheduling system'' in Linux, is given. Several per oxc scheduling
-systems coorperate and work as the ``pseudo (Linux) system level
+systems cooperate and work as the ``pseudo (Linux) system level
 scheduling''.
 
 In oxc scheduling framework, each ox-container can reserve an amount
@@ -106,3 +145,25 @@ reserve bandwidths from a subset of total CPUs and scheduling systems
 above them work together to imitate the behaviour of the Linux system
 level scheduling. The basic unit to apply a scheduling policy under
 OXC framework is an OX container.
+
+\section{State of the Art}
+
+There is work that extends Linux with real time capabilities to fullfill 
+the timing guarantee requirement: RTAI\cite{rtai}, AQuoSA\cite{Luigi09}, 
+\texttt{sched-deadline} patch\cite{Dario09}, 
+IRMOS real-time framework, RESCH and so on.
+%
+% TODO: Do not forget to insert citations where necessary, 
+% IRMOS, RESCH, RT-Xen.
+%
+Instead of modifying the system directly, RT-Xen tries to apply real 
+time mechanisms in the hypervisor level(Xen). 
+
+Each work has its emphasis. Initially, our work is motivated by
+IRMOS. 
+
+%
+% TODO This section needs to be completed with a more extensive list
+% and description of the state of the art, with comparison with OXC
+% (i.e. in what OXC is different, or even superior).
+%
