@@ -19,16 +19,23 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:introduction}{{}{iv}{Introduction\label {chap:introduction}\relax }{chapter*.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.1}CPU reservations}{v}{section.0.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.2}Multi-core systems}{v}{section.0.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.3}The Linux scheduler}{v}{section.0.3}}
+\citation{AbeniB98}
+\@writefile{toc}{\contentsline {section}{\numberline {0.4}Contributions of this thesis}{vi}{section.0.4}}
 \citation{rtai}
 \citation{Luigi09}
 \citation{Dario09}
-\citation{AbeniB98}
+\@writefile{toc}{\contentsline {section}{\numberline {0.5}State of the Art}{vii}{section.0.5}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Background}{1}{chapter.1}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:background}{{1}{1}{Background\label {chap:background}\relax }{chapter.1}{}}
 \newlabel{sec:CBS}{{1.1}{1}{The Constant Bandwidth Server theory\label {sec:CBS}\relax }{section.1.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}The Constant Bandwidth Server theory}{1}{section.1.1}}
+\citation{Wolf}
+\citation{R.Love}
 \newlabel{sec:LinuxSched}{{1.2}{2}{The Linux Scheduler\label {sec:LinuxSched}\relax }{section.1.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}The Linux Scheduler}{2}{section.1.2}}
 \newlabel{sec:LinuxSched_classes}{{1.2.1}{2}{Scheduling classes\label {sec:LinuxSched_classes}\relax }{subsection.1.2.1}{}}
@@ -40,92 +47,156 @@
 \newlabel{fig:sched_classes}{{1.1}{4}{Scheduling classes in Linux\relax \relax }{figure.caption.3}{}}
 \newlabel{task_struct}{{1.2}{4}{\texttt {A task embeds scheduling entities}\relax }{lstlisting.1.2}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {1.2}\texttt  {A task embeds scheduling entities}}{4}{lstlisting.1.2}}
+\newlabel{task_group}{{1.3}{5}{\texttt {A task group}\relax }{lstlisting.1.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.3}\texttt  {A task group}}{5}{lstlisting.1.3}}
 \newlabel{LinuxSched_rq}{{1.2.2}{5}{Runqueue centered scheduling\label {LinuxSched_rq}\relax }{subsection.1.2.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Runqueue centered scheduling}{5}{subsection.1.2.2}}
-\newlabel{sec:LinuxSched_cfs}{{1.2.3}{6}{Completely Fair scheduler\label {sec:LinuxSched_cfs}\relax }{subsection.1.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{6}{subsection.1.2.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces CFS scheduling when cfs group scheduling is enabled.\relax }}{8}{figure.caption.4}}
-\newlabel{fig:cfs_scheme_tg}{{1.2}{8}{CFS scheduling when cfs group scheduling is enabled.\relax \relax }{figure.caption.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Scheduling scheme without group scheduling\relax }}{8}{figure.caption.5}}
-\newlabel{fig:sched_scheme_no_tg}{{1.3}{8}{Scheduling scheme without group scheduling\relax \relax }{figure.caption.5}{}}
-\newlabel{sec:LinuxSched_rt}{{1.2.4}{8}{Real time scheduler\label {sec:LinuxSched_rt}\relax }{subsection.1.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{8}{subsection.1.2.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces RT scheduling when rt group scheduling is enabled.\relax }}{10}{figure.caption.6}}
-\newlabel{fig:rt_scheme_tg}{{1.4}{10}{RT scheduling when rt group scheduling is enabled.\relax \relax }{figure.caption.6}{}}
-\newlabel{sec:RelatedWork}{{1.3}{10}{Related work\label {sec:RelatedWork}\relax }{section.1.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Related work}{10}{section.1.3}}
-\newlabel{sec:RelatedWork_RT}{{1.3.1}{10}{RT throttling\label {sec:RelatedWork_RT}\relax }{subsection.1.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}RT throttling}{10}{subsection.1.3.1}}
-\newlabel{RelatedWork_CFS}{{1.3.2}{11}{CFS bandwidth control\label {RelatedWork_CFS}\relax }{subsection.1.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{11}{subsection.1.3.2}}
-\newlabel{sec:AQuoSA}{{1.3.3}{11}{AQuoSA\label {sec:AQuoSA}\relax }{subsection.1.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}AQuoSA}{11}{subsection.1.3.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{11}{subsection.1.3.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{12}{subsection.1.3.5}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}Design and development}{13}{chapter.2}}
+\newlabel{runqueue}{{1.4}{6}{\texttt {The runqueue structure}\relax }{lstlisting.1.4}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.4}\texttt  {The runqueue structure}}{6}{lstlisting.1.4}}
+\newlabel{task_group1}{{1.5}{7}{\texttt {Specific runqueue information within a task group}\relax }{lstlisting.1.5}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.5}\texttt  {Specific runqueue information within a task group}}{7}{lstlisting.1.5}}
+\newlabel{sec:LinuxSched_cfs}{{1.2.3}{7}{Completely Fair scheduler\label {sec:LinuxSched_cfs}\relax }{subsection.1.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{7}{subsection.1.2.3}}
+\citation{rbtree}
+\newlabel{cfsrunqueue}{{1.6}{8}{\texttt {The cfs runqueue}\relax }{lstlisting.1.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.6}\texttt  {The cfs runqueue}}{8}{lstlisting.1.6}}
+\newlabel{sched_entity}{{1.7}{8}{\texttt {The cfs scheduling entity}\relax }{lstlisting.1.7}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.7}\texttt  {The cfs scheduling entity}}{8}{lstlisting.1.7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces CFS scheduling when cfs group scheduling is enabled.\relax }}{9}{figure.caption.4}}
+\newlabel{fig:cfs_scheme_tg}{{1.2}{9}{CFS scheduling when cfs group scheduling is enabled.\relax \relax }{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Scheduling scheme without group scheduling\relax }}{9}{figure.caption.5}}
+\newlabel{fig:cfs_scheme_no_tg}{{1.3}{9}{Scheduling scheme without group scheduling\relax \relax }{figure.caption.5}{}}
+\newlabel{sec:LinuxSched_rt}{{1.2.4}{10}{Real time scheduler\label {sec:LinuxSched_rt}\relax }{subsection.1.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{10}{subsection.1.2.4}}
+\newlabel{rtrunqueue}{{1.8}{10}{\texttt {The rt runqueue}\relax }{lstlisting.1.8}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.8}\texttt  {The rt runqueue}}{10}{lstlisting.1.8}}
+\newlabel{rt_entity}{{1.9}{11}{\texttt {The rt scheduling entity}\relax }{lstlisting.1.9}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.9}\texttt  {The rt scheduling entity}}{11}{lstlisting.1.9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces RT scheduling when rt group scheduling is enabled.\relax }}{11}{figure.caption.6}}
+\newlabel{fig:rt_scheme_tg}{{1.4}{11}{RT scheduling when rt group scheduling is enabled.\relax \relax }{figure.caption.6}{}}
+\newlabel{sec:RelatedWork}{{1.3}{11}{Related work\label {sec:RelatedWork}\relax }{section.1.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Related work}{11}{section.1.3}}
+\newlabel{sec:RelatedWork_RT}{{1.3.1}{11}{RT throttling\label {sec:RelatedWork_RT}\relax }{subsection.1.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}RT throttling}{11}{subsection.1.3.1}}
+\newlabel{RelatedWork_CFS}{{1.3.2}{12}{CFS bandwidth control\label {RelatedWork_CFS}\relax }{subsection.1.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{12}{subsection.1.3.2}}
+\newlabel{sec:AQuoSA}{{1.3.3}{12}{AQuoSA\label {sec:AQuoSA}\relax }{subsection.1.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}AQuoSA}{12}{subsection.1.3.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{13}{subsection.1.3.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{13}{subsection.1.3.5}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Design of OXC Scheduling}{14}{chapter.2}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:design}{{2}{13}{Design and development\label {chap:design}\relax }{chapter.2}{}}
-\newlabel{sec:design_oxc}{{2.1}{13}{Open-Extension Container Structure\label {sec:design_oxc}\relax }{section.2.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{13}{section.2.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Open-Extension Container\relax }}{14}{figure.caption.7}}
-\newlabel{fig:oxc}{{2.1}{14}{Open-Extension Container\relax \relax }{figure.caption.7}{}}
-\newlabel{sec:design_oxc_scheduling}{{2.2}{14}{The oxc scheduling\label {sec:design_oxc_scheduling}\relax }{section.2.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}The oxc scheduling}{14}{section.2.2}}
-\newlabel{fig:oxc_fair_tg}{{2.2(a)}{15}{Subfigure 2 2.2(a)\relax }{subfigure.2.2.1}{}}
-\newlabel{sub@fig:oxc_fair_tg}{{(a)}{15}{Subfigure 2 2.2(a)\relax }{subfigure.2.2.1}{}}
-\newlabel{fig:oxc_rt_tg}{{2.2(b)}{15}{Subfigure 2 2.2(b)\relax }{subfigure.2.2.2}{}}
-\newlabel{sub@fig:oxc_rt_tg}{{(b)}{15}{Subfigure 2 2.2(b)\relax }{subfigure.2.2.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Scheduling route with task group scheduling in OXC enabled Linux\relax }}{15}{figure.caption.8}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {cfs}}}{15}{figure.caption.8}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {rt}}}{15}{figure.caption.8}}
-\newlabel{fig:scheduling_route_oxc}{{2.2}{15}{Scheduling route with task group scheduling in OXC enabled Linux\relax \relax }{figure.caption.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces New scheduling route for tasks when task group scheduling is not enabled\relax }}{16}{figure.caption.9}}
-\newlabel{fig:oxc_task_no_tg}{{2.3}{16}{New scheduling route for tasks when task group scheduling is not enabled\relax \relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{16}{section.2.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Development of OXC scheduling framework}{16}{section.2.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Implementation of ox container structure}{17}{subsection.2.4.1}}
-\newlabel{oxc_rq}{{2.1}{17}{\texttt {struct oxc\_rq}\relax }{lstlisting.2.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}\texttt  {struct oxc\_rq}}{17}{lstlisting.2.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Extensions on original data structures}{19}{subsection.2.4.2}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.2}Extensions in \texttt  {struct rq}}{19}{lstlisting.2.2}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.3}Extensions in \texttt  {struct task\_group}}{19}{lstlisting.2.3}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.4}\texttt  {is\_oxc\_task} field in \texttt  {struct task\_struct}}{20}{lstlisting.2.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}The point to direct a task to a per ox container runqueue}{20}{subsection.2.4.3}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.5}To associate a task with a runqueue in original Linux}{20}{lstlisting.2.5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces The creation of a task group in original Linux\relax }}{21}{figure.caption.10}}
-\newlabel{fig:tg_creation}{{2.4}{21}{The creation of a task group in original Linux\relax \relax }{figure.caption.10}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.6}To associate a task with a runqueue under oxc framework}{21}{lstlisting.2.6}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.7}OXC scheduling related initilization during task group creation}{22}{lstlisting.2.7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces The creation of a task group in oxc enabled Linux\relax }}{23}{figure.caption.11}}
-\newlabel{fig:tg_creation_oxc}{{2.5}{23}{The creation of a task group in oxc enabled Linux\relax \relax }{figure.caption.11}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.8}To explicitlt direct a task group to an OXC local runqueue}{24}{lstlisting.2.8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Run tasks under OXC scheduling framework}{25}{subsection.2.4.4}}
-\@writefile{toc}{\contentsline {subsubsection}{To obtain the runqueue of a task}{25}{section*.12}}
-\@writefile{toc}{\contentsline {subsubsection}{To enqueue an oxc task}{26}{section*.13}}
-\@writefile{toc}{\contentsline {subsubsection}{To dequeue an oxc task}{28}{section*.14}}
-\@writefile{toc}{\contentsline {subsubsection}{To check the preemption}{29}{section*.15}}
-\@writefile{toc}{\contentsline {subsubsection}{To pick up an oxc task}{31}{section*.16}}
-\@writefile{toc}{\contentsline {subsubsection}{put\_prev\_task operation}{34}{section*.17}}
-\@writefile{toc}{\contentsline {subsubsection}{set\_curr\_task operation}{35}{section*.18}}
-\@writefile{toc}{\contentsline {subsubsection}{task\_tick operation}{36}{section*.19}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.5}SMP support in oxc framework}{36}{subsection.2.4.5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.6}User interfaces provided with OXC framework}{36}{subsection.2.4.6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.7}Cooperation with scheduling mechanisms inside Linux}{39}{subsection.2.4.7}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Experimental Results}{42}{chapter.3}}
+\newlabel{chap:design}{{2}{14}{Design of OXC Scheduling\label {chap:design}\relax }{chapter.2}{}}
+\newlabel{sec:design_oxc}{{2.1}{14}{Open-Extension Container Structure\label {sec:design_oxc}\relax }{section.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{14}{section.2.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Open-Extension Container\relax }}{15}{figure.caption.7}}
+\newlabel{fig:oxc}{{2.1}{15}{Open-Extension Container\relax \relax }{figure.caption.7}{}}
+\newlabel{sec:design_oxc_scheduling}{{2.2}{15}{The oxc scheduling\label {sec:design_oxc_scheduling}\relax }{section.2.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}The oxc scheduling}{15}{section.2.2}}
+\newlabel{fig:oxc_fair_tg}{{2.2(a)}{16}{Subfigure 2 2.2(a)\relax }{subfigure.2.2.1}{}}
+\newlabel{sub@fig:oxc_fair_tg}{{(a)}{16}{Subfigure 2 2.2(a)\relax }{subfigure.2.2.1}{}}
+\newlabel{fig:oxc_rt_tg}{{2.2(b)}{16}{Subfigure 2 2.2(b)\relax }{subfigure.2.2.2}{}}
+\newlabel{sub@fig:oxc_rt_tg}{{(b)}{16}{Subfigure 2 2.2(b)\relax }{subfigure.2.2.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Scheduling routes for a task with task group scheduling  \indent \hspace  {6cm} enabled \relax }}{16}{figure.caption.8}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {The route under cfs scheduling}}}{16}{figure.caption.8}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {The route under rt scheduling}}}{16}{figure.caption.8}}
+\newlabel{fig:scheduling_route_oxc}{{2.2}{16}{Scheduling routes for a task with task group scheduling \\\indent \hspace {6cm} enabled \relax \relax }{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces New scheduling route for tasks when task group scheduling is   \indent \hspace  {6cm} not enabled\relax }}{17}{figure.caption.9}}
+\newlabel{fig:oxc_task_no_tg}{{2.3}{17}{New scheduling route for tasks when task group scheduling is \\ \indent \hspace {6cm} not enabled\relax \relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{18}{section.2.3}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Development of OXC Framework}{19}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:exp}{{3}{42}{Experimental Results\label {chap:exp}\relax }{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Ftrace in Linux kernel}{42}{section.3.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Experiment set up}{44}{section.3.2}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Hardware-Software platform\relax }}{44}{table.caption.20}}
-\newlabel{tab:mytable}{{3.1}{44}{Hardware-Software platform\relax \relax }{table.caption.20}{}}
+\newlabel{impl}{{3}{19}{Development of OXC Framework\label {impl}\relax }{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Implementation of ox container structure}{19}{section.3.1}}
+\newlabel{oxc_rq}{{3.1}{19}{\texttt {struct oxc\_rq}\relax }{lstlisting.3.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}\texttt  {struct oxc\_rq}}{19}{lstlisting.3.1}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}The EDF tree}{21}{lstlisting.3.2}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.3}The hyper ox container}{21}{lstlisting.3.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Extensions on original data structures}{22}{section.3.2}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.4}Extensions in \texttt  {struct rq}}{22}{lstlisting.3.4}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.5}Extensions in \texttt  {struct task\_group}}{22}{lstlisting.3.5}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.6}\texttt  {is\_oxc\_task} field in \texttt  {struct task\_struct}}{23}{lstlisting.3.6}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}To direct a task to a per ox container runqueue}{23}{section.3.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{23}{subsection.3.3.1}}
+\newlabel{set_task_rq}{{3.7}{24}{To associate tasks with a per CPU runqueue in mainline Linux\relax }{lstlisting.3.7}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.7}To associate tasks with a per CPU runqueue in mainline Linux}{24}{lstlisting.3.7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The creation of a task group in original Linux\relax }}{24}{figure.caption.10}}
+\newlabel{fig:tg_creation}{{3.1}{24}{The creation of a task group in original Linux\relax \relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{25}{subsection.3.3.2}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.8}The extended \texttt  {set\_task\_rq}}{25}{lstlisting.3.8}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.9}OXC scheduling related initilization during task group creation}{26}{lstlisting.3.9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces The creation of a task group in oxc enabled Linux\relax }}{27}{figure.caption.11}}
+\newlabel{fig:tg_creation_oxc}{{3.2}{27}{The creation of a task group in oxc enabled Linux\relax \relax }{figure.caption.11}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.10}To explicitlt direct a task group to an OXC local runqueue}{28}{lstlisting.3.10}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{29}{section.3.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{30}{subsection.3.4.1}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces The way to handle a scheduling operation under the oxc framework\relax }}{31}{table.caption.12}}
+\newlabel{tab:op_classes}{{3.1}{31}{The way to handle a scheduling operation under the oxc framework\relax \relax }{table.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{31}{subsection.3.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{33}{subsection.3.4.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}To check the preemption}{35}{subsection.3.4.4}}
+\newlabel{check_preempt}{{3.4.4}{35}{\relax }{lstlisting.3.-8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{36}{subsection.3.4.5}}
+\newlabel{list:pick_next}{{3.4.5}{36}{\relax }{lstlisting.3.-9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task operation}{39}{subsection.3.4.6}}
+\newlabel{list:put_prev}{{3.4.6}{40}{\relax }{lstlisting.3.-12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task operation}{40}{subsection.3.4.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.8}task\_tick operation}{41}{subsection.3.4.8}}
+\newlabel{list:task_tick}{{3.4.8}{41}{\relax }{lstlisting.3.-14}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{41}{section.3.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}User interfaces provided with OXC framework}{42}{section.3.6}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{44}{section.3.7}}
+\citation{Luigi09}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Experiments}{47}{chapter.4}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{chap:exp}{{4}{47}{Experiments\label {chap:exp}\relax }{chapter.4}{}}
+\citation{ftrace}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Hardware-Software platform\relax }}{48}{table.caption.13}}
+\newlabel{tab:exp_setup}{{4.1}{48}{Hardware-Software platform\relax \relax }{table.caption.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{48}{section.4.1}}
+\citation{tbench}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Tbench}{50}{section.4.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Experiment A}{50}{section.4.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}The experiment design}{50}{subsection.4.3.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Experiment results}{51}{subsection.4.3.2}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Measured execution time, in micro seconds, of oxc functions  \indent \hspace  {4cm}in the format of \emph  {(mean, standard deviation)}\relax }}{52}{table.caption.14}}
+\newlabel{tab:exp_res}{{4.2}{52}{Measured execution time, in micro seconds, of oxc functions\\ \indent \hspace {4cm}in the format of \emph {(mean, standard deviation)}\relax \relax }{table.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Measured execution time for \texttt  {pick\_next\_task\_oxc}\relax }}{53}{figure.caption.15}}
+\newlabel{fig:pick_next}{{4.1}{53}{Measured execution time for \texttt {pick\_next\_task\_oxc}\relax \relax }{figure.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Measured execution time for \texttt  {put\_prev\_task\_oxc}\relax }}{53}{figure.caption.16}}
+\newlabel{fig:put_prev}{{4.2}{53}{Measured execution time for \texttt {put\_prev\_task\_oxc}\relax \relax }{figure.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Measured execution time for \texttt  {task\_tick\_oxc}\relax }}{54}{figure.caption.17}}
+\newlabel{fig:task_tick}{{4.3}{54}{Measured execution time for \texttt {task\_tick\_oxc}\relax \relax }{figure.caption.17}{}}
+\newlabel{task_tick_rt}{{4.1}{55}{\texttt {task\_tick\_rt}\relax }{lstlisting.4.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.1}\texttt  {task\_tick\_rt}}{55}{lstlisting.4.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Experiment B}{55}{section.4.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Experiment design}{55}{subsection.4.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Experiment results}{56}{subsection.4.4.2}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Throughputs, in Mbps/sec, under rt throttling and oxc control\relax }}{56}{table.caption.18}}
+\newlabel{tab:expB1}{{4.3}{56}{Throughputs, in Mbps/sec, under rt throttling and oxc control\relax \relax }{table.caption.18}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Throughputs, in Mbps/sec, under cfs bandwidth and oxc control\relax }}{57}{table.caption.19}}
+\newlabel{tab:expB2}{{4.4}{57}{Throughputs, in Mbps/sec, under cfs bandwidth and oxc control\relax \relax }{table.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces \emph  {oxc control} vs. \emph  {rt throttling}\relax }}{58}{figure.caption.20}}
+\newlabel{fig:expB1}{{4.4}{58}{\emph {oxc control} vs. \emph {rt throttling}\relax \relax }{figure.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces \emph  {oxc control} vs. \emph  {cfs bandwidth control}\relax }}{59}{figure.caption.21}}
+\newlabel{fig:expB2}{{4.5}{59}{\emph {oxc control} vs. \emph {cfs bandwidth control}\relax \relax }{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces \emph  {oxc control + rt throttling} vs. \emph  {oxc control + cfs scheduling}\relax }}{59}{figure.caption.22}}
+\newlabel{fig:expB3}{{4.6}{59}{\emph {oxc control + rt throttling} vs. \emph {oxc control + cfs scheduling}\relax \relax }{figure.caption.22}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Experiment feedbacks}{60}{section.4.5}}
 \bibstyle{ieeetr}
 \bibdata{biblio}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Conclusions and Future Work}{45}{chapter.4}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{61}{chapter.5}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibcite{rtai}{1}
-\bibcite{Luigi09}{2}
-\bibcite{Dario09}{3}
-\bibcite{AbeniB98}{4}
+\bibcite{AbeniB98}{1}
+\bibcite{rtai}{2}
+\bibcite{Luigi09}{3}
+\bibcite{Dario09}{4}
+\bibcite{Wolf}{5}
+\bibcite{R.Love}{6}
+\bibcite{rbtree}{7}
+\bibcite{ftrace}{8}
+\bibcite{tbench}{9}

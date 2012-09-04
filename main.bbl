@@ -1,18 +1,38 @@
 \begin{thebibliography}{1}
 
+\bibitem{AbeniB98}
+L.~Abeni and G.~C. Buttazzo, ``Integrating multimedia applications in hard
+  real-time systems,'' in {\em IEEE Real-Time Systems Symposium}, pp.~4--13,
+  1998.
+
 \bibitem{rtai}
 ``Rtai - real time application interface.'' \url{https://www.rtai.org/}.
 
 \bibitem{Luigi09}
 L.~Palopoli, T.~Cucinotta, L.~Marzario, and G.~Lipari, ``Aquosa - adaptive
-  quality of service architecture,'' 2009.
+  quality of service architecture,'' {\em Softw., Pract. Exper.}, vol.~39,
+  no.~1, pp.~1--31, 2009.
 
 \bibitem{Dario09}
 D.~Faggioli, M.~Trimarchi, F.~Checconi, and S.~Claudio, ``An edf scheduling
-  class for the linux kernel,'' October 2009.
+  class for the linux kernel,'' in {\em Proceedings of the 11th Real-Time
+  Workshop (RTLW)}, October 2009.
 
-\bibitem{AbeniB98}
-L.~Abeni and G.~C. Buttazzo, ``Integrating multimedia applications in hard
-  real-time systems,'' 1998.
+\bibitem{Wolf}
+W.~Mauerer, {\em Professional Linux® Kernel Architecture}.
+\newblock Wiley Publishing, Inc., 2008.
+
+\bibitem{R.Love}
+R.~Love, {\em Linux Kernel Development (3rd Edition)}.
+\newblock Addison-Wesley, 2010.
+
+\bibitem{rbtree}
+``Red-black trees (rbtree) in linux.'' Documentation/scheduler/rbtree.txt.
+
+\bibitem{ftrace}
+``ftrace - function tracer.'' Documentation/trace/ftrace.txt.
+
+\bibitem{tbench}
+``tbench(1) - linux man page.'' \url{http://linux.die.net/man/1/tbench}.
 
 \end{thebibliography}
