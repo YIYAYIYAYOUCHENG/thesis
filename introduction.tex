@@ -4,11 +4,10 @@
 %% PEPPE: I did some more re-writing, splitted the chapter into sections
 %%
 
-Linux is the most widely deployed open source general purpose
-Operating System. Linux flavors are used in a very wide range of
-systems and application area, from servers for cloud computing, to
-desktop computing, to tablet and smart phones, to industrial embedded
-systems. 
+Linux is the most widely deployed open source GPOS. Linux flavors are 
+used in a very wide range of systems and application area, from servers 
+for cloud computing, to desktop computing, to tablet and smart phones, 
+to industrial embedded systems. 
 
 One critical part of every Operating System is the task scheduler. For
 Linux, the scheduling system is also very critical given the wide
@@ -38,7 +37,24 @@ Examples of soft real-time applications are multi-media applications.
 %
 % TODO: Please spend some time describing what is a multi-media
 % application, and how it is different from a interactive application.
-%
+% DONE
+Multimedia finds its application in various areas including DVD player,
+video conference, virtual reality, computer games, etc. Multimedia 
+activities include video and audio streams, which are the challenge 
+for the scheduler in a GPOS. Because such media streams are characterized 
+by an implicit timing requirement. More specifically, video/audio streams 
+in a computer are digitalized and divided into frames. In order to 
+reproduce the stream, the sequence of frames must be processed 
+respecting some temporal constraints. As an example, a rate of 25 frames 
+per second (fps) is allowed in MPEG-2 video, which means that every 40ms 
+a frame is expected to be loaded, decoded, filtered and played. If a frame 
+is lost or played too late, the user may not notice any degradation. But 
+if the skipped frames or frame delays are over some threshold, users start 
+perceiving a certain degradation on the quality of the service. In Linux, 
+a multimedia application is normally treated as interactive tasks. Even 
+through, the scheduler has no concept of the temporal requirement for a 
+stream and there is no way to guarantee some degree of quality for a 
+multimedia application.    
 
 \section{CPU reservations}
  
@@ -52,28 +68,41 @@ Examples of soft real-time applications are multi-media applications.
 %
 % One you do this, you can discuss about what is the best way to
 % distribute bandwidth (i.e. the need to do it hierarchically)
-% 
+% DONE 
+The temporal constraint of multimedia applications can be solved by
+a class of \emph{resource reservation} (RR) algorithms in real time 
+scheduling literature. The feature of a RR algorithm is temporal 
+isolation. That is, a fraction of CPU time can be reserved to a set
+of tasks. By applying resource reservation in Linux, multimedia
+applications can meet their timing requirements. Our work exploits
+the RR mechanism for a more general use in managing CPU power
+distribution. The RR algorithm we use is CBS\cite{AbeniB98}. More 
+on it will be introduced in section \ref{sec:CBS}.
 
-In many situations, people prefer to distributing cpu power in a
-privileged and predictable way. For instance, to give 10\% of the
-total CPU cycles to a set of tasks; furthermore, take half of this
-10\% and assign it to a subset of the tasks.
-
+The following example shows a scheme of CPU power distribution.
+In many cases, people prefer to distributing cpu power in a privileged and 
+predictable way. For instance, to give 10\% of the total CPU cycles to a 
+set of tasks; furthermore, take half of this 10\% and assign it to a 
+subset of the tasks.
 \section{Multi-core systems}
 
 Nowadays, multi-core architectures are successfully used to boost
-computing capability for computing devices. Common computing systems
+computation capability for computing devices. Common computing systems
 with multiple processors are becoming mainstream: it is no surprise to
-see an embedded device with more than one CPU inside.  Yet high speed
-processors and more cores rather than solving the CPU timing guarantee
-problem do bring more challenges for the developer. Also, no matter
-how powerful the platform is, there is always time when people need
-more. So, to fully utilize multi-core platform is also a good reason
-to manage computing power in a real-time way.
+see an embedded device with more than one CPU inside. So, it is 
+necessary for a CPU power distribution scheme to support multi-core 
+platforms. Additionally high speed processors and more cores rather 
+than solving the CPU timing guarantee problem do bring more challenges 
+for the developer. Also, no matter how powerful the platform is, there 
+is always time when people need more. These are all considerations 
+when design the CPU power management work.
+%in a real-time way.
+%And the last golden rule for a GPOS CPU power management mechanism is:
+%\texttt{support multi-processor platform}.
 %
 % TODO: 
 % The last thought is interesting, needs to be further elaborated.
-%
+% DONE
 
 
 \section{The Linux scheduler}
@@ -82,30 +111,71 @@ to manage computing power in a real-time way.
 % TODO: This ought to be explained in greater detail. You can remand
 % to the appropriate chapter (1.2), and make some little anticipation
 % here.
-%
-In mainline Linux kernel, there are two so called real time scheduling
-policies: SCHED\_FIFO and SCHED\_RR. Tasks scheduled by them are
-called ``real time(rt) tasks''. They are required in POSIX standard
-for POSIX-compliant operating systems like Linux. Unfortunately,
-despite of the name, these two policies can only provide real time
-gurantee in very limited conditions. In mainline Linux, there exist
-two non real time mechanisms to control CPU bandwidth distribution:
-real time (rt) throttling and complete fairness scheduler (CFS)
-bandwidth control. In principle, they are the same technique working
-for different types of tasks.
+% DONE
+In mainline Linux kernel, there are two so called real time (RT)
+scheduling policies: SCHED\_FIFO and SCHED\_RR. Tasks scheduled by 
+them are called ``real time (RT) tasks''. They are required in POSIX 
+standard for POSIX-compliant operating systems like Linux. 
+Unfortunately, despite of the name, these two policies can only 
+provide real time gurantee in very limited conditions. In mainline 
+Linux, there exist two non real time mechanisms to control CPU 
+bandwidth distribution: real time (RT) throttling and complete 
+fairness scheduler (CFS) bandwidth control. In principle, they 
+are the same technique working for different types of tasks. 
+For more on Linux scheduling, please read chapter 
+\ref{chap:background}.
 
 
 \section{Contributions of this thesis}
 
-The objective of our framework is to develope a multi-processor reservation
-mechanism in Linux that does not constraint with specific scheduling 
-algorithms implemented in the kernel.
+The objective of our work is to develop a multi-processor 
+reservation mechanism in Linux that does not constraint with specific 
+scheduling algorithms implemented in the kernel.
 
 %
 % TODO: Here you must first list what you have done. 
-%
+% DONE
+Before discussing details on our work, let's think a little bit what
+is the good mechanism to distribute the CPU power in a GPOS, taking 
+Linux as the study case. 
+\begin{itemize}
 
-Our framework has two features:
+\item   {\texttt{Compatibility}}\\
+	In principle, a scheduler does distribute CPU time. There are 
+	several schedulers in Linux and each deals with its own type 
+	of tasks. So, the constraint for a scheduler to manage CPU 
+	power is that it can only handle a subset of tasks. A general 
+	mechanism that is compatible with different shedulers are better.  
+\item 	{\texttt{Hierarchical distribution}}\\
+	Tasks in the Linux system are organized in a flat or hierarchy, 
+	depending on the kernel compilation option. In modern systems, the 
+	hierarchical way is more preferred. The recommended method should 
+	be able to hierarchically distribute the CPU power.
+\item 	{\texttt{Predictability}}\\
+	Because there are various kinds of tasks inside Linux, among which
+	some require (hard or soft) timing guarantee and some do not. 
+	The CPU power distribution should be predictable. When it comes to 
+	predictability, a guarantee test or admission control is always 
+	necessary since the predictability can only be available under 
+	a condition. For instance, the CPU utilization is no larger than 1. 
+\item	{\texttt{Support multi-procressor platforms}}
+\end{itemize}
+In this article, the above four items are called \emph{golden rules} 
+for CPU power distribution design in the GPOS. We design and develop 
+a RR based framework that fulfils all golden rules. 
+We call the framework Open-Extension Container (OXC) scheduling
+framework. The Open-Extension (OX) Container is a new data structure in
+Linux that is introduced by our work.  It is the fundamental element
+in the framework. More on an ox container is in chapter \ref{chap:design}. 
+In oxc scheduling framework, each ox-container can reserve an amount of 
+bandwidth from a CPU through CBS rules. Several ox containers can work
+together and reserve CPU bandwidths from multiple processors. From the 
+Linux scheduler's point of view, an ox container is regared as a virtual 
+CPU. This is why the reserved bandwidth through an ox container can be 
+utilized by different kinds of tasks in Linux. Details on the development 
+of the oxc framework is in chapter \ref{chap:impl}.
+
+The oxc framework has two features:
 \begin{itemize}
 \item It can predictably distribute the cpu cycles of a
   multi-processor platform to a set of tasks and its subsets, without
@@ -113,57 +183,129 @@ Our framework has two features:
 \item Under the framework, scheduling policies can be applied in a
   fine-grained way.
 \end{itemize}
-
+This first feature is actually a conclusion of four golden rules.
+The second feature has nothing to do with CPU time distribution.
+Usually, when a scheduling algorithm is applied in a system, it is
+indeed applied in the whole system level. One by-product of our 
+framework is that the working scale of a scheduling algorithm can
+be constrainted in part of the system. The basic unit to apply a 
+scheduling policy under oxc framework is an ox container.
 
 %
 % TODO: I (still) need to review this last part. 
 % Some of the things should be moved elsewhere.
 %
-In Linux, there is a scheduling system on each CPU. Different such per
-CPU scheduling systems construct the system level scheduling by task
-migration mechanisms among different CPUs. For the first time in
-Linux, our framework provides the opportunity to build extra
-scheduling systems besides these destinated with each CPU. We call the
-framework Open-Extension Container (OXC) scheduling
-framework. Open-Extension (OX) container is a new data structure in
-Linux that is introduced by our work.  It is the fundamental element
-in the framework. Based on ox container structure, the concept ``per
-oxc scheduling system'', whose behaviour is the same as ``per CPU
-scheduling system'' in Linux, is given. Several per oxc scheduling
-systems cooperate and work as the ``pseudo (Linux) system level
-scheduling''.
-
-In oxc scheduling framework, each ox-container can reserve an amount
-of bandwidth from a CPU through CBS rules \cite{AbeniB98}. The per oxc
-scheduling system based on it utilize this computing power to shcedule
-tasks as if working on a less powerful cpu. This is how oxc framework
-distribute reserved CPU cycles to tasks under it. Because the per oxc
-scheduling has the same behaviour as per CPU scheduling in Linux,
-general types of tasks can run using the reserved bandwidth. On
-multiple processor platforms, different OXCs can inpdependently
-reserve bandwidths from a subset of total CPUs and scheduling systems
-above them work together to imitate the behaviour of the Linux system
-level scheduling. The basic unit to apply a scheduling policy under
-OXC framework is an OX container.
+%In Linux, there is a scheduling system on each CPU. Different such per
+%CPU scheduling systems construct the system level scheduling by task
+%migration mechanisms among different CPUs. For the first time in
+%Linux, our framework provides the opportunity to build extra
+%scheduling systems besides these destinated with each CPU. We call the
+%framework Open-Extension Container (OXC) scheduling
+%framework. Open-Extension (OX) container is a new data structure in
+%Linux that is introduced by our work.  It is the fundamental element
+%in the framework. Based on ox container structure, the concept ``per
+%oxc scheduling system'', whose behaviour is the same as ``per CPU
+%scheduling system'' in Linux, is given. Several per oxc scheduling
+%systems cooperate and work as the ``pseudo (Linux) system level
+%scheduling''.
+%
+%In oxc scheduling framework, each ox-container can reserve an amount
+%of bandwidth from a CPU through CBS rules \cite{AbeniB98}. The per oxc
+%scheduling system based on it utilize this computing power to shcedule
+%tasks as if working on a less powerful cpu. This is how oxc framework
+%distribute reserved CPU cycles to tasks under it. Because the per oxc
+%scheduling has the same behaviour as per CPU scheduling in Linux,
+%general types of tasks can run using the reserved bandwidth. On
+%multiple processor platforms, different OXCs can inpdependently
+%reserve bandwidths from a subset of total CPUs and scheduling systems
+%above them work together to imitate the behaviour of the Linux system
+%level scheduling. The basic unit to apply a scheduling policy under
+%OXC framework is an OX container.
 
 \section{State of the Art}
 
-There is work that extends Linux with real time capabilities to fullfill 
+There is work that extends Linux with real time capabilities to fulfil 
 the timing guarantee requirement: RTAI\cite{rtai}, AQuoSA\cite{Luigi09}, 
 \texttt{sched-deadline} patch\cite{Dario09}, 
-IRMOS real-time framework, RESCH and so on.
+IRMOS real-time framework\cite{irmos}, RESCH\cite{resch}, etc.
 %
 % TODO: Do not forget to insert citations where necessary, 
 % IRMOS, RESCH, RT-Xen.
-%
-Instead of modifying the system directly, RT-Xen tries to apply real 
-time mechanisms in the hypervisor level(Xen). 
+% DONE
+Instead of modifying the system directly, RT-Xen\cite{rtxen} tries to 
+apply real time mechanisms in the hypervisor level(Xen). 
 
 Each work has its emphasis. Initially, our work is motivated by
-IRMOS. 
+IRMOS. The IRMOS can meet three of our golden rules except for 
+the compatibility one. IRMOS scheduler can only reserve CPU 
+bandwidth for RT tasks in Linux.  
+
+RTAI adapts a dual kernel approach. Besides the Linux kernel, there is
+a real time kernel for serving real time tasks. It aims to reduce the
+wost case latency to run a real time task. As for the latency, the 
+performance of RTAI is a benchmark for other work. 
+
+In AQuoSA, the CBS rules are used to reserve CPU reservations. 
+As a CPU time distribution mechanism, it is based on RT scheduling 
+with \texttt{SCHED\_RR} policy and fails the multi-processor support 
+rule. However, inside the AQuoSA architecture, there is a feedback-based 
+mechanism to dynamically cnfigure the rservation parameter. Such an 
+adaptive resource allocation is meaningful since workloads in a system 
+will fluctuate with time. 
+
+The \texttt{sched-deadline} patch is very promising to be merged 
+into the mainline kernel as the deadline based scheduler. 
+It should be expected that the oxc framework can also reserve 
+bandwidths for tasks scheduled by this deadline based scheduler. 
+
+RESCH implements several real-time algorithms that can be
+loaded into the kernel as modules. This reminds us if we can realize 
+the oxc framework as modules. 
+
+RT-Xen tries to bridge the gap between real-time scheduling theory and 
+Xen hypervisor and insantiates a suite of real-time scheduling algorithms. 
+To provide real-time guarantee in the cross platform hypervisor layer is 
+very attractive. And very likely the real-time support from the operating 
+system is necessary for such a purpose. In this case, a real-time CPU 
+bandwidth control mechanism like our work will be helpful.
+
+Our work is purely interested in CPU bandwidth distribution.
+To the author's knowledge, there does not exist other 
+CPU power management work that can achieve all golden rules.
 
 %
 % TODO This section needs to be completed with a more extensive list
 % and description of the state of the art, with comparison with OXC
 % (i.e. in what OXC is different, or even superior).
-%
+% DONE
+\section{Organization of the thesis}
+Chapter~\ref{chap:background} ({\bf Background}) gives a brief overview
+of the knowledge that is needed to understand the oxc framework. At first,
+the CBS algorithm for resource reservation. Then the architecture of 
+Linux scheduling is described. By architecture it means the emphasis is 
+on how different scheduling components are organized. In the end of this
+chapter, related work is generally discussed, including the RT throttling
+and CFS bandwidth control in mainline Linux and a more extensive 
+introduction on some work listed above.
+
+Chapter~\ref{chap:design} ({\bf Design}) gives the difinition of an ox 
+container and its attributes. The theory of ox container scheduling, which
+is the soul of our work, is explored in this chapter. 
+
+Chapter~\ref{chap:impl} ({\bf Implementation}) presents details of the oxc
+framework. It first explains new data structures added in the kernel and 
+extensions on original kernel structures. The next part concerns how to 
+implement the oxc scheduling theory in the kernel. Then, important functions,
+including how to reserve CPU bandwidths, in the oxc framework are studied.
+A complete introduction on interfaces of the framework and how to use them
+is also in this chapter. At last, the relationship between oxc framework
+and Linux CPU power management methods is investigated.
+
+In Chapter~\ref{chap:exp} ({\bf Experiment}), two experiments are conducted
+to evaluate the overhead and performance of the oxc framework (or oxc control).
+The experiment set up, kernel recording tool, benchmark tool,
+etc, are introduced first. Then at each experiment, there is the design, 
+data collection and result analysis.
+
+Finally, the Chapter~\ref{chap:con} ({\bf Conclusion}) sums up the current
+status of the oxc framework and discusses future development of the work. 

@@ -1,5 +1,11 @@
 \select@language {english}
-\contentsline {chapter}{Introduction}{iv}{chapter*.2}
+\contentsline {chapter}{Introduction}{v}{chapter*.4}
+\contentsline {section}{\numberline {0.1}CPU reservations}{vi}{section.0.1}
+\contentsline {section}{\numberline {0.2}Multi-core systems}{vii}{section.0.2}
+\contentsline {section}{\numberline {0.3}The Linux scheduler}{vii}{section.0.3}
+\contentsline {section}{\numberline {0.4}Contributions of this thesis}{vii}{section.0.4}
+\contentsline {section}{\numberline {0.5}State of the Art}{ix}{section.0.5}
+\contentsline {section}{\numberline {0.6}Organization of the thesis}{x}{section.0.6}
 \contentsline {chapter}{\numberline {1}Background}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}The Constant Bandwidth Server theory}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}The Linux Scheduler}{2}{section.1.2}
@@ -16,7 +22,7 @@
 \contentsline {chapter}{\numberline {2}Design of OXC Scheduling}{14}{chapter.2}
 \contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{14}{section.2.1}
 \contentsline {section}{\numberline {2.2}The oxc scheduling}{15}{section.2.2}
-\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{18}{section.2.3}
+\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{17}{section.2.3}
 \contentsline {chapter}{\numberline {3}Development of OXC Framework}{19}{chapter.3}
 \contentsline {section}{\numberline {3.1}Implementation of ox container structure}{19}{section.3.1}
 \contentsline {section}{\numberline {3.2}Extensions on original data structures}{22}{section.3.2}
@@ -25,24 +31,24 @@
 \contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{25}{subsection.3.3.2}
 \contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{29}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{30}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{31}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{33}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{32}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{34}{subsection.3.4.3}
 \contentsline {subsection}{\numberline {3.4.4}To check the preemption}{35}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{36}{subsection.3.4.5}
-\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task operation}{39}{subsection.3.4.6}
-\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task operation}{40}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}task\_tick operation}{41}{subsection.3.4.8}
-\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{41}{section.3.5}
-\contentsline {section}{\numberline {3.6}User interfaces provided with OXC framework}{42}{section.3.6}
-\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{44}{section.3.7}
-\contentsline {chapter}{\numberline {4}Experiments}{47}{chapter.4}
-\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{48}{section.4.1}
-\contentsline {section}{\numberline {4.2}Tbench}{50}{section.4.2}
-\contentsline {section}{\numberline {4.3}Experiment A}{50}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}The experiment design}{50}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Experiment results}{51}{subsection.4.3.2}
-\contentsline {section}{\numberline {4.4}Experiment B}{55}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}Experiment design}{55}{subsection.4.4.1}
-\contentsline {subsection}{\numberline {4.4.2}Experiment results}{56}{subsection.4.4.2}
-\contentsline {section}{\numberline {4.5}Experiment feedbacks}{60}{section.4.5}
-\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{61}{chapter.5}
+\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{37}{subsection.3.4.5}
+\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task\_oxc}{40}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task\_oxc}{41}{subsection.3.4.7}
+\contentsline {subsection}{\numberline {3.4.8}task\_tick\_oxc }{42}{subsection.3.4.8}
+\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{43}{section.3.5}
+\contentsline {section}{\numberline {3.6}User interfaces provided by OXC framework}{43}{section.3.6}
+\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{46}{section.3.7}
+\contentsline {chapter}{\numberline {4}Experiments}{49}{chapter.4}
+\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{50}{section.4.1}
+\contentsline {section}{\numberline {4.2}Tbench}{52}{section.4.2}
+\contentsline {section}{\numberline {4.3}Experiment A}{52}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}The experiment design}{52}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Experiment results}{53}{subsection.4.3.2}
+\contentsline {section}{\numberline {4.4}Experiment B}{57}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Experiment design}{57}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Experiment results}{58}{subsection.4.4.2}
+\contentsline {section}{\numberline {4.5}Experiment feedbacks}{62}{section.4.5}
+\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{63}{chapter.5}

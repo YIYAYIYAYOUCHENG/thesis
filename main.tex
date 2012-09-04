@@ -12,6 +12,7 @@
 \usepackage[pdftex,bookmarks=true,hypertexnames=true]{hyperref}
 \usepackage{fancyhdr}
 \newcommand{\fncyblank}{\fancyhf{}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newenvironment{abstract}%
 {\cleardoublepage\fncyblank\null\vfill\begin{center}%
 \bfseries\abstractname\end{center}}%
@@ -81,7 +82,7 @@ pdftitle= {Design and Development of Real-Time Multi-Processor Bandwidth
 Control Mechanisms in General Purpose Operating Systems},
 pdfsubject= {Design and Development of Real-Time Multi-Processor Bandwidth
 Control Mechanisms in General Purpose Operating Systems},
-pdfkeywords = {realtime, scheduling, linux, multiprocessor, framework},
+pdfkeywords = {realtime, scheduling, linux, multiprocessor, hierarchy},
 pdfborder = { 0 0 0 0 }
 }
 
@@ -101,36 +102,58 @@ pdfborder = { 0 0 0 0 }
 
 \frontmatter
 
-\maketitle
+%\maketitle
 
 %\input{frontpage}
-
+\input{title}
 \begin{abstract}
   % TODO: the abstract should be a short summary of the contents of
   % the thesis. Very short motivation (the problem to be solved), and
   % what has been done in the thesis.
+  % DONE
 
+  %Attentions have been being paid to extend general purpose operating
+  %systems with real time functionalities. In this thesis, a scheduling
+  %framework, which can control Central Processing Unit (CPU) bandwidth
+  %distribution on multi-processor platforms in a real-time way, is
+  %proposed in Linux.  Under the framework, cpu bandwidths from
+  %different processors are reserved according to Constant Bandwidth
+  %Server (CBS) rules.  Yet as for how to utilize the reserved
+  %bandwidths to schedule tasks in Linux, this is not the interest of
+  %the framework. They can be scheduled by policies used in the Linux
+  %system or scheduling algorithms that are implemented for a specific
+  %purpose. A subset of these tasks can get a portion of the
+  %reservation using the same rule.  Furthermore, under the framework,
+  %scheduling policies can be applied in a controlled scale instead of
+  %the whole system.
+
+  %In current implementation, both normal tasks and real-time tasks in
+  %Linux can work under the framework. Experimental results are not
+  %available now ...
   Attentions have been being paid to extend general purpose operating
-  systems with real time functionalities. In this thesis, a scheduling
-  framework, which can control Central Processing Unit (CPU) bandwidth
-  distribution on multi-processor platforms in a real-time way, is
-  proposed in Linux.  Under the framework, cpu bandwidths from
-  different processors are reserved according to Constant Bandwidth
-  Server (CBS) rules.  Yet as for how to utilize the reserved
-  bandwidths to schedule tasks in Linux, this is not the interest of
-  the framework. They can be scheduled by policies used in the Linux
-  system or scheduling algorithms that are implemented for a specific
-  purpose. A subset of these tasks can get a portion of the
-  reservation using the same rule.  Furthermore, under the framework,
-  scheduling policies can be applied in a controlled scale instead of
-  the whole system.
+  systems (GPOS) with real time functionalities. In this thesis, the
+  Open-Extension Container(OXC) scheduling framework, which can control 
+  Central Processing Unit (CPU) bandwidth distribution on multi-processor 
+  platforms in a real-time way, is proposed in Linux. The ox container 
+  is a new data structure defined in our work. It has a good feature 
+  that from a Linux scheduler's aspect, it behaves as a virtual CPU.  
+  Under the framework, cpu bandwidths from different processors are 
+  reserved according to Constant Bandwidth Server (CBS) rules.  Yet 
+  as for how to utilize the reserved bandwidths to schedule tasks, 
+  this is not the interest of the framework. They can be scheduled by 
+  policies used in the Linux system or scheduling algorithms that are 
+  implemented for a specific purpose. A subset of these tasks can get 
+  a portion of the reservation using the same rule.  Furthermore, under 
+  the framework, scheduling policies can be applied in a controlled scale 
+  instead of the whole system.
 
   In current implementation, both normal tasks and real-time tasks in
-  Linux can work under the framework. Experimental results are not
-  available now ...
+  Linux can work under the framework. Experiments show that our 
+  hierarchical CPU bandwidth control is feasible in Linux.
 \end{abstract}
 
 \tableofcontents
+\listoffigures
 \input{introduction}
 \mainmatter
 \input{background}
