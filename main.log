@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  22 AUG 2012 11:59
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.18)  4 SEP 2012 14:14
 entering extended mode
  %&-line parsing enabled.
 **main
 (./main.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
+yphenation, french, basque, italian, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/book.cls
 Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/bk12.clo
@@ -34,6 +34,14 @@ Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 ))
+(/usr/share/texmf-texlive/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count88
+\float@exts=\toks15
+\float@box=\box26
+\@float@everytoks=\toks16
+\@floatcapt=\box27
+)
 (/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
@@ -49,8 +57,8 @@ File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
 Package graphics Info: Driver file: pdftex.def on input line 91.
 
 (/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2009/08/25 v0.04m Graphics/color for pdfTeX
-\Gread@gobject=\count88
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
+\Gread@gobject=\count89
 ))
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
@@ -67,7 +75,7 @@ Language: english 2005/03/30 v3.3o English support from the babel system
 
 (/usr/share/texmf-texlive/tex/generic/babel/babel.def
 File: babel.def 2008/07/06 v3.8l Babel common definitions
-\babel@savecnt=\count89
+\babel@savecnt=\count90
 \U@D=\dimen105
 )
 \l@british = a dialect from \language\l@english 
@@ -77,24 +85,24 @@ File: babel.def 2008/07/06 v3.8l Babel common definitions
 \l@newzealand = a dialect from \language\l@british 
 ))
 (/usr/share/texmf-texlive/tex/latex/listings/listings.sty
-\lst@mode=\count90
-\lst@gtempboxa=\box26
-\lst@token=\toks15
-\lst@length=\count91
+\lst@mode=\count91
+\lst@gtempboxa=\box28
+\lst@token=\toks17
+\lst@length=\count92
 \lst@currlwidth=\dimen106
-\lst@column=\count92
-\lst@pos=\count93
+\lst@column=\count93
+\lst@pos=\count94
 \lst@lostspace=\dimen107
 \lst@width=\dimen108
-\lst@newlines=\count94
-\lst@lineno=\count95
+\lst@newlines=\count95
+\lst@lineno=\count96
 \lst@maxwidth=\dimen109
 
 (/usr/share/texmf-texlive/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
-\c@lstnumber=\count96
-\lst@skipnumbers=\count97
-\lst@framebox=\box27
+\c@lstnumber=\count97
+\lst@skipnumbers=\count98
+\lst@framebox=\box29
 )
 (/usr/share/texmf-texlive/tex/latex/listings/listings.cfg
 File: listings.cfg 2007/02/22 1.4 listings configuration
@@ -103,7 +111,7 @@ Package: listings 2007/02/22 1.4 (Carsten Heinz)
 
 (/usr/share/texmf-texlive/tex/latex/tools/varioref.sty
 Package: varioref 2009/09/13 v1.4w package for extended references (FMi)
-\c@vrcnt=\count98
+\c@vrcnt=\count99
 )
 (/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.sty
 Package: subfigure 2002/03/15 v2.1.5 subfigure package
@@ -113,10 +121,10 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 \subfigbottomskip=\skip45
 \subfigcapmargin=\dimen111
 \subfiglabelskip=\skip46
-\c@subfigure=\count99
-\c@lofdepth=\count100
-\c@subtable=\count101
-\c@lotdepth=\count102
+\c@subfigure=\count100
+\c@lofdepth=\count101
+\c@subtable=\count102
+\c@lotdepth=\count103
 
 ****************************************
 * Local config file subfigure.cfg used *
@@ -127,8 +135,8 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 )
 (/usr/share/texmf-texlive/tex/latex/tools/verbatim.sty
 Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
-\every@verbatim=\toks16
-\verbatim@line=\toks17
+\every@verbatim=\toks18
+\verbatim@line=\toks19
 \verbatim@in@stream=\read1
 )
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
@@ -141,7 +149,7 @@ Package: amstext 2000/06/29 v2.01
 
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0
-\@emptytoks=\toks18
+\@emptytoks=\toks20
 \ex@=\dimen112
 ))
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
@@ -151,41 +159,41 @@ Package: amsbsy 1999/11/29 v1.2d
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
 Package: amsopn 1999/12/14 v2.01 operator names
 )
-\inf@bad=\count103
+\inf@bad=\count104
 LaTeX Info: Redefining \frac on input line 211.
-\uproot@=\count104
-\leftroot@=\count105
+\uproot@=\count105
+\leftroot@=\count106
 LaTeX Info: Redefining \overline on input line 307.
-\classnum@=\count106
-\DOTSCASE@=\count107
+\classnum@=\count107
+\DOTSCASE@=\count108
 LaTeX Info: Redefining \ldots on input line 379.
 LaTeX Info: Redefining \dots on input line 382.
 LaTeX Info: Redefining \cdots on input line 467.
-\Mathstrutbox@=\box28
-\strutbox@=\box29
+\Mathstrutbox@=\box30
+\strutbox@=\box31
 \big@size=\dimen114
 LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
-\macc@depth=\count108
-\c@MaxMatrixCols=\count109
+\macc@depth=\count109
+\c@MaxMatrixCols=\count110
 \dotsspace@=\muskip10
-\c@parentequation=\count110
-\dspbrk@lvl=\count111
-\tag@help=\toks19
-\row@=\count112
-\column@=\count113
-\maxfields@=\count114
-\andhelp@=\toks20
+\c@parentequation=\count111
+\dspbrk@lvl=\count112
+\tag@help=\toks21
+\row@=\count113
+\column@=\count114
+\maxfields@=\count115
+\andhelp@=\toks22
 \eqnshift@=\dimen115
 \alignsep@=\dimen116
 \tagshift@=\dimen117
 \tagwidth@=\dimen118
 \totwidth@=\dimen119
 \lineht@=\dimen120
-\@envbody=\toks21
+\@envbody=\toks23
 \multlinegap=\skip50
 \multlinetaggap=\skip51
-\mathdisplay@stack=\toks22
+\mathdisplay@stack=\toks24
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
@@ -211,8 +219,8 @@ O)
 Package: xcolor-patch 2009/10/02 xcolor patch
 ))
 \@linkdim=\dimen121
-\Hy@linkcounter=\count115
-\Hy@pagecounter=\count116
+\Hy@linkcounter=\count116
+\Hy@pagecounter=\count117
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
@@ -280,10 +288,10 @@ Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 )))
-\Fld@menulength=\count117
+\Fld@menulength=\count118
 \Field@Width=\dimen122
 \Fld@charsize=\dimen123
-\Field@toks=\toks23
+\Field@toks=\toks25
 Package hyperref Info: Hyper figures OFF on input line 4377.
 Package hyperref Info: Link nesting OFF on input line 4382.
 Package hyperref Info: Hyper index ON on input line 4385.
@@ -295,14 +303,14 @@ Package hyperref Info: PDF/A mode OFF on input line 4407.
 (/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
 Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 )
-\Hy@abspage=\count118
-\c@Item=\count119
-\c@Hfootnote=\count120
+\Hy@abspage=\count119
+\c@Item=\count120
+\c@Hfootnote=\count121
 )
 *hyperref using driver hpdftex*
 (/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
-\Fld@listcount=\count121
+\Fld@listcount=\count122
 )
 (/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
 \fancy@headwidth=\skip52
@@ -362,62 +370,63 @@ Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
 \caption@parindent=\dimen128
 \caption@hangindent=\dimen129
 )
-\c@ContinuedFloat=\count122
+\c@ContinuedFloat=\count123
+Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: subfigure package is loaded.
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 99.
-LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
 
 ABD: EveryShipout initializing macros
 (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count123
+\scratchcounter=\count124
 \scratchdimen=\dimen130
-\scratchbox=\box30
-\nofMPsegments=\count124
-\nofMParguments=\count125
-\everyMPshowfont=\toks24
-\MPscratchCnt=\count126
+\scratchbox=\box32
+\nofMPsegments=\count125
+\nofMParguments=\count126
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count127
 \MPscratchDim=\dimen131
-\MPnumerator=\count127
-\everyMPtoPDFconversion=\toks25
+\MPnumerator=\count128
+\everyMPtoPDFconversion=\toks27
 )
-\c@lstlisting=\count128
-Package hyperref Info: Link coloring OFF on input line 99.
+\c@lstlisting=\count129
+Package hyperref Info: Link coloring OFF on input line 98.
  (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count129
+\c@section@level=\count130
 LaTeX Info: Redefining \Ref on input line 396.
 )
-LaTeX Info: Redefining \ref on input line 99.
-LaTeX Info: Redefining \pageref on input line 99.
+LaTeX Info: Redefining \ref on input line 98.
+LaTeX Info: Redefining \pageref on input line 98.
  (./main.out)
 (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-\AtBeginShipoutBox=\box31
-LaTeX Info: Redefining \Ref on input line 99.
+\AtBeginShipoutBox=\box33
+LaTeX Info: Redefining \Ref on input line 98.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  [1
@@ -429,7 +438,7 @@ ination with the same identifier (name{page.i}) has been already used, duplicat
 e ignored
 <to be read again> 
                    \relax 
-l.132 \tableofcontents
+l.130 \tableofcontents
                        [1
 
 ] (./main.toc [2
@@ -441,231 +450,347 @@ l.132 \tableofcontents
  (./introduction.tex [3] [4
 
 ]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 42.
+[5]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 110.
 
-(/usr/share/texmf-texlive/tex/latex/psnfss/ot1pcr.fd
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 48.
-
-(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+ (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 48.
-) [5] [6] (./background.tex
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 110.
+ [6]
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 153.
+
+
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)) [7] (./background.tex
 Chapter 1.
 [1
 
 
-] [2]
-LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <10> not available
-(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 68.
+]
+Overfull \hbox (22.35959pt too wide) in paragraph at lines 68--90
+\OT1/cmr/m/n/12 sched-ulers com-poses the generic sched-uler in Linux. The \OT1
+/pcr/m/n/12 struct sched[]class
+ []
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 68--68
+
+Overfull \hbox (1.07741pt too wide) in paragraph at lines 68--90
+\OT1/cmr/m/n/12 classes in main-line Linux: rt[]sched[]class, cfs[]sched[]class
+ and idle[]sched[]class[][][].
+ []
+
+[2]
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <10> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 90.
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 90--90
 [][][][][][][] 
  []
 
-[3] <images/sched_classes.png, id=230, 589.20125pt x 84.315pt>
+[3] <images/sched_classes.png, id=354, 589.20125pt x 84.315pt>
 File: images/sched_classes.png Graphic file (type png)
 
 <use images/sched_classes.png>
-Overfull \hbox (35.53485pt too wide) in paragraph at lines 121--129
-\OT1/pcr/m/n/12 struct sched[]entity \OT1/cmr/m/n/12 for cfs schedul-ing class 
-and \OT1/pcr/m/n/12 struct sched[]rt[]entity
- []
-
-
-Overfull \hbox (6.0pt too wide) in paragraph at lines 129--129
+Overfull \hbox (6.0pt too wide) in paragraph at lines 153--153
 [][][][][][][] 
  []
 
 [4 <./images/sched_classes.png (PNG copy)>]
-Overfull \hbox (1.08394pt too wide) in paragraph at lines 141--144
+Overfull \hbox (1.08394pt too wide) in paragraph at lines 165--174
 \OT1/cmr/m/n/12 And \OT1/pcr/m/n/12 CONFIG[]RT[]GROUP[]SCHEED \OT1/cmr/m/n/12 i
 s the ker-nel con-fig-u-ra-tion for rt task group
  []
 
 
-Overfull \hbox (1.82736pt too wide) in paragraph at lines 162--168
+Overfull \hbox (6.0pt too wide) in paragraph at lines 174--174
+[][][][][][][] 
+ []
+
+LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <10> not available
+(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 178.
+
+Overfull \hbox (1.82736pt too wide) in paragraph at lines 192--202
 \OT1/cmr/m/n/12 Every hook in \OT1/pcr/m/n/12 struct sched[]class \OT1/cmr/m/n/
 12 deals with the data struc-ture \OT1/pcr/m/n/12 struct
  []
 
-[5] [6] <images/cfs_scheduling_scheme_tg.png, id=284, 948.54375pt x 120.45pt>
-File: images/cfs_scheduling_scheme_tg.png Graphic file (type png)
+[5]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 202--202
+[][][][][][][] 
+ []
 
-<use images/cfs_scheduling_scheme_tg.png> [7]
-<images/scheduling_scheme_no_tg.png, id=310, 447.6725pt x 140.525pt>
-File: images/scheduling_scheme_no_tg.png Graphic file (type png)
+[6]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 243--243
+[][][][][][][] 
+ []
 
-<use images/scheduling_scheme_no_tg.png> [8 <./images/cfs_scheduling_scheme_tg.
-png (PNG copy)> <./images/scheduling_scheme_no_tg.png (PNG copy)>]
-<images/rt_scheduling_scheme_tg.png, id=319, 950.55125pt x 148.555pt>
-File: images/rt_scheduling_scheme_tg.png Graphic file (type png)
-
-<use images/rt_scheduling_scheme_tg.png>
-Overfull \hbox (9.0935pt too wide) in paragraph at lines 324--333
-\OT1/cmr/m/n/12 When \OT1/pcr/m/n/12 CONFIG[]RT[]GROUP[]SCHED \OT1/cmr/m/n/12 i
-s set, fig-ure[]1.4[] shows the schedul-ing scheme
+[7]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 283--283
+[][][][][][][] 
  []
 
 
-Overfull \hbox (4.5513pt too wide) in paragraph at lines 336--352
+Overfull \hbox (6.0pt too wide) in paragraph at lines 309--309
+[][][][][][][] 
+ []
+
+[8]
+Overfull \hbox (5.00967pt too wide) in paragraph at lines 325--328
+\OT1/cmr/m/n/12 nents (\OT1/pcr/m/n/12 sched[]entity\OT1/cmr/m/n/12 , \OT1/pcr/
+m/n/12 task[]struct\OT1/cmr/m/n/12 , \OT1/pcr/m/n/12 task[]group \OT1/cmr/m/n/1
+2 and \OT1/pcr/m/n/12 struct cfs[]rq\OT1/cmr/m/n/12 )
+ []
+
+<images/cfs_scheduling_scheme_tg.png, id=462, 948.54375pt x 120.45pt>
+File: images/cfs_scheduling_scheme_tg.png Graphic file (type png)
+
+<use images/cfs_scheduling_scheme_tg.png>
+<images/scheduling_scheme_no_tg.png, id=463, 447.6725pt x 140.525pt>
+File: images/scheduling_scheme_no_tg.png Graphic file (type png)
+
+<use images/scheduling_scheme_no_tg.png> [9 <./images/cfs_scheduling_scheme_tg.
+png (PNG copy)> <./images/scheduling_scheme_no_tg.png (PNG copy)>]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 385--385
+[][][][][][][] 
+ []
+
+[10]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 408--408
+[][][][][][][] 
+ []
+
+<images/rt_scheduling_scheme_tg.png, id=493, 950.55125pt x 148.555pt>
+File: images/rt_scheduling_scheme_tg.png Graphic file (type png)
+
+<use images/rt_scheduling_scheme_tg.png>
+Overfull \hbox (4.5513pt too wide) in paragraph at lines 433--449
 \OT1/cmr/m/n/12 Enabling \OT1/pcr/m/n/12 CONFIG[]RT[]GROUP[]SCHED \OT1/cmr/m/n/
 12 lets users ex-plic-itly al-lo-cate CPU bandi-
  []
 
-[9] [10 <./images/rt_scheduling_scheme_tg.png (PNG copy)>]
-Overfull \hbox (2.55936pt too wide) in paragraph at lines 387--393
+[11 <./images/rt_scheduling_scheme_tg.png (PNG copy)>] [12]
+Overfull \hbox (2.55936pt too wide) in paragraph at lines 484--490
 \OT1/cmr/m/n/12 cur-rent main-line Linux with a deadline-based schedul-ing meth
 od. In schedule-
  []
 
-) (./design.tex [11] [12]
+) (./design.tex [13]
 Chapter 2.
-<images/oxc.png, id=365, 196.735pt x 95.35625pt>
+<images/oxc.png, id=520, 196.735pt x 95.35625pt>
 File: images/oxc.png Graphic file (type png)
- <use images/oxc.png> [13
+ <use images/oxc.png> [14
 
 ]
-<images/cfs_scheduling_scheme_tg_oxc.png, id=375, 1041.8925pt x 152.57pt>
+[15 <./images/oxc.png (PNG copy)>]
+<images/cfs_scheduling_scheme_tg_oxc.png, id=535, 1041.8925pt x 152.57pt>
 File: images/cfs_scheduling_scheme_tg_oxc.png Graphic file (type png)
 
 <use images/cfs_scheduling_scheme_tg_oxc.png>
-<images/rt_scheduling_scheme_tg_oxc.png, id=376, 1044.90375pt x 150.5625pt>
+<images/rt_scheduling_scheme_tg_oxc.png, id=536, 1044.90375pt x 150.5625pt>
 File: images/rt_scheduling_scheme_tg_oxc.png Graphic file (type png)
 
 <use images/rt_scheduling_scheme_tg_oxc.png>
-Overfull \hbox (7.82657pt too wide) in paragraph at lines 62--67
+Overfull \hbox (7.82657pt too wide) in paragraph at lines 73--78
  [] 
  []
 
 
-Overfull \hbox (7.83765pt too wide) in paragraph at lines 62--67
+Overfull \hbox (7.83765pt too wide) in paragraph at lines 73--78
  [][] 
  []
 
-<images/oxc_task_no_tg.png, id=379, 917.4275pt x 396.48125pt>
+<images/oxc_task_no_tg.png, id=539, 917.4275pt x 396.48125pt>
 File: images/oxc_task_no_tg.png Graphic file (type png)
 
-<use images/oxc_task_no_tg.png> [14 <./images/oxc.png (PNG copy)>]
-Overfull \hbox (9.4075pt too wide) in paragraph at lines 104--109
+<use images/oxc_task_no_tg.png> [16 <./images/cfs_scheduling_scheme_tg_oxc.png 
+(PNG copy)> <./images/rt_scheduling_scheme_tg_oxc.png (PNG copy)>]
+Overfull \hbox (9.4075pt too wide) in paragraph at lines 116--121
 []\OT1/cmr/m/n/12 Based on per CPU schedul-ing, each schedul-ing op-er-a-tion d
 e-fined in \OT1/pcr/m/n/12 struct
  []
 
 
-Overfull \hbox (4.36774pt too wide) in paragraph at lines 110--110
+Overfull \hbox (4.36774pt too wide) in paragraph at lines 122--122
 []\OT1/cmr/bx/n/17.28 Movtivation for oxc schedul-ing frame-work 
  []
 
-[15 <./images/cfs_scheduling_scheme_tg_oxc.png (PNG copy)> <./images/rt_schedul
-ing_scheme_tg_oxc.png (PNG copy)>] [16 <./images/oxc_task_no_tg.png (PNG copy)>
-]
-Overfull \hbox (6.0pt too wide) in paragraph at lines 141--141
+[17 <./images/oxc_task_no_tg.png (PNG copy)>]) (./impl.tex [18]
+Chapter 3.
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 22--22
 [][][][][][][] 
  []
 
-[17]
-Overfull \hbox (44.18939pt too wide) in paragraph at lines 169--174
+[19
+
+]
+Overfull \hbox (44.18939pt too wide) in paragraph at lines 50--55
 \OT1/pcr/m/n/12 oxc[]runtime\OT1/cmr/m/n/12 , then \OT1/pcr/m/n/12 oxc[]throttl
 ed \OT1/cmr/m/n/12 should be set un-til \OT1/pcr/m/n/12 oxc[]period[]timer
  []
 
-[18]
-Overfull \hbox (6.0pt too wide) in paragraph at lines 219--219
-[][][][][][][] 
- []
-
-
-Overfull \hbox (6.0pt too wide) in paragraph at lines 234--234
-[][][][][][][] 
- []
-
-[19]
-Overfull \hbox (6.0pt too wide) in paragraph at lines 257--257
-[][][][][][][] 
- []
-
-
-Overfull \hbox (6.0pt too wide) in paragraph at lines 271--271
-[][][][][][][] 
- []
-
 [20]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 72--72
+[][][][][][][] 
+ []
 
-LaTeX Warning: Reference `tg_creation' on page 21 undefined on input line 287.
 
-<images/tg_creation.png, id=470, 810.02625pt x 314.17375pt>
+Overfull \hbox (6.0pt too wide) in paragraph at lines 85--85
+[][][][][][][] 
+ []
+
+[21]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 103--103
+[][][][][][][] 
+ []
+
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 124--124
+[][][][][][][] 
+ []
+
+[22]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 155--155
+[][][][][][][] 
+ []
+
+[23]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 174--174
+[][][][][][][] 
+ []
+
+<images/tg_creation.png, id=630, 810.02625pt x 314.17375pt>
 File: images/tg_creation.png Graphic file (type png)
 
 <use images/tg_creation.png>
-Overfull \hbox (6.0pt too wide) in paragraph at lines 303--303
+Overfull \hbox (79.30437pt too wide) in paragraph at lines 187--206
+\OT1/cmr/m/n/12 of the schedul-ing route when \OT1/pcr/m/n/12 CONFIG[]FAIR[]GRO
+UP[]SCHED \OT1/cmr/m/n/12 and \OT1/pcr/m/n/12 CONFIG[]RT[]GROUP[]SCHED
+ []
+
+[24 <./images/tg_creation.png (PNG copy)>]
+Overfull \hbox (7.43945pt too wide) in paragraph at lines 207--207
+[]\OT1/cmr/bx/n/14.4 To build the schedul-ing route in oxc en-abled Linux 
+ []
+
+
+LaTeX Warning: Reference `fig:scheduling_route_oc' on page 25 undefined on inpu
+t line 210.
+
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 220--220
 [][][][][][][] 
  []
 
-[21 <./images/tg_creation.png (PNG copy)>]
-<images/tg_creation_oxc.png, id=488, 292.09125pt x 269.005pt>
+[25] <images/tg_creation_oxc.png, id=676, 292.09125pt x 269.005pt>
 File: images/tg_creation_oxc.png Graphic file (type png)
 
 <use images/tg_creation_oxc.png>
-Overfull \hbox (6.0pt too wide) in paragraph at lines 355--355
+Overfull \hbox (6.0pt too wide) in paragraph at lines 289--289
 [][][][][][][] 
  []
 
-[22] [23 <./images/tg_creation_oxc.png (PNG copy)>]
-Overfull \hbox (6.0pt too wide) in paragraph at lines 396--396
+[26] [27 <./images/tg_creation_oxc.png (PNG copy)>]
+Overfull \hbox (97.01396pt too wide) in paragraph at lines 327--332
+[]\OT1/cmr/m/n/12 A task group can di-rect to a oxc lo-cal run-queue ex-plic-it
+ly through \OT1/pcr/m/n/12 init[]tg[]cfs[]entry[]oxc
+ []
+
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 332--332
 [][][][][][][] 
  []
 
-[24]
-Overfull \hbox (62.05301pt too wide) in paragraph at lines 421--429
-\OT1/cmr/m/n/12 As for codes, \OT1/pcr/m/n/12 rq[]of[]oxc[]rq \OT1/cmr/m/n/12 f
-irst re-turns the OXC lo-cal run-queue. \OT1/pcr/m/n/12 init[]tg[]cfs[]entry
+[28]
+Overfull \hbox (53.24606pt too wide) in paragraph at lines 363--376
+\OT1/cmr/m/n/12 As for codes, first \OT1/pcr/m/n/12 rq[]of[]oxc[]rq \OT1/cmr/m/
+n/12 re-turns the oxc lo-cal run-queue. \OT1/pcr/m/n/12 init[]tg[]cfs[]entry
  []
 
-[25]
-LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <10> not available
-(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 482.
- [26] [27] [28]
-Underfull \hbox (badness 10000) in paragraph at lines 608--614
+[29] [30] [31] [32] [33] [34]
+Underfull \hbox (badness 10000) in paragraph at lines 588--594
 
  []
 
-[29] [30] [31] [32] [33]
-Overfull \hbox (26.06104pt too wide) in paragraph at lines 781--788
+[35] [36] [37] [38]
+Overfull \hbox (26.06104pt too wide) in paragraph at lines 761--768
 \OT1/cmr/m/n/12 state-ment deals with the case tha tthe con-tainer is throt-tle
 d: the \OT1/pcr/m/n/12 oxc[]throttled
  []
 
-[34] [35] [36]
-Overfull \hbox (65.65732pt too wide) in paragraph at lines 887--891
+[39] [40] [41]
+Overfull \hbox (4.86366pt too wide) in paragraph at lines 851--851
+[]\OT1/cmr/bx/n/17.28 User in-ter-faces pro-vided with OXC frame-
+ []
+
+
+Overfull \hbox (65.65732pt too wide) in paragraph at lines 867--871
 \OT1/cmr/m/n/12 Observe the files in-side \OT1/pcr/m/n/12 /cgroup/cg \OT1/cmr/m
 /n/12 di-rec-tory, there are one new file \OT1/pcr/m/n/12 cpu.oxc[]control
  []
 
-[37]
-Overfull \hbox (8.96947pt too wide) in paragraph at lines 969--981
+[42] [43]
+Overfull \hbox (8.96947pt too wide) in paragraph at lines 949--961
 \OT1/cmr/m/n/12 After this, a new hy-per con-tainer with reser-va-tion pa-ram-e
 -ters 1000000/1500000
  []
 
-[38] [39]) (./exp.tex [40] [41]
-Chapter 3.
-[42
+[44] [45]) (./exp.tex [46]
+Chapter 4.
+[47
 
 ]
-Overfull \hbox (19.56938pt too wide) in paragraph at lines 57--68
-\OT1/cmr/m/n/12 spe-cific func-tions. They are \OT1/pcr/m/n/12 set[]ftrace[]fil
-ter \OT1/cmr/m/n/12 and \OT1/pcr/m/n/12 set[]ftrace[]notrace\OT1/cmr/m/n/12 .
+Overfull \hbox (3.02696pt too wide) in paragraph at lines 41--52
+ [][] 
  []
 
-[43]) (./conclusion.tex [44]
-Chapter 4.
-) (./main.bbl [45
+[48] [49] [50]
+Overfull \hbox (35.10973pt too wide) in paragraph at lines 195--206
+ [][] 
+ []
 
-]) [46
+[51] <images/pick_next_task_oxc.png, id=1157, 642.4pt x 481.8pt>
+File: images/pick_next_task_oxc.png Graphic file (type png)
+
+<use images/pick_next_task_oxc.png>
+<images/put_prev_task_oxc.png, id=1159, 642.4pt x 481.8pt>
+File: images/put_prev_task_oxc.png Graphic file (type png)
+
+<use images/put_prev_task_oxc.png> [52]
+<images/task_tick_oxc.png, id=1168, 642.4pt x 481.8pt>
+File: images/task_tick_oxc.png Graphic file (type png)
+
+<use images/task_tick_oxc.png> [53 <./images/pick_next_task_oxc.png> <./images/
+put_prev_task_oxc.png>] [54 <./images/task_tick_oxc.png>]
+Overfull \hbox (6.0pt too wide) in paragraph at lines 283--283
+[][][][][][][] 
+ []
+
+[55]
+Overfull \hbox (8.356pt too wide) in paragraph at lines 357--366
+ [][] 
+ []
+
+[56] <images/expB1.png, id=1219, 642.4pt x 481.8pt>
+File: images/expB1.png Graphic file (type png)
+ <use images/expB1.png>
+[57] <images/expB2.png, id=1228, 642.4pt x 481.8pt>
+File: images/expB2.png Graphic file (type png)
+ <use images/expB2.png>
+<images/expB3.png, id=1229, 642.4pt x 481.8pt>
+File: images/expB3.png Graphic file (type png)
+ <use images/expB3.png> [58 <./images/expB1.png>] [59 <./images/expB2.png> <./i
+mages/expB3.png>])
+(./conclusion.tex [60]
+Chapter 5.
+) (./main.bbl [61
+
+]
+Missing character: There is no Â in font cmti12!
+Missing character: There is no ® in font cmti12!
+) [62
 
 ] (./main.aux)
 
@@ -673,13 +798,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 9338 strings out of 495061
- 135523 string characters out of 1182621
- 328269 words of memory out of 3000000
- 11720 multiletter control sequences out of 15000+50000
- 13935 words of font info for 50 fonts, out of 3000000 for 9000
+ 9569 strings out of 495021
+ 138882 string characters out of 1180926
+ 343666 words of memory out of 3000000
+ 11856 multiletter control sequences out of 15000+50000
+ 14235 words of font info for 51 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,8n,43p,266b,1790s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,10n,43p,267b,1788s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
 ve/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive/fonts/ty
 pe1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/public/
@@ -688,16 +813,17 @@ amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm
 </usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/
 texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-texliv
 e/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type
-1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
-onts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl1
-2.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
-/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf
--texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf-texlive/fo
-nts/type1/urw/courier/ucrb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/cour
-ier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb>
-Output written on main.pdf (53 pages, 656179 bytes).
+1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.
+pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl12.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/font
+s/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf-texlive/fonts/type1/urw
+/courier/ucrb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pf
+b></usr/share/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb>
+Output written on main.pdf (70 pages, 811283 bytes).
 PDF statistics:
- 1154 PDF objects out of 1200 (max. 8388607)
- 627 named destinations out of 1000 (max. 500000)
- 291 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1469 PDF objects out of 1728 (max. 8388607)
+ 719 named destinations out of 1000 (max. 500000)
+ 497 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,4 +1,9 @@
 \BOOKMARK [0][-]{chapter*.2}{Introduction}{}
+\BOOKMARK [1][-]{section.0.1}{CPU reservations}{chapter*.2}
+\BOOKMARK [1][-]{section.0.2}{Multi-core systems}{chapter*.2}
+\BOOKMARK [1][-]{section.0.3}{The Linux scheduler}{chapter*.2}
+\BOOKMARK [1][-]{section.0.4}{Contributions of this thesis}{chapter*.2}
+\BOOKMARK [1][-]{section.0.5}{State of the Art}{chapter*.2}
 \BOOKMARK [0][-]{chapter.1}{Background}{}
 \BOOKMARK [1][-]{section.1.1}{The Constant Bandwidth Server theory}{chapter.1}
 \BOOKMARK [1][-]{section.1.2}{The Linux Scheduler}{chapter.1}
@@ -12,19 +17,36 @@
 \BOOKMARK [2][-]{subsection.1.3.3}{AQuoSA}{section.1.3}
 \BOOKMARK [2][-]{subsection.1.3.4}{Schedule-deadline patch}{section.1.3}
 \BOOKMARK [2][-]{subsection.1.3.5}{IRMOS real-time framework}{section.1.3}
-\BOOKMARK [0][-]{chapter.2}{Design and development}{}
+\BOOKMARK [0][-]{chapter.2}{Design of OXC Scheduling}{}
 \BOOKMARK [1][-]{section.2.1}{Open-Extension Container Structure}{chapter.2}
 \BOOKMARK [1][-]{section.2.2}{The oxc scheduling}{chapter.2}
 \BOOKMARK [1][-]{section.2.3}{Movtivation for oxc scheduling framework}{chapter.2}
-\BOOKMARK [1][-]{section.2.4}{Development of OXC scheduling framework}{chapter.2}
-\BOOKMARK [2][-]{subsection.2.4.1}{Implementation of ox container structure}{section.2.4}
-\BOOKMARK [2][-]{subsection.2.4.2}{Extensions on original data structures}{section.2.4}
-\BOOKMARK [2][-]{subsection.2.4.3}{The point to direct a task to a per ox container runqueue}{section.2.4}
-\BOOKMARK [2][-]{subsection.2.4.4}{Run tasks under OXC scheduling framework}{section.2.4}
-\BOOKMARK [2][-]{subsection.2.4.5}{SMP support in oxc framework}{section.2.4}
-\BOOKMARK [2][-]{subsection.2.4.6}{User interfaces provided with OXC framework}{section.2.4}
-\BOOKMARK [2][-]{subsection.2.4.7}{Cooperation with scheduling mechanisms inside Linux}{section.2.4}
-\BOOKMARK [0][-]{chapter.3}{Experimental Results}{}
-\BOOKMARK [1][-]{section.3.1}{Ftrace in Linux kernel}{chapter.3}
-\BOOKMARK [1][-]{section.3.2}{Experiment set up}{chapter.3}
-\BOOKMARK [0][-]{chapter.4}{Conclusions and Future Work}{}
+\BOOKMARK [0][-]{chapter.3}{Development of OXC Framework}{}
+\BOOKMARK [1][-]{section.3.1}{Implementation of ox container structure}{chapter.3}
+\BOOKMARK [1][-]{section.3.2}{Extensions on original data structures}{chapter.3}
+\BOOKMARK [1][-]{section.3.3}{To direct a task to a per ox container runqueue}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.3.1}{To build the scheduling route in mainline Linux}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.2}{To build the scheduling route in oxc enabled Linux}{section.3.3}
+\BOOKMARK [1][-]{section.3.4}{Run tasks under OXC scheduling framework}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.4.1}{To obtain the runqueue of a task}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.2}{To enqueue an oxc task}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.3}{To dequeue an oxc task}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.4}{To check the preemption}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.5}{To pick up an oxc task}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.6}{put\137prev\137task operation}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.7}{set\137curr\137task operation}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.8}{task\137tick operation}{section.3.4}
+\BOOKMARK [1][-]{section.3.5}{SMP support in oxc framework}{chapter.3}
+\BOOKMARK [1][-]{section.3.6}{User interfaces provided with OXC framework}{chapter.3}
+\BOOKMARK [1][-]{section.3.7}{Cooperation with scheduling mechanisms inside Linux}{chapter.3}
+\BOOKMARK [0][-]{chapter.4}{Experiments}{}
+\BOOKMARK [1][-]{section.4.1}{Ftrace in Linux kernel}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Tbench}{chapter.4}
+\BOOKMARK [1][-]{section.4.3}{Experiment A}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.3.1}{The experiment design}{section.4.3}
+\BOOKMARK [2][-]{subsection.4.3.2}{Experiment results}{section.4.3}
+\BOOKMARK [1][-]{section.4.4}{Experiment B}{chapter.4}
+\BOOKMARK [2][-]{subsection.4.4.1}{Experiment design}{section.4.4}
+\BOOKMARK [2][-]{subsection.4.4.2}{Experiment results}{section.4.4}
+\BOOKMARK [1][-]{section.4.5}{Experiment feedbacks}{chapter.4}
+\BOOKMARK [0][-]{chapter.5}{Conclusions and Future Work}{}

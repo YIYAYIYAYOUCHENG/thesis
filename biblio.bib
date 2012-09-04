@@ -1,12 +1,23 @@
+@INPROCEEDINGS{lipari2001hierarchical,
+  author = {G. Lipari and S. Baruah},
+  title = {{A hierarchical extension to the constant bandwidth server framework}},
+  booktitle = {rtas},
+  year = {2001},
+  pages = {0026},
+  organization = {Published by the IEEE Computer Society}
+}
+
 @misc{rtai,
   title	= {RTAI - Real Time Application Interface},
   Howpublished = {\url{https://www.rtai.org/}}
 }
+
 @misc{ftq,
   title	= {FTQ - Fixed Time Quanta},
   Howpublished = {\url{https://rt.wiki.kernel.org/index.php/FTQ}}
 }
-@misc{AbeniB98,
+
+@inproceedings{AbeniB98,
   author    = {Luca Abeni and
                Giorgio C. Buttazzo},
   title     = {Integrating Multimedia Applications in Hard Real-Time Systems},
@@ -14,7 +25,70 @@
   year      = {1998},
   pages     = {4-13},
 }
-@misc{Luigi09,
+
+@ARTICLE{journals/jec/LipariB05,
+  author = {Giuseppe Lipari and Enrico Bini},
+  title = {A methodology for designing hierarchical scheduling systems},
+  journal = {Journal of Embedded Computing},
+  year = {2005},
+  volume = {1},
+  pages = {257--269},
+  number = {2},
+  bibdate = {2009-03-16},
+  bibsource = {DBLP, http://dblp.uni-trier.de/db/journals/jec/jec1.html\\#LipariB05},
+  issn = {1740-4460},
+  publisher = {IOS Press},
+  url = {http://iospress.metapress.com/content/a60keb3bb9c9cptn/}
+}
+
+@ARTICLE{Lip05-comp,
+  author = {G. Lipari and P. Gai and M. Trimarchi and G. Guidi and P. Ancilotti},
+  title = {A hierarchical framework for component-based real-time systems},
+  journal = {Electronic Notes in Theoretical Computer Science (ENTCS)},
+  year = {2005},
+  volume = {116},
+  pages = {253--266},
+  abstract = {In this paper, we describe a methodology for the design and the development
+	of component-based real-time systems. In our model, a component consists
+	of a set of concurrent real-time threads that communicate by means
+	of synchronous and asynchronous operations. In addition, each component
+	can specify its own local scheduling algorithm. We also discuss the
+	support that must be provided at the operating system level, and
+	present an implementation in the SHaRK operating system.},
+  issn = {1571-0661},
+  keywords = {real-time, component-based design, hierarchical scheduling},
+  language = {en},
+  publisher = {Elsevier}
+}
+
+@INPROCEEDINGS{baruah2002implementing,
+  author = {Baruah, Sanjoy K. and Goossens, Joel and Lipari, Giuseppe},
+  title = {{Implementing constant-bandwidth servers upon multiprocessor platforms}},
+  booktitle = {Real-Time and Embedded Technology and Applications Symposium, 2002.
+	Proceedings. Eighth IEEE},
+  year = {2002},
+  pages = {154--163},
+  organization = {IEEE},
+  isbn = {0769517390},
+  issn = {1080-1812}
+}
+
+@ARTICLE{DBLP:journals/rts/MancinaFLHGT09,
+  author = {Antonio Mancina and Dario Faggioli and Giuseppe Lipari and Jorrit
+	N. Herder and Ben Gras and Andrew S. Tanenbaum},
+  title = {Enhancing a dependable multiserver operating system with temporal
+	protection via resource reservations},
+  journal = {Real-Time Systems},
+  year = {2009},
+  volume = {43},
+  pages = {177--210},
+  number = {2},
+  bibsource = {DBLP, http://dblp.uni-trier.de},
+  ee = {http://dx.doi.org/10.1007/s11241-009-9086-5}
+}
+
+
+@article{Luigi09,
   author    = {Luigi Palopoli and
                Tommaso Cucinotta and
                Luca Marzario and
@@ -26,7 +100,7 @@
   year      = {2009},
   pages     = {1-31},
 }
-@misc{Dario09,
+@inproceedings{Dario09,
  author = {Faggioli, Dario and Trimarchi, Michael and Checconi, 
 		Fabio and Scordino Claudio},
         TITLE = "An EDF scheduling class for the Linux kernel",
@@ -34,11 +108,17 @@
         year = {2009},
         MONTH = "October"
 }
+<<<<<<< HEAD
 @misc{irmos,
 	author = {F. Checconi and 
 			T. Cucinotta and 
 			D. Faggioli and 
 			Giuseppe Lipari},
+=======
+@inproceedings{irmos,
+ author = {Fabio Checconi, Tommaso Cucinotta, Dario Faggioli, 
+		Giuseppe Lipari},
+>>>>>>> 937232e3abc76ecbe89fc63495efcb91f493ce7a
         TITLE = "Hierarchical Multiprocessor CPU Reservations for Linux Kernel",
         booktitle = {5th OSPERT Workshop}, 
         year = {2009},
@@ -76,14 +156,17 @@
         title = {Linux Kernel Development (3rd Edition)},
         year = {2010}
 }
+
 @misc{rbtree,
 	Title={Red-black Trees (rbtree) in Linux},
 	Howpublished={Documentation/scheduler/rbtree.txt}
 }
+
 @misc{ftrace,
 	Title={ftrace - Function Tracer},
 	Howpublished={Documentation/trace/ftrace.txt}
 }
+
 @misc{tbench,
   title	= {tbench(1) - Linux man page},
   Howpublished = {\url{http://linux.die.net/man/1/tbench}}
