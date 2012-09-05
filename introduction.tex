@@ -226,7 +226,7 @@ scheduling policy under oxc framework is an ox container.
 
 There is work that extends Linux with real time capabilities to fulfil 
 the timing guarantee requirement: RTAI~\cite{rtai}, AQuoSA~\cite{Luigi09}, 
-\texttt{sched-deadline} patch~\cite{Dario09}, 
+\texttt{sched\_deadline} patch~\cite{Dario09}, 
 IRMOS real-time framework~\cite{irmos}, RESCH~\cite{resch}, etc.
 %
 % TODO: Do not forget to insert citations where necessary, 
@@ -253,7 +253,7 @@ mechanism to dynamically cnfigure the rservation parameter. Such an
 adaptive resource allocation is meaningful since workloads in a system 
 will fluctuate with time. 
 
-The \texttt{sched-deadline} patch is very promising to be merged 
+The \texttt{sched\_deadline} patch is very promising to be merged 
 into the mainline kernel as the deadline based scheduler. 
 It should be expected that the oxc framework can also reserve 
 bandwidths for tasks scheduled by this deadline based scheduler. 

@@ -524,14 +524,18 @@ not enabled, still \emph{task\_rq} marco will be used.
 \end{figure}
 
 \section{Related work\label{sec:RelatedWork}}
-\subsection{RT throttling\label{sec:RelatedWork_RT}}
+
+\subsection{RT throttling\label{sec:RelatedWork_RT}~\cite{rt-throttling}}
+
 Enabling \texttt{CONFIG\_RT\_GROUP\_SCHED} lets users explicitly allocate
 CPU bandiwidth to RT tasks in task groups. It uses the \emph{control group}
-(cgroup) virtual file system. Each cgroup associates a set of tasks with
-a set of resources, called \emph{subsystems}. For example \emph{cpuset} 
-subsystem is responsible for assigning a set of CPUs and Memory Nodes to
-tasks in a cgroup. Such tasks and resources can be further distributed in 
-sub cgroups. Each cgroup is represented by a directory in the cgroup file 
+(cgroup)~\cite{cgroups} virtual file system. Each cgroup associates a set of 
+tasks with a set of resources, called \emph{subsystems}. For example 
+\emph{cpuset} subsystem~\cite{cpusets} is responsible for assigning a 
+set of CPUs and 
+Memory Nodes to tasks in a cgroup. Such tasks and resources can be further 
+distributed in sub cgroups. Each cgroup is represented by a directory in 
+the cgroup file 
 system and a hierarchy of cgroups maps to a hierarchy of directories. In 
 the directory, each mounted subsystem provides a list of files that are used 
 as interfaces to control the allocation of a resource.
@@ -549,25 +553,33 @@ rt tasks' execution through the /proc virtual file system :
 	$/proc/sys/kernel/sched\_rt\_period\_us$ 
 
 	$/proc/sys/kernel/sched\_rt\_runtime\_us$ 
-\\This applies to all RT tasks in a system.
+\\This applies to all RT tasks in a system. By default, 
+The default values for \texttt{sched\_rt\_period\_us} and
+\texttt{sched\_rt\_runtime\_us} are 1000000 (1s) and 950000 (0.95s)
+respectively. This means that RT tasks are limited to 95\% of the total
+system processor time, enforced on a per-second period. The remainder 
+of that time, 5\%, is left for CFS tasks. 
 
-\subsection{CFS bandwidth control\label{RelatedWork_CFS}}
-Basically, CFS bandwidth control is the same technique as RT throttling
-applying on normal tasks. It is a \texttt{CONFIG\_FAIR\_GROUP\_SCHED} 
+\subsection{CFS bandwidth control\label{sec:RelatedWork_CFS}}
+
+Basically, CFS bandwidth control~\cite{cfs-bwc} apllies the same technique 
+in RT throttling on normal tasks. It is a \texttt{CONFIG\_FAIR\_GROUP\_SCHED} 
 extension which allows the specification of the maximum CPU bandwidth
-available to normal tasks  in a cgroup or cgroup hierarchy.
+available to normal tasks in a cgroup or cgroup hierarchy.
 The bandwidth allowed to a cgroup is specified using a 
 quota(\texttt{cpu.cfs\_quota\_us}) and a period(\texttt{cpu.cfs\_period\_us}).
-By specifying this, normal tasks in a cgroup will be limited to 
+By specifying them, normal tasks in a cgroup will be limited to 
 \texttt{cfs\_quota\_us} units of CPU time within the period of 
 \texttt{cfs\_period\_us}. Recall that in RT throttling \ref{sec:RelatedWork_RT},
 the reserved bandwidth through cgroup interfaces are applied in each CPU
 individually.
-\subsection{AQuoSA\label{sec:AQuoSA}}
+
+\subsection{AQuoSA\label{sec:RelatedWork_AQuoSA}}
+
 The Adaptive Quality of Service Architecture composes two parts: 
 a resource reservation scheduler an a feedback-based
 control mechanism. The scheduler uses CBS rules to rserve CPU bandwidth for
-a task, which is a RT task with SCHED\_RR policy in its Linux implementation.
+a task, which is a RT task with \texttt{SCHED\_RR} policy.
 Given the error between the reserved computation and the amount of CPU cycles
 really consumed, the feedback controller adapts CBS reservation paramters to
 provide quality of service CPU allocation in the system.
@@ -575,23 +587,27 @@ The control mechanism depends on CBS performance, not the scheduling details.
 That is, such a control mechanism can be applied to general CBS based 
 scheduling. AQuoSA lacks considerations on multi-processor platform.
   
-\subsection{Schedule-deadline patch}
-The schedule-deadline patch for Linux kernel is being developed to extend
-current mainline Linux with a deadline-based scheduling method. 
-In schedule-deadline, a new scheduling class (scheduler) is implemented and 
-has highest priority among all scheduling classes. Tasks scheduled by this
-scheduling class are called sched tasks. A sched task is assigned deadlines
-according to CBS rules and scheduled in ''earliest deadline first (EDF)'' way.
-\subsection{IRMOS real-time framework}
+\subsection{Sched\_deadline patch\label{sec:RelatedWork_dl}}
+The \texttt{sched\_deadline }patch for Linux kernel is being developed 
+to extend current mainline Linux with a deadline-based scheduling method. 
+In the work of \texttt{sched\_deadline}, a new scheduling class (scheduler) 
+\texttt{dl\_sched\_class} is implemented and has the highest priority among 
+all scheduling classes. Tasks from this schedulinfg class are assigned 
+deadlines according to CBS rules and scheduled in ''earliest deadline first
+(EDF)'' way.
+
+\subsection{IRMOS real-time framework\label{sec:RelatedWork_irmos}}
 The rague name IRMOS comes from the European project ''Interactive Real-time
 Multimedia Applications on Service Oriented Infrastructures''. 
-The IRMOS 
-framework replace RT throttling mechanism in mainline Linux with real time
-CPU reservation(still CBS), and reuses the existing interfaces. So, users 
-configure the cgroup interface as what we saw in RT 
-throttling(\ref{sec:RelatedWork_RT}), the difference is that this time the CPU 
-bandwidth is allocated in a guaranteed way. Also, new cgroup interfaces are 
-added to assist reserved CPU power distribution in the cgroup hierarchy.
+The IRMOS framework replaces RT throttling mechanism in mainline Linux with 
+real time CPU reservation(still CBS), and reuses the existing interfaces. 
+Still, users can configure the cgroup interface as what we saw in RT 
+throttling, the difference is that this time the CPU 
+bandwidth is allocated in a guaranteed way. To control the distribution of 
+reserved CPU bandwidths in the cgroup hierarchy, two new cgroup inerfaces
+are added inside each cgroup to specify the CPU bandwidth that can be 
+further reserved by descendant cgroups, which of course should not exceed 
+the reserved bandwidth in this cgroup.
 
 %%% Local Variables: 
 %%% mode: latex
