@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{AbeniB98}
 L.~Abeni and G.~C. Buttazzo, ``Integrating multimedia applications in hard
@@ -17,6 +17,46 @@ L.~Palopoli, T.~Cucinotta, L.~Marzario, and G.~Lipari, ``Aquosa - adaptive
 D.~Faggioli, M.~Trimarchi, F.~Checconi, and S.~Claudio, ``An edf scheduling
   class for the linux kernel,'' in {\em Proceedings of the 11th Real-Time
   Workshop (RTLW)}, October 2009.
+
+\bibitem{irmos}
+F.~Checconi, T.~Cucinotta, D.~Faggioli, and G.~Lipari, ``Hierarchical
+  multiprocessor cpu reservations for linux kernel,'' in {\em 5th OSPERT
+  Workshop}, July 2009.
+
+\bibitem{resch}
+Y.~I. S.~Kato, R.~Rajkumar, ``A loadable real-time scheduler suite for
+  multicore platforms,'' December 2009.
+
+\bibitem{rtxen}
+S.~Xi, J.~Wilson, C.~Lu, and C.~D. Gill, ``Rt-xen: towards real-time hypervisor
+  scheduling in xen,'' in {\em EMSOFT}, pp.~39--48, 2011.
+
+\bibitem{baruah2002implementing}
+S.~K. Baruah, J.~Goossens, and G.~Lipari, ``{Implementing constant-bandwidth
+  servers upon multiprocessor platforms},'' in {\em Real-Time and Embedded
+  Technology and Applications Symposium, 2002. Proceedings. Eighth IEEE},
+  pp.~154--163, IEEE, 2002.
+
+\bibitem{lipari2001hierarchical}
+G.~Lipari and S.~Baruah, ``{A hierarchical extension to the constant bandwidth
+  server framework},'' in {\em rtas}, p.~0026, Published by the IEEE Computer
+  Society, 2001.
+
+\bibitem{journals/jec/LipariB05}
+G.~Lipari and E.~Bini, ``A methodology for designing hierarchical scheduling
+  systems,'' {\em Journal of Embedded Computing}, vol.~1, no.~2, pp.~257--269,
+  2005.
+
+\bibitem{Lip05-comp}
+G.~Lipari, P.~Gai, M.~Trimarchi, G.~Guidi, and P.~Ancilotti, ``A hierarchical
+  framework for component-based real-time systems,'' {\em Electronic Notes in
+  Theoretical Computer Science (ENTCS)}, vol.~116, pp.~253--266, 2005.
+
+\bibitem{DBLP:journals/rts/MancinaFLHGT09}
+A.~Mancina, D.~Faggioli, G.~Lipari, J.~N. Herder, B.~Gras, and A.~S. Tanenbaum,
+  ``Enhancing a dependable multiserver operating system with temporal
+  protection via resource reservations,'' {\em Real-Time Systems}, vol.~43,
+  no.~2, pp.~177--210, 2009.
 
 \bibitem{Wolf}
 W.~Mauerer, {\em Professional Linux® Kernel Architecture}.

@@ -1,9 +1,10 @@
-\BOOKMARK [0][-]{chapter*.2}{Introduction}{}
-\BOOKMARK [1][-]{section.0.1}{CPU reservations}{chapter*.2}
-\BOOKMARK [1][-]{section.0.2}{Multi-core systems}{chapter*.2}
-\BOOKMARK [1][-]{section.0.3}{The Linux scheduler}{chapter*.2}
-\BOOKMARK [1][-]{section.0.4}{Contributions of this thesis}{chapter*.2}
-\BOOKMARK [1][-]{section.0.5}{State of the Art}{chapter*.2}
+\BOOKMARK [0][-]{chapter*.4}{Introduction}{}
+\BOOKMARK [1][-]{section.0.1}{CPU reservations}{chapter*.4}
+\BOOKMARK [1][-]{section.0.2}{Multi-core systems}{chapter*.4}
+\BOOKMARK [1][-]{section.0.3}{The Linux scheduler}{chapter*.4}
+\BOOKMARK [1][-]{section.0.4}{Contributions of this thesis}{chapter*.4}
+\BOOKMARK [1][-]{section.0.5}{State of the Art}{chapter*.4}
+\BOOKMARK [1][-]{section.0.6}{Organization of the thesis}{chapter*.4}
 \BOOKMARK [0][-]{chapter.1}{Background}{}
 \BOOKMARK [1][-]{section.1.1}{The Constant Bandwidth Server theory}{chapter.1}
 \BOOKMARK [1][-]{section.1.2}{The Linux Scheduler}{chapter.1}
@@ -33,11 +34,11 @@
 \BOOKMARK [2][-]{subsection.3.4.3}{To dequeue an oxc task}{section.3.4}
 \BOOKMARK [2][-]{subsection.3.4.4}{To check the preemption}{section.3.4}
 \BOOKMARK [2][-]{subsection.3.4.5}{To pick up an oxc task}{section.3.4}
-\BOOKMARK [2][-]{subsection.3.4.6}{put\137prev\137task operation}{section.3.4}
-\BOOKMARK [2][-]{subsection.3.4.7}{set\137curr\137task operation}{section.3.4}
-\BOOKMARK [2][-]{subsection.3.4.8}{task\137tick operation}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.6}{put\137prev\137task\137oxc}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.7}{set\137curr\137task\137oxc}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.8}{task\137tick\137oxc }{section.3.4}
 \BOOKMARK [1][-]{section.3.5}{SMP support in oxc framework}{chapter.3}
-\BOOKMARK [1][-]{section.3.6}{User interfaces provided with OXC framework}{chapter.3}
+\BOOKMARK [1][-]{section.3.6}{User interfaces provided by OXC framework}{chapter.3}
 \BOOKMARK [1][-]{section.3.7}{Cooperation with scheduling mechanisms inside Linux}{chapter.3}
 \BOOKMARK [0][-]{chapter.4}{Experiments}{}
 \BOOKMARK [1][-]{section.4.1}{Ftrace in Linux kernel}{chapter.4}
