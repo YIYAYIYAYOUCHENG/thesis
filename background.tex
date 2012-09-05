@@ -368,13 +368,13 @@ runqueue and CFS scheduling entity follow.
 %CFS, we are going to see how different scheduling components
 \begin{lstlisting}[language=C,
 		caption={\texttt{The CFS runqueue}},
-		label={cfsrunqueue}]
+		label={lst:cfsrunqueue}]
 struct cfs_rq {
         unsigned long nr_running;
         struct rb_root tasks_timeline;
 #ifdef CONFIG_FAIR_GROUP_SCHED
         struct rq *rq;  
-	struct task_group *tg;
+        struct task_group *tg;
 #endif
 	...
 };
@@ -384,7 +384,7 @@ struct cfs_rq {
 	runqueue.
 \item \texttt{tasks\_timeline} is the root of the red-black tree 
 	\cite{rbtree} where 
-	all CFS entities enququed into this CFS runqueue is stored. 
+	all CFS entities enququed into this CFS runqueue are stored. 
 	This article will not go into details of the red-black tree
 	mechanism, people only need to know it is an efficient way 
 	to sort and access data elements.
@@ -394,7 +394,7 @@ struct cfs_rq {
 \end{itemize}
 \begin{lstlisting}[language=C,
 			caption={\texttt{The CFS scheduling entity}},
-			label={sched_entity}]
+			label={lst:sched_entity}]
 struct sched_entity {
 	...
 	struct cfs_rq *cfs_rq;
@@ -415,7 +415,7 @@ Now there is enough information to show how different scheduling components
 and \texttt{struct cfs\_rq}) are related in completely fair scheduler.
 
 In this case that CFS task group scheduling is enabled. The CFS
-scheduling scheme is shown in figure\ref{fig:cfs_scheme_tg}.  This is
+scheduling scheme is shown in figure\ref{fig:cfs_routing_tg}.  This is
 not a complete scheme: 
 
 \begin{enumerate}
@@ -429,7 +429,7 @@ not a complete scheme:
         \centering
         \includegraphics[width=\textwidth]{images/cfs_scheduling_scheme_tg}
         \caption{CFS scheduling when CFS group scheduling is enabled.}
-        \label{fig:cfs_scheme_tg}
+        \label{fig:cfs_routing_tg}
 \end{figure}
 
 If CFS task group scheduling is not enabled, a task is directed to its
@@ -437,31 +437,32 @@ per CPU runqueue by a \emph{task\_rq} marco. \emph{task\_rq} also
 works for RT scheduling when RT task group scheduling is not enabled.
 In fact, this \texttt{task\_rq} can be used even in case RT and CFS
 task group scheduling are enabled. It just that when such task group
-schedling are set, normally the information in each element in the
-scheduling route is more important than simply returning a runqueue.
+scheduling is set, normally the information in each element between  
+a task and the destination runqueue is more important than simply 
+returning a runqueue.
 %\ref{fig:cfs_scheme_no_tg}.
 \begin{figure}[htbp]
         \centering
         \includegraphics[height=0.1\textheight,width=0.5\textwidth]{images/scheduling_scheme_no_tg}
         \caption{Scheduling scheme without group scheduling}
-        \label{fig:cfs_scheme_no_tg}
+        \label{fig:routing_no_tg}
 \end{figure}
 
-We call the scheme in Figure \ref{fig:cfs_scheme_tg} and
-\ref{fig:cfs_scheme_no_tg} \emph{scheduling routes} in CFS scheduling.
+We call the scheme in Figure \ref{fig:cfs_routing_tg} and
+\ref{fig:routing_no_tg} \emph{scheduling routes} in CFS scheduling.
 The route source is a task and the destination is a runqueue.  The
 feature of a scheduling route is that if one component in the route is
 known, then other scheduling components in the direction towards the
 destination can be tracked.  The concept of scheduling route is first
 invented in our work.  Later you will see the theory behind oxc
 framework explores scheduling routes in Linux extensivly. We believe a
-new concept is deserved in formalizing the work for oxc framework.
+new concept is worthy in formalizing the work for oxc framework.
 
 \subsection{Real time scheduler\label{sec:LinuxSched_rt}}
 
 Tasks with POSIX real time policies \texttt{SCHED\_FIFO} and \texttt{SCHED\_RR}
 are scheduled by the real time scheduling class \texttt{rt\_sched\_class} and
-are called RT tasks. Given figure\ref{fig:sched_classes}, RT tasks are always
+are called RT tasks. Given figure~\vref{fig:sched_classes}, RT tasks are always
 schedueld over normal tasks. 
 
 \texttt{SCHED\_FIFO} implements a simple first-in, first-out scheduling 
@@ -476,7 +477,7 @@ The RT scheduling class provides with a sub runqueue structure
 \texttt{struct rt\_rq} to deal with RT tasks.
 \begin{lstlisting}[language=C,
 		caption={\texttt{The RT runqueue}},
-		label={rtrunqueue}]
+		label={lst:rtrunqueue}]
 struct rt_rq {
 	struct rt_prio_array active;
         unsigned long rt_nr_running;
@@ -495,7 +496,7 @@ struct rt_prio_array {
 All RT tasks with the same priority, let's say $prio$, are kept in a linked 
 list headed by $active.queue[prio]$. If there is a task in the list, the 
 corresponding bit in $active.bitmap$ is set. All other fields have the same
-meaning as in CFS runqueue. Compare with the CFS scheduling entity, the 
+meaning as in CFS runqueue. Analogous with the CFS scheduling entity, the 
 following \texttt{struct sched\_rt\_entity} is self explanatory enough. 
 \begin{lstlisting}[language=C,
 		caption={\texttt{The RT scheduling entity}},
@@ -512,14 +513,14 @@ struct sched_rt_entity {
 
 %The connections among \texttt{struct sched\_rt\_entity} and other scheduling
 %components are similar to the \text{struct sched\_entity} case.
-When \texttt{CONFIG\_RT\_GROUP\_SCHED} is set, figure\ref{fig:rt_scheme_tg} 
+When \texttt{CONFIG\_RT\_GROUP\_SCHED} is set, figure~\ref{fig:rt_routing_tg} 
 shows the scheduling route for RT scheduling. If RT task group scheduling is 
 not enabled, still \emph{task\_rq} marco will be used.
 \begin{figure}[htbp]
         \centering
         \includegraphics[width=\textwidth]{images/rt_scheduling_scheme_tg}
         \caption{RT scheduling when RT group scheduling is enabled.}
-        \label{fig:rt_scheme_tg}
+        \label{fig:rt_routing_tg}
 \end{figure}
 
 \section{Related work\label{sec:RelatedWork}}
