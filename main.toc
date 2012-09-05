@@ -1,5 +1,4 @@
 \select@language {english}
-<<<<<<< HEAD
 \contentsline {chapter}{Introduction}{v}{chapter*.4}
 \contentsline {section}{\numberline {0.1}CPU reservations}{vi}{section.0.1}
 \contentsline {section}{\numberline {0.2}Multi-core systems}{vii}{section.0.2}
@@ -7,57 +6,49 @@
 \contentsline {section}{\numberline {0.4}Contributions of this thesis}{vii}{section.0.4}
 \contentsline {section}{\numberline {0.5}State of the Art}{ix}{section.0.5}
 \contentsline {section}{\numberline {0.6}Organization of the thesis}{x}{section.0.6}
-=======
-\contentsline {chapter}{Introduction}{iv}{chapter*.2}
-\contentsline {section}{\numberline {0.1}CPU reservations}{v}{section.0.1}
-\contentsline {section}{\numberline {0.2}Multi-core systems}{v}{section.0.2}
-\contentsline {section}{\numberline {0.3}The Linux scheduler}{v}{section.0.3}
-\contentsline {section}{\numberline {0.4}Contributions of this thesis}{vi}{section.0.4}
-\contentsline {section}{\numberline {0.5}State of the Art}{vii}{section.0.5}
->>>>>>> 937232e3abc76ecbe89fc63495efcb91f493ce7a
 \contentsline {chapter}{\numberline {1}Background}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}The Constant Bandwidth Server theory}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}The Linux Scheduler}{2}{section.1.2}
 \contentsline {subsection}{\numberline {1.2.1}Scheduling classes}{2}{subsection.1.2.1}
-\contentsline {subsection}{\numberline {1.2.2}Runqueue centered scheduling}{5}{subsection.1.2.2}
+\contentsline {subsection}{\numberline {1.2.2}Runqueue centered scheduling}{6}{subsection.1.2.2}
 \contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{7}{subsection.1.2.3}
 \contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{10}{subsection.1.2.4}
-\contentsline {section}{\numberline {1.3}Related work}{11}{section.1.3}
-\contentsline {subsection}{\numberline {1.3.1}RT throttling}{11}{subsection.1.3.1}
-\contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{12}{subsection.1.3.2}
-\contentsline {subsection}{\numberline {1.3.3}AQuoSA}{12}{subsection.1.3.3}
+\contentsline {section}{\numberline {1.3}Related work}{12}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}RT throttling}{12}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{13}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}AQuoSA}{13}{subsection.1.3.3}
 \contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{13}{subsection.1.3.4}
-\contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{13}{subsection.1.3.5}
-\contentsline {chapter}{\numberline {2}Design of OXC Scheduling}{14}{chapter.2}
-\contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{14}{section.2.1}
-\contentsline {section}{\numberline {2.2}The oxc scheduling}{15}{section.2.2}
-\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{17}{section.2.3}
-\contentsline {chapter}{\numberline {3}Development of OXC Framework}{19}{chapter.3}
-\contentsline {section}{\numberline {3.1}Implementation of ox container structure}{19}{section.3.1}
-\contentsline {section}{\numberline {3.2}Extensions on original data structures}{22}{section.3.2}
-\contentsline {section}{\numberline {3.3}To direct a task to a per ox container runqueue}{23}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{23}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{25}{subsection.3.3.2}
-\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{29}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{30}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{32}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{34}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}To check the preemption}{35}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{37}{subsection.3.4.5}
-\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task\_oxc}{40}{subsection.3.4.6}
-\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task\_oxc}{41}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}task\_tick\_oxc }{42}{subsection.3.4.8}
-\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{43}{section.3.5}
-\contentsline {section}{\numberline {3.6}User interfaces provided by OXC framework}{43}{section.3.6}
-\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{46}{section.3.7}
-\contentsline {chapter}{\numberline {4}Experiments}{49}{chapter.4}
-\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{50}{section.4.1}
-\contentsline {section}{\numberline {4.2}Tbench}{52}{section.4.2}
-\contentsline {section}{\numberline {4.3}Experiment A}{52}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}The experiment design}{52}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Experiment results}{53}{subsection.4.3.2}
-\contentsline {section}{\numberline {4.4}Experiment B}{57}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}Experiment design}{57}{subsection.4.4.1}
-\contentsline {subsection}{\numberline {4.4.2}Experiment results}{58}{subsection.4.4.2}
-\contentsline {section}{\numberline {4.5}Experiment feedbacks}{62}{section.4.5}
-\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{63}{chapter.5}
+\contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{14}{subsection.1.3.5}
+\contentsline {chapter}{\numberline {2}Design of OXC Scheduling}{15}{chapter.2}
+\contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{15}{section.2.1}
+\contentsline {section}{\numberline {2.2}The oxc scheduling}{16}{section.2.2}
+\contentsline {section}{\numberline {2.3}Movtivation for oxc scheduling framework}{18}{section.2.3}
+\contentsline {chapter}{\numberline {3}Development of OXC Framework}{20}{chapter.3}
+\contentsline {section}{\numberline {3.1}Implementation of ox container structure}{20}{section.3.1}
+\contentsline {section}{\numberline {3.2}Extensions on original data structures}{23}{section.3.2}
+\contentsline {section}{\numberline {3.3}To direct a task to a per ox container runqueue}{24}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{24}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{26}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{30}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{31}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{33}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{35}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}To check the preemption}{36}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{38}{subsection.3.4.5}
+\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task\_oxc}{41}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.7}set\_curr\_task\_oxc}{42}{subsection.3.4.7}
+\contentsline {subsection}{\numberline {3.4.8}task\_tick\_oxc }{43}{subsection.3.4.8}
+\contentsline {section}{\numberline {3.5}SMP support in oxc framework}{44}{section.3.5}
+\contentsline {section}{\numberline {3.6}User interfaces provided by OXC framework}{44}{section.3.6}
+\contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{47}{section.3.7}
+\contentsline {chapter}{\numberline {4}Experiments}{50}{chapter.4}
+\contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{51}{section.4.1}
+\contentsline {section}{\numberline {4.2}Tbench}{53}{section.4.2}
+\contentsline {section}{\numberline {4.3}Experiment A}{53}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}The experiment design}{53}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Experiment results}{54}{subsection.4.3.2}
+\contentsline {section}{\numberline {4.4}Experiment B}{58}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Experiment design}{58}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Experiment results}{59}{subsection.4.4.2}
+\contentsline {section}{\numberline {4.5}Experiment feedbacks}{63}{section.4.5}
+\contentsline {chapter}{\numberline {5}Conclusions and Future Work}{64}{chapter.5}
