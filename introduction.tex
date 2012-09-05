@@ -76,8 +76,8 @@ isolation. That is, a fraction of CPU time can be reserved to a set
 of tasks. By applying resource reservation in Linux, multimedia
 applications can meet their timing requirements. Our work exploits
 the RR mechanism for a more general use in managing CPU power
-distribution. The RR algorithm we use is CBS\cite{AbeniB98}. More 
-on it will be introduced in section \ref{sec:CBS}.
+distribution. The RR algorithm we use is CBS~\cite{AbeniB98}. More 
+on it will be introduced in section~\ref{sec:CBS}.
 
 The following example shows a scheme of CPU power distribution.
 In many cases, people prefer to distributing cpu power in a privileged and 
@@ -166,14 +166,14 @@ a RR based framework that fulfils all golden rules.
 We call the framework Open-Extension Container (OXC) scheduling
 framework. The Open-Extension (OX) Container is a new data structure in
 Linux that is introduced by our work.  It is the fundamental element
-in the framework. More on an ox container is in chapter \ref{chap:design}. 
+in the framework. More on an ox container is in chapter~\ref{chap:design}. 
 In oxc scheduling framework, each ox-container can reserve an amount of 
 bandwidth from a CPU through CBS rules. Several ox containers can work
 together and reserve CPU bandwidths from multiple processors. From the 
 Linux scheduler's point of view, an ox container is regared as a virtual 
 CPU. This is why the reserved bandwidth through an ox container can be 
 utilized by different kinds of tasks in Linux. Details on the development 
-of the oxc framework is in chapter \ref{chap:impl}.
+of the oxc framework is in chapter~\ref{chap:impl}.
 
 The oxc framework has two features:
 \begin{itemize}
@@ -225,14 +225,14 @@ scheduling policy under oxc framework is an ox container.
 \section{State of the Art}
 
 There is work that extends Linux with real time capabilities to fulfil 
-the timing guarantee requirement: RTAI\cite{rtai}, AQuoSA\cite{Luigi09}, 
-\texttt{sched-deadline} patch\cite{Dario09}, 
-IRMOS real-time framework\cite{irmos}, RESCH\cite{resch}, etc.
+the timing guarantee requirement: RTAI~\cite{rtai}, AQuoSA~\cite{Luigi09}, 
+\texttt{sched-deadline} patch~\cite{Dario09}, 
+IRMOS real-time framework~\cite{irmos}, RESCH~\cite{resch}, etc.
 %
 % TODO: Do not forget to insert citations where necessary, 
 % IRMOS, RESCH, RT-Xen.
 % DONE
-Instead of modifying the system directly, RT-Xen\cite{rtxen} tries to 
+Instead of modifying the system directly, RT-Xen~\cite{rtxen} tries to 
 apply real time mechanisms in the hypervisor level(Xen). 
 
 Each work has its emphasis. Initially, our work is motivated by

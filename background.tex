@@ -29,12 +29,11 @@
 %%$U_s = Q_s/T_s$ is called the server bandwidth (or utilisation).  Such
 %%a server can be utilised to serve a set of tasks, which can be tasks
 %%with soft, hard or non real-time guarantee requirements.  
-The original
-CBS algorithm \cite{AbeniB98} defines rules to reserve bandwidth on a
-single processor, and every server can manage a single task. The CBS
-algorithm was later extended to multi-processor global scheduling
-\cite{baruah2002implementing}, and to hierarchical scheduling
-\cite{lipari2001hierarchical,journals/jec/LipariB05,Lip05-comp} (where
+The original CBS algorithm~\cite{AbeniB98} defines rules to reserve 
+bandwidth on a single processor, and every server can manage a single 
+task. The CBS algorithm was later extended to multi-processor global 
+scheduling~\cite{baruah2002implementing}, and to hierarchical scheduling
+~\cite{lipari2001hierarchical,journals/jec/LipariB05,Lip05-comp} (where
 multiple tasks can coexist in the same server).
 
 %
@@ -71,7 +70,7 @@ multiple tasks can coexist in the same server).
 A Constnat bandwidth server can be used to provide temporal isolation
 for a tasks or a set of tasks. In the terminology of CBS theory, the 
 waking up or creation of a served task is also called the arrival of a 
-request for the server. The following is the classical CBS rules, 
+request for the server. The following is the classic CBS rules, 
 focusing on single processor.
 \begin{itemize}
 \item A Constant Bandwidth Server (CBS) is characterized by an ordered pair
@@ -80,7 +79,7 @@ period of the server. The ratio $U_{s} = Q_{s}/T_{s}$ is denoted as the
 server bandwidth. 
 \item A CBS server manages two internal variables that define its state:
 $c_{s}$ (initialized as $C_{s}$) is the current budget at time $t$ 
-(zero-initialized) and $d_{s}$ is the current deadline assigned by the 
+and $d_{s}$ is the current deadline assigned by the 
 server to a request (zero-initialized). Requests served by different 
 servers are scheduled with earliest deadline first. The $c_{s}$ will
 decrease with the same value as the time a served task runs. 
@@ -91,7 +90,7 @@ request and the current request will be queued; this is not part of
 CBS rules and can be managed with an arbitrary discipline, 
 for example FIFO. 
 \item When a new request arrives at instant $t$ and the server is idle, 
-there are two cases. If $c_{s} > (d_{s} - t)U_{s}$, then the server 
+there are two cases. If $c_{s} \ge (d_{s} - t)U_{s}$, then the server 
 generates a new deadline ($d_{s} = d_{s} + T_{s}$) and $c_{s}$ is 
 recharged to the maximum value $Q_{s}$. Otherwise, the request is 
 served with the current deadline and budget value.
@@ -103,8 +102,8 @@ maximum value ($c_{s} = Q_{s}$) and the current deadline is postponed by
 one period ($d_{s} = d_{s} + T_{s}$).
 \end{itemize}
 In our work, we use a hard version of CBS (HCBS). The HCBS rules differ 
-in the situation when a server's budget is exhausted, as the budget is not 
-recharged immediately as the soft resource reservation:
+in the situation when a server's budget is exhausted, where the budget is 
+not recharged immediately as the soft resource reservation:
 \begin{itemize}
 \item When a budget is exhausted ($c_{s} = 0$), the server and the request
 it serves are suspended until the current deadline ($d_{s}$), when the 
@@ -120,7 +119,7 @@ that the sum of all servers' utilization on a CPU is not greater than
 
 A complete description of the CBS and of all its variant, using a
 state machine formalism is available in
-\cite{DBLP:journals/rts/MancinaFLHGT09}.
+~\cite{DBLP:journals/rts/MancinaFLHGT09}.
 
 %
 % TODO: if you need help because you are late, I can copy and paste a
@@ -140,8 +139,8 @@ components. % TODO: commented, this comment is not useful IMHO. As for
 % framework.
 To understand the Linux scheduling architecture is the
 first step to explore the oxc framework. For details about how linux
-schedulers work, people can read corresponding chapters in \cite{Wolf}
-\cite{R.Love}.
+schedulers work, people can read corresponding chapters in~\cite{Wolf}
+~\cite{R.Love}.
 
 \subsection{Scheduling classes\label{sec:LinuxSched_classes}}
 
@@ -156,14 +155,14 @@ a set of interfaces that a scheduler module must implement. Each
 scheduler fulfils details behind the interface and carries out its
 specific scheduling behaviour.
 
-There are three scheduling classes in mainline Linux:
+There are three scheduling classes in mainline Linux kernel:
 rt\_sched\_class, cfs\_sched\_class and idle\_sched\_class, defined in
 rt.c, fair.c, and idle.c, respectively, in directory
 kernel/sched. Each scheduling class is responsible for scheduling a
 type of tasks. Tasks scheduled with \texttt{cfs\_sched\_class} are
-called \emph{normal tasks}, and asks scheduled by
+called \emph{normal tasks}, and tasks scheduled by
 \texttt{rt\_sched\_class} are called \emph{rt tasks}.
-\texttt{idle\_sched\_class} deals with special idles tasks which do
+\texttt{idle\_sched\_class} deals with special idle tasks which do
 nothing and occupy the CPU when no RT or normal tasks need a CPU.
 
 Now, it's time to see the semantics of scheduling operations for a
@@ -171,7 +170,7 @@ scheduler. The following listing contains the main field of structure
 sched\_class.
 \begin{lstlisting}[language=C, 
 		caption={\texttt{Scheduling operations for a scheduler}},
-		label={sched_class}]
+		label={lst:sched_class}]
 struct sched_class {
 	const struct sched_class *next;
 	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
@@ -187,7 +186,7 @@ struct sched_class {
 \begin{itemize} 
 \item \texttt{next:}
 	Scheduling classes are linked in a chain, as shown 
-	in \ref{fig:sched_classes}.  Whenever a task is needed,
+	in~\vref{fig:sched_classes}.  Whenever a task is needed,
 	the scheduler from the beginning to the end of the chain 
 	is checked and corresponding scheduling methods are called
 	until a task is found. So, schedulers in front have higher 
@@ -211,8 +210,8 @@ struct sched_class {
 	that after this operation, the same task still occupies the 
 	CPU, as it is picked up again through \texttt{pick\_next\_task}.
 \item \texttt{set\_curr\_task:}
-	This is the first scheduling operation for a task after a task 
-	is chosen to occupy the CPU.
+	This function is called when a task changes its scheduling class
+	or changes its task group.
 \item \texttt{task\_tick:}
 	This function is the most frequently called scheduling function. 
 	It is a good point to update the scheduling information, and 
@@ -250,13 +249,14 @@ When \texttt{CONFIG\_FAIR\_GROUP\_SCHED} is set, CFS task grouping is
 enabled. And \texttt{CONFIG\_RT\_GROUP\_SCHEED} is the kernel
 configuration for RT task group scheduling. A task group can contains
 both RT tasks and normal tasks, as shown in listing
-\ref{task_group}. For each CPU, a task group uses a RT entity and a
-CFS entity to represent its RT tasks and normal tasks.  Each type of
-tasks inside a task group is scheduled independently by its own
+~\vref{lst:task_group}. For each CPU, a task group uses a RT entity and a
+CFS entity to represent its RT tasks and normal tasks on a CPU.  Each 
+type of tasks inside a task group is scheduled independently by its own
 scheduling class.
 \begin{lstlisting}[language=C,
-			caption={\texttt{A task group}},
-			label={task_group}]		
+		caption={\texttt{A task group contains 
+			both RT tasks and CFS tasks}},
+			label={lst:task_group}]		
 
 struct task_group {
 #ifdef CONFIG_FAIR_GROUP_SCHED
@@ -276,16 +276,16 @@ struct task_group {
 \subsection{Runqueue centered scheduling\label{LinuxSched_rq}}
 
 Every hook in \texttt{struct sched\_class} deals with the data
-structure \texttt{struct rq}\footnote{Defined in kernel/sched/core.c},
+structure \texttt{struct rq}\footnote{Defined in kernel/sched/sched.h},
 which is called runqueue in Linux.  We say that Linux scheduling is
 runqueue centered. In Linux, the \texttt{struct rq} is a per CPU data
-structure; each cpu is associated with a runqueue. Despite its name,
-\texttt{struct rq} is not a queue. The \texttt{struct rq} contains a
-large amount of information. Its partial contents that are necessary
-for understanding the remaining of the thesis are listed below.
+structure; each cpu is associated with a dedicated runqueue. Despite 
+its name, \texttt{struct rq} is not a queue. The \texttt{struct rq} 
+contains a large amount of information. Its partial contents that are 
+necessary for understanding the remaining of the thesis are listed below.
 \begin{lstlisting}[language=C,
 			caption={\texttt{The runqueue structure}},
-			label={runqueue}]
+			label={lst:runqueue}]
 struct rq {
 	...
 	unsigned long nr_running;
@@ -311,9 +311,9 @@ struct rq {
 	its corresponding specific runqueue.Each task group has one CFS 
 	runqueue and RT runqueue per CPU to enqueue the tasks and sub task
 	groups it contains in that CPU. 
-	Figure \ref{task_group1} adds this new information to the
+	Listing~\vref{lst:task_group_ex} adds this new information to the
 	knowledge just introduced for a task group, as in 
-	figure \ref{task_group}. The default task group in the system points
+	listing~\vref{lst:task_group}. The default task group in the system points
 	their CFS runqueue and RT runqueue to fields contained in the
 	per CPU runqueue directly. 
 \item \texttt{curr} points to the task currently running in this runqueue.
@@ -322,11 +322,11 @@ struct rq {
 \item \texttt{clock and clock\_task} are time information kept by the runqueue.
 	They updated by \texttt{update\_rq\_clock} method and some scheduling
 	operation can rely them as time source.
-\item \texttt{cpu} tells the CPU of this runqueue.
+\item \texttt{cpu} tells the CPU of this runqueue is devoted to.
 \end{itemize}
 \begin{lstlisting}[language=C,
 caption={\texttt{Specific runqueue information within a task group}},
-			label={task_group1}]		
+			label={lst:task_group_ex}]		
 
 struct task_group {
 #ifdef CONFIG_FAIR_GROUP_SCHED

@@ -1,6 +1,74 @@
 \chapter{Conclusions and Future Work\label{chap:con}}
+In this thesis we present the design and development of the oxc scheduling
+framework. The oxc framework is a hierarchical multi-processor reservation 
+mechsnism that targets to manage CPU power distribution to tasks in Linux
+without constraints on the scheduling details. 
 
+Alongside the design and development of the framework, we bring some
+new ideas into the world. We conclude the four golden rules that may
+be useful in developing and evaluating a CPU power management 
+mechanism for a GPOS. We propose the ox container structure in Linux
+and the oxc scheduling theory. We formalize the relationship among
+different components in Linux scheduling by inventing the concept
+scheduling route, which will assist people for studying and probing
+the Linux kernel scheduling.
 
+The theoretical background of the oxc framework is the oxc scheduling,
+which may be have a more profound influence besides our framework. 
+In the world of oxc scheduling, tasks are managed by a scheduler around 
+a virtual CPU. An independent scheduling system can be constructued 
+above the virtual CPU whose behaviour is the same as a Linux per CPU
+scheduling system. And the theory of oxc scheduling can find its use in
+any case when an independent scheduling is needed. A big feature of the 
+oxc scheduling is that it is naturally compatible with Linux schedulers. 
+
+Although current implementation of the oxc framework is still a prototype,
+it shows great potential for an opportunity to be seriously applied in real
+world. For the first time, there is work in Linux that can manage CPU power
+distribution for all types of tasks. It can reserve bandwidths for RT tasks
+and CFS tasks in Linux, which demonstrates the theory of oxc scheduling. 
+Under the framework, CFS task group scheduling is support.
+Naivly work on multi-processor support and hierarchical reservation 
+distributing are included in the framework and demonstrate that under 
+the oxc famework such functionalities are achievable.  
+
+During experiments, the overhead of oxc functions is measured and 
+confirms that the there is the necessity to refine the implementation
+of the oxc scheduling control. In another experiment, the performance of
+the oxc famewrok is not as good as existing work; however, it also shows
+the feasibility of the framework in Linux.
+
+In order for the oxc framework to really attract interests from both 
+academic and industrial fields. There are four issues that must be 
+sloved first.
+\begin{itemize}
+\item The CPU bandwidth allocation in the oxc framework now is made in 
+a uncontrolled way depending on the wise decision from users. A admission
+control for bandwidth distribution should be added.
+\item Strategies for task migrations among ox containers using the same 
+reservation, which means ox containers in the same hyper ox container,
+should be added. 
+\item Temporarily, the hierarchical distribution of reserved CPU bandwidth
+is implemented in a faked way. That is, the bandwidth distributed to sub
+groups is a new reservation from the system instead of inheriting from 
+the parent's reservation. The connection between parent's and children' 
+reservations needs to be added. 
+\item Until now, the oxc framework does not have a consideration for 
+resource sharing among ox containers. If two tasks accessing the same
+critical section are in the same ox container, the Linux has its way
+to schedule the two tasks. However, if the two are in different ox 
+containers or one is oxc tasks and the other one is not, it may happen
+that an earliest deadline ox container is blocked. Now the oxc framework 
+has no work on this problem. For the similiar reason, synchronization
+between tasks from different ox containers is a dangerous operation.
+\end{itemize}
+Besides the above four items related to the survival of the oxc work, 
+there are some less critical issues that are better to be done.
+ 
+Under oxc framework, the performance of RT throttling is not satisfiable.
+The relationship between oxc framework and \texttt{cpuset} cgroup 
+subsystem is not well studied. It is greatly meaningful to explore the
+oxc control together with other work like AQuoSA, RT-Xen, RESCH, etc. 
 
 %%% Local Variables: 
 %%% mode: latex

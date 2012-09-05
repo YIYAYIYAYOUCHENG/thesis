@@ -1,11 +1,11 @@
 \select@language {english}
-\contentsline {chapter}{Introduction}{v}{chapter*.4}
-\contentsline {section}{\numberline {0.1}CPU reservations}{vi}{section.0.1}
-\contentsline {section}{\numberline {0.2}Multi-core systems}{vii}{section.0.2}
-\contentsline {section}{\numberline {0.3}The Linux scheduler}{vii}{section.0.3}
-\contentsline {section}{\numberline {0.4}Contributions of this thesis}{vii}{section.0.4}
-\contentsline {section}{\numberline {0.5}State of the Art}{ix}{section.0.5}
-\contentsline {section}{\numberline {0.6}Organization of the thesis}{x}{section.0.6}
+\contentsline {chapter}{Introduction}{viii}{chapter*.4}
+\contentsline {section}{\numberline {0.1}CPU reservations}{ix}{section.0.1}
+\contentsline {section}{\numberline {0.2}Multi-core systems}{x}{section.0.2}
+\contentsline {section}{\numberline {0.3}The Linux scheduler}{x}{section.0.3}
+\contentsline {section}{\numberline {0.4}Contributions of this thesis}{x}{section.0.4}
+\contentsline {section}{\numberline {0.5}State of the Art}{xii}{section.0.5}
+\contentsline {section}{\numberline {0.6}Organization of the thesis}{xiii}{section.0.6}
 \contentsline {chapter}{\numberline {1}Background}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}The Constant Bandwidth Server theory}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}The Linux Scheduler}{3}{section.1.2}
@@ -52,3 +52,4 @@
 \contentsline {subsection}{\numberline {4.4.2}Experiment results}{59}{subsection.4.4.2}
 \contentsline {section}{\numberline {4.5}Experiment feedbacks}{63}{section.4.5}
 \contentsline {chapter}{\numberline {5}Conclusions and Future Work}{64}{chapter.5}
+\contentsline {chapter}{Acknowledgments}{67}{chapter*.25}

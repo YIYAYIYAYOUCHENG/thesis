@@ -13,6 +13,7 @@
 \usepackage{fancyhdr}
 \newcommand{\fncyblank}{\fancyhf{}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage{lettrine}
 \newenvironment{abstract}%
 {\cleardoublepage\fncyblank\null\vfill\begin{center}%
 \bfseries\abstractname\end{center}}%
@@ -102,8 +103,8 @@ pdfborder = { 0 0 0 0 }
 
 %\maketitle
 
-%\input{frontpage}
-\input{title}
+\input{frontpage}
+\input{dedication}
 \begin{abstract}
   % TODO: the abstract should be a short summary of the contents of
   % the thesis. Very short motivation (the problem to be solved), and
@@ -159,6 +160,8 @@ pdfborder = { 0 0 0 0 }
 \input{impl}
 \input{exp}
 \input{conclusion}
+\backmatter
+\input{acknowledgements}
 
 \bibliographystyle{ieeetr}%{plain}
 \bibliography{biblio}
