@@ -8,16 +8,16 @@
 \contentsline {section}{\numberline {0.6}Organization of the thesis}{x}{section.0.6}
 \contentsline {chapter}{\numberline {1}Background}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}The Constant Bandwidth Server theory}{1}{section.1.1}
-\contentsline {section}{\numberline {1.2}The Linux Scheduler}{2}{section.1.2}
-\contentsline {subsection}{\numberline {1.2.1}Scheduling classes}{2}{subsection.1.2.1}
+\contentsline {section}{\numberline {1.2}The Linux Scheduler}{3}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}Scheduling classes}{3}{subsection.1.2.1}
 \contentsline {subsection}{\numberline {1.2.2}Runqueue centered scheduling}{6}{subsection.1.2.2}
-\contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{7}{subsection.1.2.3}
-\contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{10}{subsection.1.2.4}
+\contentsline {subsection}{\numberline {1.2.3}Completely Fair scheduler}{8}{subsection.1.2.3}
+\contentsline {subsection}{\numberline {1.2.4}Real time scheduler}{11}{subsection.1.2.4}
 \contentsline {section}{\numberline {1.3}Related work}{12}{section.1.3}
 \contentsline {subsection}{\numberline {1.3.1}RT throttling}{12}{subsection.1.3.1}
 \contentsline {subsection}{\numberline {1.3.2}CFS bandwidth control}{13}{subsection.1.3.2}
 \contentsline {subsection}{\numberline {1.3.3}AQuoSA}{13}{subsection.1.3.3}
-\contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{13}{subsection.1.3.4}
+\contentsline {subsection}{\numberline {1.3.4}Schedule-deadline patch}{14}{subsection.1.3.4}
 \contentsline {subsection}{\numberline {1.3.5}IRMOS real-time framework}{14}{subsection.1.3.5}
 \contentsline {chapter}{\numberline {2}Design of OXC Scheduling}{15}{chapter.2}
 \contentsline {section}{\numberline {2.1}Open-Extension Container Structure}{15}{section.2.1}

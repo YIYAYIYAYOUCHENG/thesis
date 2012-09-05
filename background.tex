@@ -17,18 +17,19 @@
 % previous student!
 %
 
-A Constant Bandwidth Server(CBS) is characterised by a budget $c_s$ and
-an pair $(Q_s, T_s)$, where $Q_s$ is the maximum budget and $T_s$
-is the period of the server. 
+%%A Constant Bandwidth Server(CBS) is characterised by a budget $c_s$ and
+%%an pair $(Q_s, T_s)$, where $Q_s$ is the maximum budget and $T_s$
+%%is the period of the server. 
 %
 % TODO: you should separate static parameters (Qs and Ts) from dynamic
 % variables (cs), because the first are used to define the server, and
 % the seconds are concerned with the internal working of the
 % algorithm. In this case, c_s goes together with d_s.
 %
-$U_s = Q_s/T_s$ is called the server bandwidth (or utilisation).  Such
-a server can be utilised to serve a set of tasks, which can be tasks
-with soft, hard or non real-time guarantee requirements.  The original
+%%$U_s = Q_s/T_s$ is called the server bandwidth (or utilisation).  Such
+%%a server can be utilised to serve a set of tasks, which can be tasks
+%%with soft, hard or non real-time guarantee requirements.  
+The original
 CBS algorithm \cite{AbeniB98} defines rules to reserve bandwidth on a
 single processor, and every server can manage a single task. The CBS
 algorithm was later extended to multi-processor global scheduling
@@ -40,32 +41,82 @@ multiple tasks can coexist in the same server).
 % TODO: you have to specify what does it mean hard CBS. I think you can just 
 % copy and paste the rules of the CBS from somewhere.
 %
-In our work, we use a hard version of CBS.
-
-For a specific server $S$, at any instant, a fixed deadline $d_{s,k}$
-is associated with the server. A CBS is said to be active at time $t$
-if there are pending tasks and $c_s$ is not 0; otherwise it is called
-idle.  At any time, among all active servers, the one with earliest
-deadline is chosen. Then a served task of this server is picked to
-execute. CBS does not restrict the rule to pick up a particular
-task. For example, first in first out (FIFO), rate monotonic
-scheduling and any user defined rule can be used.  As the picked task
-executes, the server budget $c_s$ is decreased by the same
-amount. When budget $c_s$ reaches 0, the server goes into a recharging
-state. At each deadline point, the $c_s$ will be recharged to $Q_s$
-and a new server deadline will be generated as $d_{s, k+1} = d_{s,k} +
-T_k$. Initially, $c_s = Q_s$ and $d_{s, 0} = 0$. When a task arrives
-at time $t$ and the server is idle, if $c_s \ge (d_{s,k} - t)U_s$, the
-server updates its deadline as $d_{s, k+1} = t + T_s$ and $c_s$ is
-recharged to maximum value $Q_s$.
-
-Given a set of servers $\{S_0, S_1, ... , S_n\}$, if
-\[
-	\sum_{i=0}^n U_i \le 1
-\]
-then, every $T_i$ time units, a server $S_i$ can obtain $Q_s$ time
-units to serve its tasks. In other words, $U_i$ is the bandwidth a
-server $S_i$ reserves from a cpu.
+%%In our work, we use a hard version of CBS.
+%%
+%%For a specific server $S$, at any instant, a fixed deadline $d_{s,k}$
+%%is associated with the server. A CBS is said to be active at time $t$
+%%if there are pending tasks and $c_s$ is not 0; otherwise it is called
+%%idle.  At any time, among all active servers, the one with earliest
+%%deadline is chosen. Then a served task of this server is picked to
+%%execute. CBS does not restrict the rule to pick up a particular
+%%task. For example, first in first out (FIFO), rate monotonic
+%%scheduling and any user defined rule can be used.  As the picked task
+%%executes, the server budget $c_s$ is decreased by the same
+%%amount. When budget $c_s$ reaches 0, the server goes into a recharging
+%%state. At each deadline point, the $c_s$ will be recharged to $Q_s$
+%%and a new server deadline will be generated as $d_{s, k+1} = d_{s,k} +
+%%T_k$. Initially, $c_s = Q_s$ and $d_{s, 0} = 0$. When a task arrives
+%%at time $t$ and the server is idle, if $c_s \ge (d_{s,k} - t)U_s$, the
+%%server updates its deadline as $d_{s, k+1} = t + T_s$ and $c_s$ is
+%%recharged to maximum value $Q_s$.
+%%
+%%Given a set of servers $\{S_0, S_1, ... , S_n\}$, if
+%%\[
+%%	\sum_{i=0}^n U_i \le 1
+%%\]
+%%then, every $T_i$ time units, a server $S_i$ can obtain $Q_s$ time
+%%units to serve its tasks. In other words, $U_i$ is the bandwidth a
+%%server $S_i$ reserves from a cpu.
+%%
+A Constnat bandwidth server can be used to provide temporal isolation
+for a tasks or a set of tasks. In the terminology of CBS theory, the 
+waking up or creation of a served task is also called a request for 
+the server. The following is the classical CBS rules, focusing on 
+single processor.
+\begin{itemize}
+\item A Constant Bandwidth Server (CBS) is characterized by an ordered pair
+($Q_{s}$, $T_{s}$) where $Q_{s}$ is the maximum budget and $T_{s}$ is the
+period of the server. The ratio $U_{s} = Q_{s}/T_{s}$ is denoted as the
+server bandwidth. 
+\item A CBS server manages two internal variables that define its state:
+$c_{s}$ (initialized as $C_{s}$) is the current budget at time $t$ 
+(zero-initialized) and $d_{s}$ is the current deadline assigned by the 
+server to a request (zero-initialized). Requests served by different 
+servers are scheduled with earliest deadline first. The $c_{s}$ will
+decrease with the same value as the time a served task runs. 
+\item A CBS is said to be active at time $t$ if there are pending 
+requests. If a new request arrives while the server is still active,
+then it is queued in a server queue or it can preempt the current 
+request and the current request will be queued; this is not part of 
+CBS rules and can be managed with an arbitrary discipline, 
+for example FIFO. 
+\item When a new request arrives at instant $t$ and the server is idle, 
+there are two cases. If $c_{s} > (d_{s} - t)U_{s}$, then the server 
+generates a new deadline ($d_{s} = d_{s} + T_{s}$) and $c_{s}$ is 
+recharged to the maximum value $Q_{s}$. Otherwise, the request is 
+served with the current deadline and budget value.
+\item When a request is completed, the server picks the next (if it exists)
+pending request from the internal queue and schedule it with the current
+budget value and deadline.
+\item When a budget is exhausted ($c_{s} = 0$), it is recharged at the
+maximum value ($c_{s} = Q_{s}$) and the current deadline is postponed by
+one period ($d_{s} = d_{s} + T_{s}$).
+\end{itemize}
+In our work, we use a hard version of CBS (HCBS). The HCBS rules differ 
+in the situation when a server's budget is exhausted, as the budget is not 
+recharged immediately as the soft resource reservation:
+\begin{itemize}
+\item When a budget is exhausted ($c_{s} = 0$), the server and the request
+it serves are suspended until the current deadline ($d_{s}$), when the 
+budget is recharged to maximum value ($c_{s} = Q_{s}$) and the deadline 
+is updated by one period ($d_{s} = d_{s} + T_{s}$).
+\item When a request arrives and the server is suspended, the request is
+put in the server's internal queue.
+\end{itemize}
+By this hard variant of CBS, a server reserves exactly $Q_{s}$ units
+of time every $T{s}$ time units for its requests given the condition
+that the sum of all servers' utilization on a CPU is not greater than 
+1.
 
 A complete description of the CBS and of all its variant, using a
 state machine formalism is available in
