@@ -233,7 +233,7 @@ task is enqueued in a runqueue, more precisely, it is the task's (CFS
 or RT) scheduling entity that is enqueued.
 \begin{lstlisting}[language=C, 
 			caption={\texttt{A task embeds scheduling entities}},
-			label={task_struct}]
+			label={lst:task_struct}]
 struct task_struct {
 	...
 	struct sched_entity se;
@@ -525,26 +525,26 @@ not enabled, still \emph{task\_rq} marco will be used.
 
 \section{Related work\label{sec:RelatedWork}}
 
-\subsection{RT throttling\label{sec:RelatedWork_RT}~\cite{rt-throttling}}
+\subsection{RT throttling\label{sec:RelatedWork_RT}}
 
 Enabling \texttt{CONFIG\_RT\_GROUP\_SCHED} lets users explicitly allocate
-CPU bandiwidth to RT tasks in task groups. It uses the \emph{control group}
-(cgroup)~\cite{cgroups} virtual file system. Each cgroup associates a set of 
-tasks with a set of resources, called \emph{subsystems}. For example 
-\emph{cpuset} subsystem~\cite{cpusets} is responsible for assigning a 
-set of CPUs and 
+CPU bandiwidth to RT tasks in task groups~\cite{rt-throttling}. It uses 
+the \emph{control group} (cgroup)~\cite{cgroups} virtual file system. 
+Each cgroup associates a set of tasks with a set of resources, 
+called \emph{subsystems}. For example \emph{cpuset} 
+subsystem~\cite{cpusets} is responsible for assigning a set of CPUs and 
 Memory Nodes to tasks in a cgroup. Such tasks and resources can be further 
 distributed in sub cgroups. Each cgroup is represented by a directory in 
-the cgroup file 
-system and a hierarchy of cgroups maps to a hierarchy of directories. In 
-the directory, each mounted subsystem provides a list of files that are used 
-as interfaces to control the allocation of a resource.
-Through mounting the \emph{cpu} subsystem, two interfaces $cpu.rt\_period\_us$ 
-and $cpu.rt\_runtime\_us$ are used to control the CPU bandwidth for RT 
-tasks in each cgroup. That is, the total execution time of RT tasks in a cgroup 
-on each CPU in time length $rt\_period\_us$ cannot exceed $rt\_runtime\_us$. 
-If this constraint is met, RT tasks would not be choosen to run on that CPU 
-until a new period; we call such tasks be throttled.
+the cgroup file system and a hierarchy of cgroups maps to a hierarchy of 
+directories. In the directory, each mounted subsystem provides a list of 
+files that are used as interfaces to control the allocation of a resource.
+Through mounting the \emph{cpu} subsystem, two interfaces 
+$cpu.rt\_period\_us$ and $cpu.rt\_runtime\_us$ are used to control the 
+CPU bandwidth for RT tasks in each cgroup. That is, the total execution t
+ime of RT tasks in a cgroup on each CPU in time length $rt\_period\_us$ 
+cannot exceed $rt\_runtime\_us$. If this constraint is met, RT tasks would 
+not be choosen to run on that CPU until a new period; we call such tasks be 
+throttled.
 
 No matter \texttt{CONFIG\_RT\_GROUP\_SCHED} is set or not, in order to avoid RT 
 tasks forever occupy thc CPU, there is a system wide setting that constraints
@@ -588,26 +588,35 @@ That is, such a control mechanism can be applied to general CBS based
 scheduling. AQuoSA lacks considerations on multi-processor platform.
   
 \subsection{Sched\_deadline patch\label{sec:RelatedWork_dl}}
-The \texttt{sched\_deadline }patch for Linux kernel is being developed 
+The \texttt{sched\_deadline} patch for Linux kernel is being developed 
 to extend current mainline Linux with a deadline-based scheduling method. 
 In the work of \texttt{sched\_deadline}, a new scheduling class (scheduler) 
 \texttt{dl\_sched\_class} is implemented and has the highest priority among 
-all scheduling classes. Tasks from this schedulinfg class are assigned 
+all scheduling classes. Tasks from this scheduling class are assigned 
 deadlines according to CBS rules and scheduled in ''earliest deadline first
-(EDF)'' way.
+(EDF)'' way. So, when creating a deadline task or changing a task's scheduler
+to \texttt{dl\_sched\_class}, not only you need to specify the scheduling
+policy (\texttt{SCHED\_DEADLINE} in this case), you should also clearly
+set the CPU bandwdith assigned to this task, corresponding to the
+\emph{maximum budget} and \emph{period} parameters of a CBS. However,
+these two parameters are not supported by mainline Linux system calls.
+This problem solved by importing a new system call interface 
+\texttt{sched\_setscheduler\_ex}, which only allows for creating a 
+reservation attached to a task. On multi-processor platforms, the 
+deadline tasks are scheduled in a global EDF way~\cite{J.Lelli}.
 
 \subsection{IRMOS real-time framework\label{sec:RelatedWork_irmos}}
-The rague name IRMOS comes from the European project ''Interactive Real-time
-Multimedia Applications on Service Oriented Infrastructures''. 
+The rague name IRMOS comes from the European project ''Interactive 
+Real-time Multimedia Applications on Service Oriented Infrastructures''. 
 The IRMOS framework replaces RT throttling mechanism in mainline Linux with 
 real time CPU reservation(still CBS), and reuses the existing interfaces. 
 Still, users can configure the cgroup interface as what we saw in RT 
 throttling, the difference is that this time the CPU 
 bandwidth is allocated in a guaranteed way. To control the distribution of 
 reserved CPU bandwidths in the cgroup hierarchy, two new cgroup inerfaces
-are added inside each cgroup to specify the CPU bandwidth that can be 
-further reserved by descendant cgroups, which of course should not exceed 
-the reserved bandwidth in this cgroup.
+are added inside each cgroup directory to specify the CPU bandwidth that 
+is allowed to be further reserved by descendant cgroups, which of course 
+should not exceed the reserved bandwidth in this cgroup.
 
 %%% Local Variables: 
 %%% mode: latex
