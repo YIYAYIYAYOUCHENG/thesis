@@ -12,7 +12,7 @@
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {The route for RT scheduling}}}{18}{figure.caption.10}
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Extended scheduling route without task group scheduling\relax }}{19}{figure.caption.11}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces The creation of a task group in original Linux\relax }}{26}{figure.caption.12}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The creation of a task group in original Linux\relax }}{27}{figure.caption.12}
 \contentsline {figure}{\numberline {3.2}{\ignorespaces The creation of a task group in oxc enabled Linux\relax }}{29}{figure.caption.13}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces Measured execution time for \texttt {pick\_next\_task\_oxc}\relax }}{57}{figure.caption.17}

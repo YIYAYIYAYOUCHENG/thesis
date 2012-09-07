@@ -29,19 +29,19 @@
 \contentsline {section}{\numberline {3.1}Implementation of ox container structure}{21}{section.3.1}
 \contentsline {section}{\numberline {3.2}Extensions on original data structures}{24}{section.3.2}
 \contentsline {section}{\numberline {3.3}To direct a task to a per ox container runqueue}{25}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{25}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{27}{subsection.3.3.2}
-\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{31}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{32}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.3.1}To build the scheduling route in mainline Linux}{26}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}To build the scheduling route in oxc enabled Linux}{26}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Run tasks under OXC scheduling framework}{32}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}To obtain the runqueue of a task}{33}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}To enqueue an oxc task}{34}{subsection.3.4.2}
 \contentsline {subsection}{\numberline {3.4.3}To dequeue an oxc task}{36}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}To check the preemption}{37}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.4}To check the preemption condition }{38}{subsection.3.4.4}
 \contentsline {subsection}{\numberline {3.4.5}To pick up an oxc task}{39}{subsection.3.4.5}
-\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task\_oxc}{42}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.6}put\_prev\_task\_oxc}{43}{subsection.3.4.6}
 \contentsline {subsection}{\numberline {3.4.7}set\_curr\_task\_oxc}{43}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}task\_tick\_oxc }{44}{subsection.3.4.8}
+\contentsline {subsection}{\numberline {3.4.8}task\_tick\_oxc}{45}{subsection.3.4.8}
 \contentsline {section}{\numberline {3.5}SMP support in oxc framework}{45}{section.3.5}
-\contentsline {section}{\numberline {3.6}User interfaces provided by OXC framework}{45}{section.3.6}
+\contentsline {section}{\numberline {3.6}User interfaces provided by OXC framework}{46}{section.3.6}
 \contentsline {section}{\numberline {3.7}Cooperation with scheduling mechanisms inside Linux}{48}{section.3.7}
 \contentsline {chapter}{\numberline {4}Experiments}{51}{chapter.4}
 \contentsline {section}{\numberline {4.1}Ftrace in Linux kernel}{52}{section.4.1}

@@ -563,14 +563,15 @@ of that time, 5\%, is left for CFS tasks.
 \subsection{CFS bandwidth control\label{sec:RelatedWork_CFS}}
 
 Basically, CFS bandwidth control~\cite{cfs-bwc} apllies the same technique 
-in RT throttling on normal tasks. It is a \texttt{CONFIG\_FAIR\_GROUP\_SCHED} 
+in RT throttling on normal tasks. It is a CFS task group scheduling 
 extension which allows the specification of the maximum CPU bandwidth
-available to normal tasks in a cgroup or cgroup hierarchy.
-The bandwidth allowed to a cgroup is specified using a 
+available to normal tasks in a cgroup or cgroup hierarchy. Ther kenel
+configuration item \texttt{CONFIG\_CFS\_BANDWIDH} allows the user to use
+this function. The bandwidth assigned to a cgroup is specified using a 
 quota(\texttt{cpu.cfs\_quota\_us}) and a period(\texttt{cpu.cfs\_period\_us}).
 By specifying them, normal tasks in a cgroup will be limited to 
 \texttt{cfs\_quota\_us} units of CPU time within the period of 
-\texttt{cfs\_period\_us}. Recall that in RT throttling \ref{sec:RelatedWork_RT},
+\texttt{cfs\_period\_us}. Recall that in RT throttling in last paragraph.
 the reserved bandwidth through cgroup interfaces are applied in each CPU
 individually.
 
@@ -608,15 +609,16 @@ deadline tasks are scheduled in a global EDF way~\cite{J.Lelli}.
 \subsection{IRMOS real-time framework\label{sec:RelatedWork_irmos}}
 The rague name IRMOS comes from the European project ''Interactive 
 Real-time Multimedia Applications on Service Oriented Infrastructures''. 
-The IRMOS framework replaces RT throttling mechanism in mainline Linux with 
-real time CPU reservation(still CBS), and reuses the existing interfaces. 
-Still, users can configure the cgroup interface as what we saw in RT 
-throttling, the difference is that this time the CPU 
-bandwidth is allocated in a guaranteed way. To control the distribution of 
-reserved CPU bandwidths in the cgroup hierarchy, two new cgroup inerfaces
+The IRMOS framework replaces RT throttling mechanism in mainline Linux 
+with real time CPU reservation(still CBS), It modifies the RT scheduling 
+class directly and reuses the the existing cgroup interfaces for RT 
+throttling. Still, users can configure the cgroup interface as what we saw 
+in RT throttling, the difference is that this time 
+the CPU bandwidth is allocated in a guaranteed way. To control the distribution 
+of reserved CPU bandwidths in the cgroup hierarchy, two new cgroup inerfaces
 are added inside each cgroup directory to specify the CPU bandwidth that 
 is allowed to be further reserved by descendant cgroups, which of course 
-should not exceed the reserved bandwidth in this cgroup.
+should not exceed the reserved bandwidth in this parent cgroup.
 
 %%% Local Variables: 
 %%% mode: latex

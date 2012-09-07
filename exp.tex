@@ -42,7 +42,7 @@ table \ref{tab:exp_setup}.
 	\emph{Hardware platform}\hspace{4cm}		& 	\\
 	Processor			& Intel(R) Core(TM) Duo E8500	 \\
 	Frequency			& 3.16GHz\\
-	RAM				& 	  \\	
+	RAM				& 4Gb 	  \\	
 					&	\\	
 	\emph{Software platform}\hspace{4cm}		& 	\\
 	Linux distribution		& Ubuntu 11.10\\
@@ -258,17 +258,18 @@ show this pattern.
 
 Now we are going to probe why the execution time of \texttt{task\_tick\_oxc}
 is more stable than the result of the other two. A look at the body of the
-three functions in list \ref{list:pick_next}, \ref{list:put_prev} and
-\ref{list:task_tick}, we can find that except for the enclosed scheduling
+three functions in listing~\ref{lst:pick_next_task_oxc}, 
+\ref{lst:put_prev_task_oxc} and \ref{lst:task_tick_oxc}, we can find that 
+except for the enclosed scheduling
 operations, other codes in the three functions are actually the same:
-to update the per CPU runqueue, to update the per container runqueue and
-update the current ox container. So, the different variance behaviour in 
-measured execution time for oxc functions may be affected by the performance
-of sheduling operations inside oxc container. 
+to update the runqueue and the current ox container's runtime information. 
+So, the different variance behaviour in measured execution time for oxc 
+functions is very likely to be caused by the performance
+fluctuation of sheduling operations inside oxc container. 
 
 The three encapsulated scheduling operations \texttt{pick\_next\_task\_rt}, 
 \\\texttt{put\_prev\_task\_rt} and \texttt{task\_tick\_rt} are defined in
-rt scheduling class. Specifically, the codes of \texttt{task\_tick\_rt},
+RT scheduling class. Specifically, the codes of \texttt{task\_tick\_rt},
 which is called inside oxc function \texttt{task\_tick\_oxc}, is listed 
 below. This is a very simple function. If people read the other two
 scheduling operations' codes in \emph{linux/sched/rt.c}, this function is 
@@ -276,7 +277,7 @@ still less complex in dealing with runqueues. When scheduling operations
 are called inside an ox container, there will be extra cost because
 the raw handle of implementation details, and such an influence may 
 be smaller when the scheduling operation itself is simple. This explains 
-why the result in \ref{fig:task_tick} is stable in both mean value and 
+why the result in~\ref{fig:task_tick} is stable in both mean value and 
 standard variance.
 \begin{lstlisting}[language=C,
 			caption={\texttt{task\_tick\_rt}},
