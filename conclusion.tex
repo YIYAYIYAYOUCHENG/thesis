@@ -16,11 +16,12 @@ the Linux kernel scheduling.
 The theoretical background of the oxc framework is the oxc scheduling,
 which may be have a more profound influence besides our framework. 
 In the world of oxc scheduling, tasks are managed by a scheduler around 
-a virtual CPU. An independent scheduling system can be constructued 
-above the virtual CPU whose behaviour is the same as a Linux per CPU
-scheduling system. And the theory of oxc scheduling can find its use in
-any case when an independent scheduling is needed. A big feature of the 
-oxc scheduling is that it is naturally compatible with Linux schedulers. 
+the ox container (a virtual CPU). An independent scheduling system can 
+be constructued above the virtual CPU whose behaviour is the same as a 
+Linux per CPU scheduling system. And the theory of oxc scheduling can 
+find its use in any case when an independent scheduling is needed. A big 
+feature of the oxc scheduling is that it is naturally compatible with 
+Linux schedulers. 
 
 Although current implementation of the oxc framework is still a prototype,
 it shows great potential for an opportunity to be seriously applied in real
@@ -41,6 +42,7 @@ the feasibility of the framework in Linux.
 In order for the oxc framework to really attract interests from both 
 academic and industrial fields. There are four issues that must be 
 sloved first.
+
 \begin{itemize}
 \item The CPU bandwidth allocation in the oxc framework now is made in 
 a uncontrolled way depending on the wise decision from users. A admission
@@ -51,7 +53,7 @@ should be added.
 \item Temporarily, the hierarchical distribution of reserved CPU bandwidth
 is implemented in a faked way. That is, the bandwidth distributed to sub
 groups is a new reservation from the system instead of inheriting from 
-the parent's reservation. The connection between parent's and children' 
+the parent's reservation. The connection between parent's and children's 
 reservations needs to be added. 
 \item Until now, the oxc framework does not have a consideration for 
 resource sharing among ox containers. If two tasks accessing the same
@@ -62,6 +64,7 @@ that an earliest deadline ox container is blocked. Now the oxc framework
 has no work on this problem. For the similiar reason, synchronization
 between tasks from different ox containers is a dangerous operation.
 \end{itemize}
+
 Besides the above four items related to the survival of the oxc work, 
 there are some less critical issues that are better to be done.
  

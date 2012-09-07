@@ -682,7 +682,7 @@ when the waking task is an oxc task.
 
 \begin{lstlisting}[language=C, 
 		caption={The preemption check for an oxc task},
-		label={check_preempt}]
+		label={lst:check_preempt_curr_oxc}]
 static inline int
 check_preempt_oxc_rq(struct task_struct *curr, struct task_struct *p, int flags)
 {
