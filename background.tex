@@ -166,10 +166,11 @@ called \emph{normal tasks}, and tasks scheduled by
 nothing and occupy the CPU when no RT or normal tasks need a CPU.
 
 Now, it's time to see the semantics of scheduling operations for a
-scheduler. The following listing contains the main field of structure
-sched\_class.
+scheduler. The following listing contains main fields of 
+the data structure \texttt{struct sched\_class}.
+
 \begin{lstlisting}[language=C, 
-		caption={\texttt{Scheduling operations for a scheduler}},
+		caption={Scheduling operations for a scheduler},
 		label={lst:sched_class}]
 struct sched_class {
 	const struct sched_class *next;
@@ -232,7 +233,7 @@ scheduling entities \footnote{Both are defined in
 task is enqueued in a runqueue, more precisely, it is the task's (CFS
 or RT) scheduling entity that is enqueued.
 \begin{lstlisting}[language=C, 
-			caption={\texttt{A task embeds scheduling entities}},
+			caption={A task embeds scheduling entities},
 			label={lst:task_struct}]
 struct task_struct {
 	...
@@ -254,8 +255,8 @@ CFS entity to represent its RT tasks and normal tasks on a CPU.  Each
 type of tasks inside a task group is scheduled independently by its own
 scheduling class.
 \begin{lstlisting}[language=C,
-		caption={\texttt{A task group contains 
-			both RT tasks and CFS tasks}},
+		caption={A task group contains 
+			both RT and CFS tasks},
 			label={lst:task_group}]		
 
 struct task_group {
@@ -283,8 +284,9 @@ structure; each cpu is associated with a dedicated runqueue. Despite
 its name, \texttt{struct rq} is not a queue. The \texttt{struct rq} 
 contains a large amount of information. Its partial contents that are 
 necessary for understanding the remaining of the thesis are listed below.
+
 \begin{lstlisting}[language=C,
-			caption={\texttt{The runqueue structure}},
+			caption={The runqueue structure},
 			label={lst:runqueue}]
 struct rq {
 	...
@@ -325,7 +327,7 @@ struct rq {
 \item \texttt{cpu} tells the CPU of this runqueue is devoted to.
 \end{itemize}
 \begin{lstlisting}[language=C,
-caption={\texttt{Specific runqueue information within a task group}},
+caption={Specific runqueue information within a task group},
 			label={lst:task_group_ex}]		
 
 struct task_group {
@@ -367,7 +369,7 @@ runqueue and CFS scheduling entity follow.
 %\texttt{struct sched\_entity}. Here instead of studying the details of
 %CFS, we are going to see how different scheduling components
 \begin{lstlisting}[language=C,
-		caption={\texttt{The CFS runqueue}},
+		caption={The CFS runqueue},
 		label={lst:cfsrunqueue}]
 struct cfs_rq {
         unsigned long nr_running;
@@ -393,7 +395,7 @@ struct cfs_rq {
 \item \texttt{tg} is the task group that owns this CFS runqueue.
 \end{itemize}
 \begin{lstlisting}[language=C,
-			caption={\texttt{The CFS scheduling entity}},
+			caption={The CFS scheduling entity},
 			label={lst:sched_entity}]
 struct sched_entity {
 	...
@@ -476,7 +478,7 @@ cannot be preempted by a lower priority task.
 The RT scheduling class provides with a sub runqueue structure 
 \texttt{struct rt\_rq} to deal with RT tasks.
 \begin{lstlisting}[language=C,
-		caption={\texttt{The RT runqueue}},
+		caption={The RT runqueue},
 		label={lst:rtrunqueue}]
 struct rt_rq {
 	struct rt_prio_array active;
@@ -487,7 +489,6 @@ struct rt_rq {
 #endif
 	...
 };
-
 struct rt_prio_array {
 	DECLARE_BITMAP(bitmap, MAX_RT_PRIO+1); 
 	struct list_head queue[MAX_RT_PRIO];
@@ -499,7 +500,7 @@ corresponding bit in $active.bitmap$ is set. All other fields have the same
 meaning as in CFS runqueue. Analogous with the CFS scheduling entity, the 
 following \texttt{struct sched\_rt\_entity} is self explanatory enough. 
 \begin{lstlisting}[language=C,
-		caption={\texttt{The RT scheduling entity}},
+		caption={The RT scheduling entity},
 		label={rt_entity}]
 struct sched_rt_entity {
 	...
@@ -609,7 +610,6 @@ deadline tasks are scheduled in a global EDF way~\cite{J.Lelli}.
 \subsection{IRMOS real-time framework\label{sec:RelatedWork_irmos}}
 The rague name IRMOS comes from the European project ''Interactive 
 Real-time Multimedia Applications on Service Oriented Infrastructures''. 
-<<<<<<< HEAD
 The IRMOS framework replaces RT throttling mechanism in mainline Linux 
 with real time CPU reservation(still CBS), It modifies the RT scheduling 
 class directly and reuses the the existing cgroup interfaces for RT 
@@ -620,17 +620,6 @@ of reserved CPU bandwidths in the cgroup hierarchy, two new cgroup inerfaces
 are added inside each cgroup directory to specify the CPU bandwidth that 
 is allowed to be further reserved by descendant cgroups, which of course 
 should not exceed the reserved bandwidth in this parent cgroup.
-=======
-The IRMOS framework replaces RT throttling mechanism in mainline Linux with 
-real time CPU reservation(still CBS), and reuses the existing interfaces. 
-Still, users can configure the cgroup interface as what we saw in RT 
-throttling, the difference is that this time the CPU 
-bandwidth is allocated in a guaranteed way. To control the distribution of 
-reserved CPU bandwidths in the cgroup hierarchy, two new cgroup inerfaces
-are added inside each cgroup directory to specify the CPU bandwidth that 
-is allowed to be further reserved by descendant cgroups, which of course 
-should not exceed the reserved bandwidth in this cgroup.
->>>>>>> 17eef5a2c2bc25d5f21dd2b5743055410827b573
 
 %%% Local Variables: 
 %%% mode: latex

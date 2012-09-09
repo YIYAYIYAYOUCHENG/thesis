@@ -6,18 +6,18 @@ without constraints on the scheduling details.
 
 Alongside the design and development of the framework, we bring some
 new ideas into the world. We conclude the four golden rules that may
-be useful in developing and evaluating a CPU power management 
-mechanism for a GPOS. We propose the ox container structure in Linux
-and the oxc scheduling theory. We formalize the relationship among
+be useful in developing and evaluating a CPU bandwidth management 
+mechanism for a GPOS. We formalize the relationship among
 different components in Linux scheduling by inventing the concept
 scheduling route, which will assist people for studying and probing
-the Linux kernel scheduling.
+the Linux kernel scheduling. We propose the ox container structure in 
+Linux and the oxc scheduling theory. 
 
 The theoretical background of the oxc framework is the oxc scheduling,
 which may be have a more profound influence besides our framework. 
 In the world of oxc scheduling, tasks are managed by a scheduler around 
 the ox container (a virtual CPU). An independent scheduling system can 
-be constructued above the virtual CPU whose behaviour is the same as a 
+be constructued above the virtual CPU and its behaviour is the same as a 
 Linux per CPU scheduling system. And the theory of oxc scheduling can 
 find its use in any case when an independent scheduling is needed. A big 
 feature of the oxc scheduling is that it is naturally compatible with 

@@ -19,7 +19,8 @@ bandwidth server in CBS theory.
 The CPU reservation for oxc runqueues follows the implementation 
 of CBS reservation for a RT runqueue in IRMOS framework. 
 
-\begin{lstlisting}[language=C, caption={\texttt{struct oxc\_rq}},
+\begin{lstlisting}[language=C, 
+		caption={The ox container : \texttt{struct oxc\_rq}},
                         label={lst:oxc_rq}]
 struct oxc_rq {
 	unsigned long oxc_nr_running;
@@ -130,7 +131,7 @@ The kernel configuration option \texttt{CONFIG\_CGROUP\_SCHED} is required
 by the oxc framework. This option allows to create arbitrary task groups
 using the "cgroup" pseudo filesystem. In current implementation of oxc 
 framework, reservation is made for tasks in a control group. Tasks in a 
-cgroup is represented in the \texttt{struct task\_group} structure. And 
+cgroup is represented by the \texttt{struct task\_group} structure. And 
 extensions also happen inside it.
 
 \begin{lstlisting}[language=C, 
@@ -551,7 +552,8 @@ extra operations can be put in this method.
 
 \begin{lstlisting}[language=C, 
 		caption={To update the number of tasks inside a container} ]
-static inline void inc_oxc_tasks(struct task_struct *p, struct oxc_rq *oxc_rq)
+static inline void 
+inc_oxc_tasks(struct task_struct *p, struct oxc_rq *oxc_rq)
 {
         oxc_rq->oxc_nr_running ++;
 }
@@ -747,7 +749,7 @@ are considered. \texttt{pick\_next\_task\_oxc} is responsible for choosing
 the most eligible oxc task in a CPU.
 
 \begin{lstlisting}[language=C, label={lst:pick_next_task_oxc},
-		caption={Pick up the most eligible oxc task}]
+		caption={To pick up the most eligible oxc task}]
 static struct task_struct* pick_next_task_oxc(struct rq *rq)
 {
         struct oxc_rq *oxc_rq;
@@ -793,7 +795,7 @@ is \texttt{update\_curr\_oxc\_rq}. The budget comsumption of an ox
 container actually happens in this method.
 
 \begin{lstlisting}[language=C, 
-		caption={Update an ox container's runtime information}]
+		caption={To update an ox container's runtime information}]
 static void update_curr_oxc_rq(struct rq *rq)
 {
         struct task_struct *curr = rq->curr;
@@ -830,7 +832,7 @@ used to check if the ox container has exceeded its budget in a
 period.
 
 \begin{lstlisting}[language=C, 
-	caption={Check if an ox container should be throttled}]
+	caption={To check if an ox container should be throttled}]
 static int sched_oxc_rq_runtime_exceeded(struct oxc_rq *oxc_rq)
 {
         u64 runtime = sched_oxc_rq_runtime(oxc_rq);
@@ -967,7 +969,7 @@ current ox container's runtime information and
 local runqueue when the CPU is occupied by an oxc task.
 
 \begin{lstlisting}[language=C, label={lst:task_tick_oxc},
-		caption={The most frequent called entry to update a container's runtime}]
+		caption={The most frequently called entry to update a container's runtime}]
 			
 static void 
 task_tick_oxc(struct rq *rq, struct task_struct *p, int queued)

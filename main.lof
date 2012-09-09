@@ -1,25 +1,25 @@
 \select@language {english}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces Scheduling classes in Linux\relax }}{5}{figure.caption.5}
-\contentsline {figure}{\numberline {1.2}{\ignorespaces CFS scheduling when CFS group scheduling is enabled.\relax }}{10}{figure.caption.6}
-\contentsline {figure}{\numberline {1.3}{\ignorespaces Scheduling scheme without group scheduling\relax }}{10}{figure.caption.7}
-\contentsline {figure}{\numberline {1.4}{\ignorespaces RT scheduling when RT group scheduling is enabled.\relax }}{12}{figure.caption.8}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Scheduling classes in Linux\relax }}{5}{figure.caption.6}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces CFS scheduling when CFS group scheduling is enabled.\relax }}{10}{figure.caption.7}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Scheduling scheme without group scheduling\relax }}{10}{figure.caption.8}
+\contentsline {figure}{\numberline {1.4}{\ignorespaces RT scheduling when RT group scheduling is enabled.\relax }}{12}{figure.caption.9}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Open-Extension Container\relax }}{17}{figure.caption.9}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Extended scheduling routes with task group scheduling\relax }}{18}{figure.caption.10}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {The route for CFS scheduling}}}{18}{figure.caption.10}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {The route for RT scheduling}}}{18}{figure.caption.10}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Extended scheduling route without task group scheduling\relax }}{19}{figure.caption.11}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Open-Extension Container\relax }}{17}{figure.caption.10}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Extended scheduling routes with task group scheduling\relax }}{18}{figure.caption.11}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {The route for CFS scheduling}}}{18}{figure.caption.11}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {The route for RT scheduling}}}{18}{figure.caption.11}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Extended scheduling route without task group scheduling\relax }}{19}{figure.caption.12}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces The creation of a task group in original Linux\relax }}{27}{figure.caption.12}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces The creation of a task group in oxc enabled Linux\relax }}{29}{figure.caption.13}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The creation of a task group in original Linux\relax }}{27}{figure.caption.13}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces The creation of a task group in oxc enabled Linux\relax }}{29}{figure.caption.14}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Measured execution time for \texttt {pick\_next\_task\_oxc}\relax }}{57}{figure.caption.17}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Measured execution time for \texttt {put\_prev\_task\_oxc}\relax }}{57}{figure.caption.18}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Measured execution time for \texttt {task\_tick\_oxc}\relax }}{58}{figure.caption.19}
-\contentsline {figure}{\numberline {4.4}{\ignorespaces \emph {oxc control} vs. \emph {rt throttling}\relax }}{62}{figure.caption.22}
-\contentsline {figure}{\numberline {4.5}{\ignorespaces \emph {oxc control} vs. \emph {cfs bandwidth control}\relax }}{63}{figure.caption.23}
-\contentsline {figure}{\numberline {4.6}{\ignorespaces \emph {oxc control + rt throttling} vs. \emph {oxc control + cfs scheduling}\relax }}{63}{figure.caption.24}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Measured execution time for \texttt {pick\_next\_task\_oxc}\relax }}{57}{figure.caption.18}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Measured execution time for \texttt {put\_prev\_task\_oxc}\relax }}{57}{figure.caption.19}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Measured execution time for \texttt {task\_tick\_oxc}\relax }}{58}{figure.caption.20}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces \emph {oxc control} vs. \emph {RT throttling}\relax }}{62}{figure.caption.23}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces \emph {oxc control} vs. \emph {CFS bandwidth control}\relax }}{63}{figure.caption.24}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces \emph {oxc control + RT throttling} vs. \emph {oxc control + CFS scheduling}\relax }}{63}{figure.caption.25}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
