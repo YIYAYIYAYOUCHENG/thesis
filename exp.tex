@@ -335,8 +335,8 @@ Each connection will be dedicated to one CPU.
 Without constraints, they will consume all CPU time.
 In the experiment, the CPU bandwidth allocated to tbench traffic is restricted.
 The per CPU bandwidth parameter used in tests includes
-$0.05ms/1ms$, $0.1ms/1ms$, $0.2ms/1ms$, $0.4ms/1ms$, $0.6ms/1ms$ and 
-$0.8ms/1ms$. 
+$0.05s/1s$, $0.1s/1s$, $0.2s/1s$, $0.4s/1s$, $0.6s/1s$ and 
+$0.8s/1s$. 
 Note that these are the per CPU bandwidth that is planned to assign to 
 tbench tasks. Each CPU bandwidth control mechnism will restrict the 
 tbench execution not exceed the configured value. And the throughput 
@@ -360,12 +360,12 @@ The thrughput results are shown in table~\ref{tab:expB1} and~\ref{tab:expB2}.
 	\centering
 	\begin{tabular}{|l||c|c|}\hline
 		 per CPU bandwidth & RT throttling & oxc control + RT scheduling\\\hline
-			0.05/1ms &	21.9335	&	18.5313	\\\hline 
-			0.1ms/1ms &	43.5794 &	36.89324 \\\hline
-			0.2ms/1ms &	92.7356 &	73.5099	\\\hline
-			0.4ms/1ms &	172.582 &	147.806 \\\hline
-			0.6ms/1ms &	233	&	225.72	\\\hline
-			0.8ms/1ms &	319.297 &	297.0607	\\\hline
+			0.05s/1s &	21.9335	&	18.5313	\\\hline 
+			0.1s/1s &	43.5794 &	36.89324 \\\hline
+			0.2s/1s &	92.7356 &	73.5099	\\\hline
+			0.4s/1s &	172.582 &	147.806 \\\hline
+			0.6s/1s &	233	&	225.72	\\\hline
+			0.8s/1s &	319.297 &	297.0607	\\\hline
 	\end{tabular}
 	\caption{Throughputs, in Mbps/sec, under RT throttling and oxc control}
 	\label{tab:expB1}
@@ -374,12 +374,12 @@ The thrughput results are shown in table~\ref{tab:expB1} and~\ref{tab:expB2}.
 	\centering
 	\begin{tabular}{|l||c|c|}\hline
 		 per CPU bandwidth & CFS bandwidth control & oxc control + CFS scheduling  \\\hline
-		 0.05ms/1ms	& 24.8825	& 19.2151 \\\hline
-		 0.1ms/1ms	& 52.2106	& 39.4268 \\\hline
-		 0.2ms/1ms	& 106.226	& 77.4225 \\\hline
-		 0.4ms/1ms	& 215.071	& 151.465 \\\hline
-		 0.6ms/1ms	& 323.628	& 234.369 \\\hline
-		 0.8ms/1ms	& 433.025	& 305.1 \\\hline
+		 0.05s/1s	& 24.8825	& 19.2151 \\\hline
+		 0.1s/1s	& 52.2106	& 39.4268 \\\hline
+		 0.2s/1s	& 106.226	& 77.4225 \\\hline
+		 0.4s/1s	& 215.071	& 151.465 \\\hline
+		 0.6s/1s	& 323.628	& 234.369 \\\hline
+		 0.8s/1s	& 433.025	& 305.1 \\\hline
 	\end{tabular}
 	\caption{Throughputs, in Mbps/sec, under CFS bandwidth and oxc control}
 	\label{tab:expB2}

@@ -264,7 +264,7 @@ void set_task_rq(struct task_struct *p, unsigned int cpu)
         else
                 p->rt.rt_rq = &tg->hyper_oxc_rq->oxc_rq[cpu]->rq_.rt;
 #endif
-        if (task_rq_oxc(p)->in_oxc == 1)
+        if (rq_of_task(p)->in_oxc == 1)
                 p->is_oxc_task = 100;
         else
                 p->is_oxc_task = 0;
@@ -617,7 +617,7 @@ oxc runqueue in an edf tree.
 static void 
 dequeue_task_oxc(struct rq *rq, struct task_struct*p, int flags)
 {
-        struct rq *rq_ = task_rq_oxc(p);
+        struct rq *rq_ = rq_of_task(p);
         struct oxc_rq *oxc_rq = container_of(rq_, struct oxc_rq, rq_);
 
         /* Update the local runqueue. */
@@ -974,7 +974,7 @@ local runqueue when the CPU is occupied by an oxc task.
 static void 
 task_tick_oxc(struct rq *rq, struct task_struct *p, int queued)
 {
-        struct rq *rq_ = task_rq_oxc(p);
+        struct rq *rq_ = rq_of_task(p);
 
         update_curr_oxc_rq(rq);
         update_rq_clock(rq_);
