@@ -5,7 +5,7 @@ all:
 	pdflatex main
 
 clean:
-	rm *pdf 
+#	rm *pdf 
 	rm *aux
 	rm *bbl
 	rm *blg
